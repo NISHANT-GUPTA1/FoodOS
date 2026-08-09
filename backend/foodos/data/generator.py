@@ -414,12 +414,16 @@ class Generator:
                 }
             )
 
-        # PATHOLOGY 2 — cubed paneer, one day old, in the chiller that runs warm.
-        add("B-1042", "paneer", WARM_ZONE, 4.4, age_days=1.0, state="prepped", is_cut=True,
+        # PATHOLOGY 2 — a full day's paneer cubed ahead on a Sunday, service came in soft,
+        # and it has sat in the chiller that runs warm ever since. Sized ABOVE a day's
+        # throughput on purpose: a batch smaller than the kitchen gets through in a day is
+        # not at risk, however old it looks, and the risk model is right to say so.
+        add("B-1042", "paneer", WARM_ZONE, 13.0, age_days=1.0, state="prepped", is_cut=True,
             unopened=False)
 
-        # PATHOLOGY 3 — Sunday's chicken over-order, surfacing on Tuesday.
-        add("B-1057", "chicken_boneless", "MEAT_1", 9.6, age_days=0.5, state="raw")
+        # PATHOLOGY 3 — Sunday's chicken, ordered against a fixture that moved. Two days of
+        # throughput with a day and a half of life, surfacing on a Tuesday.
+        add("B-1057", "chicken_boneless", "MEAT_1", 26.0, age_days=0.5, state="raw")
 
         # Ordinary open stock, so the ledger looks like a real kitchen rather than a stage set.
         ordinary = [

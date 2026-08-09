@@ -277,6 +277,11 @@ class FoodosService:
     def rescue(self, batch_id: str | None = None, lambda_: float | None = None) -> RescueResult:
         batch = self._pick_batch(batch_id)
         objective = self.objective(lambda_)
+
+        # The special is chosen first, because how much of this batch tonight's covers can
+        # absorb is what bounds every channel valued at menu price.
+        special = best_special(self.session, batch, self.curves)
+
         result = rank_channels(
             self.session,
             batch,
@@ -284,8 +289,9 @@ class FoodosService:
             now=self.now,
             rsl_days=self.batch_rsl(batch),
             exclusion_reasons=self.context.exclusion_reasons,
+            menu_demand_cap_kg=special["kg_used"] if special else None,
         )
-        result.special = best_special(self.session, batch, self.curves)
+        result.special = special
         return result
 
     def _pick_batch(self, batch_id: str | None) -> Batch:

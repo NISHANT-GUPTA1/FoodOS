@@ -202,8 +202,16 @@ def rank_channels(
     now: dt.datetime,
     rsl_days: float,
     exclusion_reasons: dict[str, str],
+    menu_demand_cap_kg: float | None = None,
 ) -> RescueResult:
-    """Gate first, then rank the survivors by V(a). Excluded options come back too."""
+    """Gate first, then rank the survivors by V(a). Excluded options come back too.
+
+    ``menu_demand_cap_kg`` bounds channels valued at menu price by the quantity tonight's
+    covers can actually absorb. Without it, selling stock through the kitchen always wins
+    by a mile — a kilogram of chicken is worth six portions of butter chicken on paper, so
+    twenty-six kilograms "recovers" a number no operator would believe and no judge should.
+    Demand is the binding constraint on that channel, not shelf space.
+    """
     channels = session.scalars(select(Channel)).all()
     result = RescueResult(
         batch=batch,
@@ -234,7 +242,23 @@ def rank_channels(
             )
             continue
 
-        qty = batch.qty_kg if channel.max_qty_kg is None else min(batch.qty_kg, float(channel.max_qty_kg))
+        qty = batch.qty_kg
+        if channel.max_qty_kg is not None:
+            qty = min(qty, float(channel.max_qty_kg))
+        if channel.basis == "menu_price" and menu_demand_cap_kg is not None:
+            qty = min(qty, menu_demand_cap_kg)
+        if qty <= 0:
+            result.excluded.append(
+                ChannelOption(
+                    channel_id=channel.id, name=channel.name, type=channel.type, eligible=False,
+                    lead_time_hours=float(channel.lead_time_hours), max_qty_kg=channel.max_qty_kg,
+                    exclusion_reason_code="above_max_qty",
+                    exclusion_reason=exclusion_reasons.get("above_max_qty", "above_max_qty"),
+                    exclusion_detail="no incremental demand for this today",
+                )
+            )
+            continue
+
         unit_value = _unit_value(batch, channel, session)
         action = build_channel_action(batch, channel, qty, unit_value)
         value = objective.value(action)
