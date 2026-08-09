@@ -1,0 +1,733 @@
+{
+  "site_id": 1,
+  "target_date": "2026-02-13",
+  "lam": 1.0,
+  "lines": [
+    {
+      "product_id": 41,
+      "label": "Chicken Biryani",
+      "uom": "portion",
+      "baseline_qty": 84.0,
+      "recommended_qty": 64.0,
+      "delta": -20.0,
+      "q_star": 0.6191,
+      "forecast_median": 62.0,
+      "forecast_low": 54.7,
+      "forecast_high": 70.9,
+      "expected_waste_baseline_kg": 9.79,
+      "expected_waste_recommended_kg": 1.55,
+      "saving_kg": 8.25,
+      "saving_money": 1478.75,
+      "saving_co2e": 46.31,
+      "confidence": "HIGH",
+      "economics": {
+        "unit_price": 275.0,
+        "unit_cost": 95.28,
+        "disposal_per_unit": 1.8,
+        "waste_penalty_per_unit": 13.5,
+        "cu": 179.72,
+        "co": 97.08,
+        "co_effective": 110.58,
+        "lambda": 1.0,
+        "q_star": 0.6191,
+        "habitual_service_level": 0.92
+      }
+    },
+    {
+      "product_id": 43,
+      "label": "Paneer Butter Masala",
+      "uom": "portion",
+      "baseline_qty": 72.0,
+      "recommended_qty": 62.0,
+      "delta": -10.0,
+      "q_star": 0.6042,
+      "forecast_median": 61.5,
+      "forecast_low": 55.7,
+      "forecast_high": 65.0,
+      "expected_waste_baseline_kg": 3.44,
+      "expected_waste_recommended_kg": 0.68,
+      "saving_kg": 2.76,
+      "saving_money": 689.09,
+      "saving_co2e": 17.18,
+      "confidence": "HIGH",
+      "economics": {
+        "unit_price": 235.0,
+        "unit_cost": 86.85,
+        "disposal_per_unit": 1.2,
+        "waste_penalty_per_unit": 9.0,
+        "cu": 148.15,
+        "co": 88.05,
+        "co_effective": 97.05,
+        "lambda": 1.0,
+        "q_star": 0.6042,
+        "habitual_service_level": 0.92
+      }
+    },
+    {
+      "product_id": 50,
+      "label": "Mutton Rogan Josh",
+      "uom": "portion",
+      "baseline_qty": 34.5,
+      "recommended_qty": 31.0,
+      "delta": -3.5,
+      "q_star": 0.4416,
+      "forecast_median": 32.0,
+      "forecast_low": 24.8,
+      "forecast_high": 34.6,
+      "expected_waste_baseline_kg": 1.25,
+      "expected_waste_recommended_kg": 0.53,
+      "saving_kg": 0.72,
+      "saving_money": 256.19,
+      "saving_co2e": 24.05,
+      "confidence": "HIGH",
+      "economics": {
+        "unit_price": 385.0,
+        "unit_cost": 210.18,
+        "disposal_per_unit": 1.28,
+        "waste_penalty_per_unit": 9.6,
+        "cu": 174.82,
+        "co": 211.46,
+        "co_effective": 221.06,
+        "lambda": 1.0,
+        "q_star": 0.4416,
+        "habitual_service_level": 0.92
+      }
+    },
+    {
+      "product_id": 44,
+      "label": "Gobi Manchurian",
+      "uom": "portion",
+      "baseline_qty": 55.0,
+      "recommended_qty": 46.0,
+      "delta": -9.0,
+      "q_star": 0.7969,
+      "forecast_median": 43.5,
+      "forecast_low": 40.1,
+      "forecast_high": 47.5,
+      "expected_waste_baseline_kg": 3.15,
+      "expected_waste_recommended_kg": 0.71,
+      "saving_kg": 2.44,
+      "saving_money": 216.56,
+      "saving_co2e": 4.54,
+      "confidence": "HIGH",
+      "economics": {
+        "unit_price": 180.0,
+        "unit_cost": 28.98,
+        "disposal_per_unit": 1.12,
+        "waste_penalty_per_unit": 8.4,
+        "cu": 151.02,
+        "co": 30.1,
+        "co_effective": 38.5,
+        "lambda": 1.0,
+        "q_star": 0.7969,
+        "habitual_service_level": 0.92
+      }
+    },
+    {
+      "product_id": 54,
+      "label": "Fish Curry",
+      "uom": "portion",
+      "baseline_qty": 33.25,
+      "recommended_qty": 30.0,
+      "delta": -3.2,
+      "q_star": 0.607,
+      "forecast_median": 28.5,
+      "forecast_low": 21.2,
+      "forecast_high": 31.9,
+      "expected_waste_baseline_kg": 1.63,
+      "expected_waste_recommended_kg": 0.8,
+      "saving_kg": 0.83,
+      "saving_money": 209.73,
+      "saving_co2e": 3.59,
+      "confidence": "HIGH",
+      "economics": {
+        "unit_price": 290.0,
+        "unit_cost": 107.77,
+        "disposal_per_unit": 1.2,
+        "waste_penalty_per_unit": 9.0,
+        "cu": 182.23,
+        "co": 108.97,
+        "co_effective": 117.97,
+        "lambda": 1.0,
+        "q_star": 0.607,
+        "habitual_service_level": 0.92
+      }
+    },
+    {
+      "product_id": 42,
+      "label": "Veg Biryani",
+      "uom": "portion",
+      "baseline_qty": 45.25,
+      "recommended_qty": 40.0,
+      "delta": -5.2,
+      "q_star": 0.7328,
+      "forecast_median": 38.0,
+      "forecast_low": 33.8,
+      "forecast_high": 42.3,
+      "expected_waste_baseline_kg": 3.05,
+      "expected_waste_recommended_kg": 1.06,
+      "saving_kg": 1.99,
+      "saving_money": 137.88,
+      "saving_co2e": 4.5,
+      "confidence": "HIGH",
+      "economics": {
+        "unit_price": 210.0,
+        "unit_cost": 45.65,
+        "disposal_per_unit": 1.68,
+        "waste_penalty_per_unit": 12.6,
+        "cu": 164.35,
+        "co": 47.33,
+        "co_effective": 59.93,
+        "lambda": 1.0,
+        "q_star": 0.7328,
+        "habitual_service_level": 0.92
+      }
+    },
+    {
+      "product_id": 48,
+      "label": "Jeera Rice",
+      "uom": "portion",
+      "baseline_qty": 64.25,
+      "recommended_qty": 59.0,
+      "delta": -5.2,
+      "q_star": 0.7572,
+      "forecast_median": 58.0,
+      "forecast_low": 53.1,
+      "forecast_high": 60.5,
+      "expected_waste_baseline_kg": 1.98,
+      "expected_waste_recommended_kg": 0.6,
+      "saving_kg": 1.38,
+      "saving_money": 92.8,
+      "saving_co2e": 2.7,
+      "confidence": "HIGH",
+      "economics": {
+        "unit_price": 130.0,
+        "unit_cost": 24.36,
+        "disposal_per_unit": 1.12,
+        "waste_penalty_per_unit": 8.4,
+        "cu": 105.64,
+        "co": 25.48,
+        "co_effective": 33.88,
+        "lambda": 1.0,
+        "q_star": 0.7572,
+        "habitual_service_level": 0.92
+      }
+    },
+    {
+      "product_id": 45,
+      "label": "Palak Paneer",
+      "uom": "portion",
+      "baseline_qty": 41.0,
+      "recommended_qty": 38.0,
+      "delta": -3.0,
+      "q_star": 0.7206,
+      "forecast_median": 34.5,
+      "forecast_low": 29.4,
+      "forecast_high": 39.6,
+      "expected_waste_baseline_kg": 1.92,
+      "expected_waste_recommended_kg": 1.13,
+      "saving_kg": 0.8,
+      "saving_money": 88.91,
+      "saving_co2e": 3.19,
+      "confidence": "HIGH",
+      "economics": {
+        "unit_price": 220.0,
+        "unit_cost": 54.11,
+        "disposal_per_unit": 1.2,
+        "waste_penalty_per_unit": 9.0,
+        "cu": 165.89,
+        "co": 55.31,
+        "co_effective": 64.31,
+        "lambda": 1.0,
+        "q_star": 0.7206,
+        "habitual_service_level": 0.92
+      }
+    },
+    {
+      "product_id": 53,
+      "label": "Mixed Veg Curry",
+      "uom": "portion",
+      "baseline_qty": 49.0,
+      "recommended_qty": 43.0,
+      "delta": -6.0,
+      "q_star": 0.8452,
+      "forecast_median": 41.0,
+      "forecast_low": 38.5,
+      "forecast_high": 44.2,
+      "expected_waste_baseline_kg": 2.31,
+      "expected_waste_recommended_kg": 0.59,
+      "saving_kg": 1.73,
+      "saving_money": 82.56,
+      "saving_co2e": 2.16,
+      "confidence": "HIGH",
+      "economics": {
+        "unit_price": 185.0,
+        "unit_cost": 20.02,
+        "disposal_per_unit": 1.2,
+        "waste_penalty_per_unit": 9.0,
+        "cu": 164.98,
+        "co": 21.22,
+        "co_effective": 30.22,
+        "lambda": 1.0,
+        "q_star": 0.8452,
+        "habitual_service_level": 0.92
+      }
+    },
+    {
+      "product_id": 49,
+      "label": "Dal Tadka",
+      "uom": "portion",
+      "baseline_qty": 78.25,
+      "recommended_qty": 72.0,
+      "delta": -6.2,
+      "q_star": 0.7856,
+      "forecast_median": 67.5,
+      "forecast_low": 55.2,
+      "forecast_high": 74.6,
+      "expected_waste_baseline_kg": 3.69,
+      "expected_waste_recommended_kg": 1.97,
+      "saving_kg": 1.72,
+      "saving_money": 73.84,
+      "saving_co2e": 2.05,
+      "confidence": "HIGH",
+      "economics": {
+        "unit_price": 145.0,
+        "unit_cost": 23.08,
+        "disposal_per_unit": 1.2,
+        "waste_penalty_per_unit": 9.0,
+        "cu": 121.92,
+        "co": 24.28,
+        "co_effective": 33.28,
+        "lambda": 1.0,
+        "q_star": 0.7856,
+        "habitual_service_level": 0.92
+      }
+    },
+    {
+      "product_id": 51,
+      "label": "Veg Pulao",
+      "uom": "portion",
+      "baseline_qty": 35.25,
+      "recommended_qty": 32.0,
+      "delta": -3.2,
+      "q_star": 0.7383,
+      "forecast_median": 30.5,
+      "forecast_low": 27.0,
+      "forecast_high": 33.9,
+      "expected_waste_baseline_kg": 1.76,
+      "expected_waste_recommended_kg": 0.76,
+      "saving_kg": 0.99,
+      "saving_money": 49.02,
+      "saving_co2e": 2.05,
+      "confidence": "HIGH",
+      "economics": {
+        "unit_price": 170.0,
+        "unit_cost": 35.7,
+        "disposal_per_unit": 1.4,
+        "waste_penalty_per_unit": 10.5,
+        "cu": 134.3,
+        "co": 37.1,
+        "co_effective": 47.6,
+        "lambda": 1.0,
+        "q_star": 0.7383,
+        "habitual_service_level": 0.92
+      }
+    }
+  ],
+  "totals": {
+    "kg": 23.61,
+    "money": 3375.33,
+    "co2e": 112.32
+  },
+  "ingredient_requirement": [
+    {
+      "ingredient_id": 33,
+      "ingredient": "Basmati rice",
+      "required_kg": 29.237,
+      "baseline_kg": 34.392,
+      "standard_yield_pct": 1.0,
+      "driven_by": [
+        "Chicken Biryani",
+        "Veg Biryani",
+        "Jeera Rice",
+        "Veg Pulao"
+      ],
+      "saved_kg": 5.155
+    },
+    {
+      "ingredient_id": 23,
+      "ingredient": "Chicken",
+      "required_kg": 14.976,
+      "baseline_kg": 19.656,
+      "standard_yield_pct": 1.0,
+      "driven_by": [
+        "Chicken Biryani"
+      ],
+      "saved_kg": 4.68
+    },
+    {
+      "ingredient_id": 2,
+      "ingredient": "Onion",
+      "required_kg": 25.802,
+      "baseline_kg": 30.052,
+      "standard_yield_pct": 0.92,
+      "driven_by": [
+        "Chicken Biryani",
+        "Paneer Butter Masala",
+        "Mutton Rogan Josh",
+        "Gobi Manchurian",
+        "Fish Curry",
+        "Veg Biryani",
+        "Jeera Rice",
+        "Palak Paneer",
+        "Mixed Veg Curry",
+        "Dal Tadka",
+        "Veg Pulao"
+      ],
+      "saved_kg": 4.25
+    },
+    {
+      "ingredient_id": 4,
+      "ingredient": "Cauliflower",
+      "required_kg": 23.041,
+      "baseline_kg": 27.16,
+      "standard_yield_pct": 0.58,
+      "driven_by": [
+        "Gobi Manchurian",
+        "Veg Biryani",
+        "Mixed Veg Curry"
+      ],
+      "saved_kg": 4.119
+    },
+    {
+      "ingredient_id": 1,
+      "ingredient": "Tomato",
+      "required_kg": 22.649,
+      "baseline_kg": 26.28,
+      "standard_yield_pct": 0.97,
+      "driven_by": [
+        "Chicken Biryani",
+        "Paneer Butter Masala",
+        "Mutton Rogan Josh",
+        "Fish Curry",
+        "Veg Biryani",
+        "Palak Paneer",
+        "Mixed Veg Curry",
+        "Dal Tadka"
+      ],
+      "saved_kg": 3.631
+    },
+    {
+      "ingredient_id": 27,
+      "ingredient": "Paneer",
+      "required_kg": 12.324,
+      "baseline_kg": 14.027,
+      "standard_yield_pct": 1.0,
+      "driven_by": [
+        "Paneer Butter Masala",
+        "Palak Paneer"
+      ],
+      "saved_kg": 1.703
+    },
+    {
+      "ingredient_id": 28,
+      "ingredient": "Curd",
+      "required_kg": 5.005,
+      "baseline_kg": 6.092,
+      "standard_yield_pct": 1.0,
+      "driven_by": [
+        "Chicken Biryani",
+        "Mutton Rogan Josh",
+        "Veg Biryani"
+      ],
+      "saved_kg": 1.087
+    },
+    {
+      "ingredient_id": 24,
+      "ingredient": "Mutton",
+      "required_kg": 8.06,
+      "baseline_kg": 8.97,
+      "standard_yield_pct": 1.0,
+      "driven_by": [
+        "Mutton Rogan Josh"
+      ],
+      "saved_kg": 0.91
+    },
+    {
+      "ingredient_id": 5,
+      "ingredient": "Spinach",
+      "required_kg": 8.645,
+      "baseline_kg": 9.328,
+      "standard_yield_pct": 0.8,
+      "driven_by": [
+        "Palak Paneer"
+      ],
+      "saved_kg": 0.683
+    },
+    {
+      "ingredient_id": 25,
+      "ingredient": "Seer fish",
+      "required_kg": 6.24,
+      "baseline_kg": 6.916,
+      "standard_yield_pct": 1.0,
+      "driven_by": [
+        "Fish Curry"
+      ],
+      "saved_kg": 0.676
+    },
+    {
+      "ingredient_id": 10,
+      "ingredient": "Carrot",
+      "required_kg": 5.097,
+      "baseline_kg": 5.739,
+      "standard_yield_pct": 0.88,
+      "driven_by": [
+        "Veg Biryani",
+        "Mixed Veg Curry",
+        "Veg Pulao"
+      ],
+      "saved_kg": 0.642
+    },
+    {
+      "ingredient_id": 32,
+      "ingredient": "Ghee",
+      "required_kg": 3.901,
+      "baseline_kg": 4.512,
+      "standard_yield_pct": 1.0,
+      "driven_by": [
+        "Chicken Biryani",
+        "Mutton Rogan Josh",
+        "Veg Biryani",
+        "Jeera Rice",
+        "Dal Tadka",
+        "Veg Pulao"
+      ],
+      "saved_kg": 0.611
+    },
+    {
+      "ingredient_id": 3,
+      "ingredient": "Potato",
+      "required_kg": 4.318,
+      "baseline_kg": 4.901,
+      "standard_yield_pct": 0.87,
+      "driven_by": [
+        "Veg Biryani",
+        "Mixed Veg Curry"
+      ],
+      "saved_kg": 0.583
+    },
+    {
+      "ingredient_id": 11,
+      "ingredient": "Capsicum",
+      "required_kg": 3.79,
+      "baseline_kg": 4.362,
+      "standard_yield_pct": 0.83,
+      "driven_by": [
+        "Gobi Manchurian",
+        "Mixed Veg Curry",
+        "Veg Pulao"
+      ],
+      "saved_kg": 0.572
+    },
+    {
+      "ingredient_id": 19,
+      "ingredient": "French beans",
+      "required_kg": 3.922,
+      "baseline_kg": 4.422,
+      "standard_yield_pct": 0.9,
+      "driven_by": [
+        "Veg Biryani",
+        "Mixed Veg Curry",
+        "Veg Pulao"
+      ],
+      "saved_kg": 0.5
+    },
+    {
+      "ingredient_id": 39,
+      "ingredient": "Toor dal",
+      "required_kg": 5.616,
+      "baseline_kg": 6.104,
+      "standard_yield_pct": 1.0,
+      "driven_by": [
+        "Dal Tadka"
+      ],
+      "saved_kg": 0.488
+    },
+    {
+      "ingredient_id": 15,
+      "ingredient": "Green peas",
+      "required_kg": 2.99,
+      "baseline_kg": 3.367,
+      "standard_yield_pct": 1.0,
+      "driven_by": [
+        "Veg Biryani",
+        "Mixed Veg Curry",
+        "Veg Pulao"
+      ],
+      "saved_kg": 0.377
+    },
+    {
+      "ingredient_id": 30,
+      "ingredient": "Cream",
+      "required_kg": 2.553,
+      "baseline_kg": 2.915,
+      "standard_yield_pct": 1.0,
+      "driven_by": [
+        "Paneer Butter Masala",
+        "Palak Paneer",
+        "Mixed Veg Curry"
+      ],
+      "saved_kg": 0.362
+    },
+    {
+      "ingredient_id": 36,
+      "ingredient": "Refined oil",
+      "required_kg": 1.495,
+      "baseline_kg": 1.788,
+      "standard_yield_pct": 1.0,
+      "driven_by": [
+        "Gobi Manchurian"
+      ],
+      "saved_kg": 0.293
+    },
+    {
+      "ingredient_id": 9,
+      "ingredient": "Garlic",
+      "required_kg": 1.66,
+      "baseline_kg": 1.946,
+      "standard_yield_pct": 0.87,
+      "driven_by": [
+        "Chicken Biryani",
+        "Paneer Butter Masala",
+        "Mutton Rogan Josh",
+        "Gobi Manchurian",
+        "Palak Paneer",
+        "Dal Tadka"
+      ],
+      "saved_kg": 0.286
+    },
+    {
+      "ingredient_id": 6,
+      "ingredient": "Coriander leaves",
+      "required_kg": 1.321,
+      "baseline_kg": 1.581,
+      "standard_yield_pct": 0.86,
+      "driven_by": [
+        "Chicken Biryani",
+        "Gobi Manchurian",
+        "Veg Biryani",
+        "Dal Tadka"
+      ],
+      "saved_kg": 0.26
+    },
+    {
+      "ingredient_id": 37,
+      "ingredient": "Cashew",
+      "required_kg": 1.144,
+      "baseline_kg": 1.404,
+      "standard_yield_pct": 1.0,
+      "driven_by": [
+        "Chicken Biryani",
+        "Paneer Butter Masala"
+      ],
+      "saved_kg": 0.26
+    },
+    {
+      "ingredient_id": 35,
+      "ingredient": "Gram flour",
+      "required_kg": 1.196,
+      "baseline_kg": 1.43,
+      "standard_yield_pct": 1.0,
+      "driven_by": [
+        "Gobi Manchurian"
+      ],
+      "saved_kg": 0.234
+    },
+    {
+      "ingredient_id": 7,
+      "ingredient": "Green chilli",
+      "required_kg": 1.162,
+      "baseline_kg": 1.394,
+      "standard_yield_pct": 0.94,
+      "driven_by": [
+        "Chicken Biryani",
+        "Gobi Manchurian",
+        "Fish Curry",
+        "Dal Tadka"
+      ],
+      "saved_kg": 0.232
+    },
+    {
+      "ingredient_id": 31,
+      "ingredient": "Butter",
+      "required_kg": 1.604,
+      "baseline_kg": 1.83,
+      "standard_yield_pct": 1.0,
+      "driven_by": [
+        "Paneer Butter Masala",
+        "Palak Paneer"
+      ],
+      "saved_kg": 0.226
+    },
+    {
+      "ingredient_id": 8,
+      "ingredient": "Ginger",
+      "required_kg": 1.027,
+      "baseline_kg": 1.224,
+      "standard_yield_pct": 0.9,
+      "driven_by": [
+        "Chicken Biryani",
+        "Paneer Butter Masala",
+        "Mutton Rogan Josh",
+        "Palak Paneer"
+      ],
+      "saved_kg": 0.197
+    },
+    {
+      "ingredient_id": 38,
+      "ingredient": "Coconut",
+      "required_kg": 1.56,
+      "baseline_kg": 1.729,
+      "standard_yield_pct": 1.0,
+      "driven_by": [
+        "Fish Curry"
+      ],
+      "saved_kg": 0.169
+    },
+    {
+      "ingredient_id": 16,
+      "ingredient": "Mint leaves",
+      "required_kg": 0.629,
+      "baseline_kg": 0.782,
+      "standard_yield_pct": 0.86,
+      "driven_by": [
+        "Chicken Biryani",
+        "Veg Biryani"
+      ],
+      "saved_kg": 0.153
+    },
+    {
+      "ingredient_id": 18,
+      "ingredient": "Lemon",
+      "required_kg": 0.355,
+      "baseline_kg": 0.393,
+      "standard_yield_pct": 0.55,
+      "driven_by": [
+        "Fish Curry"
+      ],
+      "saved_kg": 0.038
+    },
+    {
+      "ingredient_id": 17,
+      "ingredient": "Curry leaves",
+      "required_kg": 0.295,
+      "baseline_kg": 0.322,
+      "standard_yield_pct": 0.9,
+      "driven_by": [
+        "Fish Curry",
+        "Dal Tadka"
+      ],
+      "saved_kg": 0.027
+    }
+  ]
+}

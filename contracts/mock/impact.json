@@ -1,0 +1,133 @@
+{
+  "site_id": 1,
+  "acceptance": {
+    "counts": {
+      "pending": 41
+    },
+    "decided": 0,
+    "accepted": 0,
+    "overridden": 0,
+    "acceptance_rate": null
+  },
+  "realised_vs_projected": {
+    "projected_money": 0.0,
+    "projected_kg": 0.0,
+    "actual_money": 0.0,
+    "actual_kg": 0.0,
+    "realisation_rate": null
+  },
+  "backtest": {
+    "train_start": "2025-12-15",
+    "train_end": "2026-01-28",
+    "eval_start": "2026-01-29",
+    "eval_end": "2026-02-12",
+    "days_evaluated": 15,
+    "products_evaluated": 11,
+    "actual_waste_kg": 347.3,
+    "modelled_waste_kg": 196.3,
+    "saving_kg": 151.0,
+    "saving_money": 1861.31,
+    "median_abs_error": 5.05,
+    "naive_abs_error": 5.87,
+    "improvement_vs_naive": 0.1389,
+    "interval_coverage": 0.6545,
+    "daily": [
+      {
+        "date": "2026-01-29",
+        "actual_waste_kg": 23.93,
+        "modelled_waste_kg": 21.99,
+        "saving_money": 2178.44
+      },
+      {
+        "date": "2026-01-30",
+        "actual_waste_kg": 31.84,
+        "modelled_waste_kg": 10.29,
+        "saving_money": -129.1
+      },
+      {
+        "date": "2026-01-31",
+        "actual_waste_kg": 27.49,
+        "modelled_waste_kg": 10.78,
+        "saving_money": -440.12
+      },
+      {
+        "date": "2026-02-01",
+        "actual_waste_kg": 31.84,
+        "modelled_waste_kg": 10.39,
+        "saving_money": 1851.35
+      },
+      {
+        "date": "2026-02-02",
+        "actual_waste_kg": 11.69,
+        "modelled_waste_kg": 7.86,
+        "saving_money": -1638.69
+      },
+      {
+        "date": "2026-02-03",
+        "actual_waste_kg": 19.31,
+        "modelled_waste_kg": 10.31,
+        "saving_money": -67.68
+      },
+      {
+        "date": "2026-02-04",
+        "actual_waste_kg": 16.33,
+        "modelled_waste_kg": 20.42,
+        "saving_money": -703.63
+      },
+      {
+        "date": "2026-02-05",
+        "actual_waste_kg": 24.69,
+        "modelled_waste_kg": 21.17,
+        "saving_money": 2319.1
+      },
+      {
+        "date": "2026-02-06",
+        "actual_waste_kg": 35.25,
+        "modelled_waste_kg": 13.8,
+        "saving_money": 1616.3
+      },
+      {
+        "date": "2026-02-07",
+        "actual_waste_kg": 25.99,
+        "modelled_waste_kg": 8.51,
+        "saving_money": -54.51
+      },
+      {
+        "date": "2026-02-08",
+        "actual_waste_kg": 29.04,
+        "modelled_waste_kg": 6.9,
+        "saving_money": -3598.72
+      },
+      {
+        "date": "2026-02-09",
+        "actual_waste_kg": 10.98,
+        "modelled_waste_kg": 2.06,
+        "saving_money": 222.52
+      },
+      {
+        "date": "2026-02-10",
+        "actual_waste_kg": 8.62,
+        "modelled_waste_kg": 1.18,
+        "saving_money": -2281.55
+      },
+      {
+        "date": "2026-02-11",
+        "actual_waste_kg": 26.64,
+        "modelled_waste_kg": 29.05,
+        "saving_money": 622.53
+      },
+      {
+        "date": "2026-02-12",
+        "actual_waste_kg": 23.66,
+        "modelled_waste_kg": 21.59,
+        "saving_money": 1965.07
+      }
+    ],
+    "note": "Trained on the train window only; evaluated on days the forecast never saw. Savings are measured against what the kitchen actually produced, not projected."
+  },
+  "monthly_projection": {
+    "kg": 302.0,
+    "money": 3722.62,
+    "co2e": 755.0
+  }
+}
