@@ -1,0 +1,45 @@
+# --- Python ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- FoodOS generated data ------------------------------------------------
+# Everything under backend/data/ is rebuilt by `python -m foodos.ingest.seed`.
+# Nothing in here is a source of truth, so nothing in here is committed —
+# except the small sample CSVs a new clone needs before the generator runs.
+backend/data/*
+!backend/data/sample/
+!backend/data/sample/**
+backend/data/sample/*.db
+
+# --- Secrets --------------------------------------------------------------
+.env
+.env.*
+!.env.example
+
+# --- Node / frontend ------------------------------------------------------
+node_modules/
+frontend/dist/
+frontend/.vite/
+*.local
+npm-debug.log*
+yarn-error.log*
+
+# --- Editors and OS -------------------------------------------------------
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
