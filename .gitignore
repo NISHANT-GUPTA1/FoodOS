@@ -1,0 +1,30 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Node (Person C)
+node_modules/
+dist/
+.vite/
+
+# Secrets — the Anthropic key lives here, it must never be committed
+.env
+*.env
+!.env.example
+
+# Generated data and databases.
+# backend/data/sample/ is deliberately NOT ignored: every other module is
+# blocked until those CSVs exist, so they are committed on purpose.
+backend/data/*.csv
+backend/data/*.db
+backend/data/foodos.db
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,56 @@
+product_id,sku,name,category,uom,unit_cost,unit_price,is_dish,perishable,is_produce,co2e_kg_per_uom,portion_kg,plannable
+ING_TOMATO,SKU-TOMATO,Tomato,soft_veg,kg,32.0,,0,1,1,1.4,,0
+ING_ONION,SKU-ONION,Onion,root_allium,kg,38.0,,0,1,1,0.5,,0
+ING_POTATO,SKU-POTATO,Potato,root_allium,kg,28.0,,0,1,1,0.5,,0
+ING_CAULI,SKU-CAULI,Cauliflower,hard_veg,kg,40.0,,0,1,1,0.7,,0
+ING_SPINACH,SKU-SPINACH,Spinach,leafy,kg,30.0,,0,1,1,0.6,,0
+ING_CORIANDER,SKU-CORIANDER,Coriander leaves,herb,kg,60.0,,0,1,1,0.6,,0
+ING_GCHILLI,SKU-GCHILLI,Green chilli,soft_veg,kg,70.0,,0,1,1,1.0,,0
+ING_GINGER,SKU-GINGER,Ginger,root_allium,kg,120.0,,0,1,1,0.8,,0
+ING_GARLIC,SKU-GARLIC,Garlic,root_allium,kg,180.0,,0,1,1,0.8,,0
+ING_CARROT,SKU-CARROT,Carrot,hard_veg,kg,45.0,,0,1,1,0.4,,0
+ING_CAPSICUM,SKU-CAPSICUM,Capsicum,soft_veg,kg,80.0,,0,1,1,1.8,,0
+ING_CABBAGE,SKU-CABBAGE,Cabbage,hard_veg,kg,25.0,,0,1,1,0.4,,0
+ING_BRINJAL,SKU-BRINJAL,Brinjal,soft_veg,kg,40.0,,0,1,1,0.9,,0
+ING_OKRA,SKU-OKRA,Okra,soft_veg,kg,55.0,,0,1,1,0.9,,0
+ING_PEAS,SKU-PEAS,Green peas,soft_veg,kg,90.0,,0,1,1,1.0,,0
+ING_MINT,SKU-MINT,Mint leaves,herb,kg,60.0,,0,1,1,0.6,,0
+ING_CURRYLEAF,SKU-CURRYLEAF,Curry leaves,herb,kg,80.0,,0,1,1,0.6,,0
+ING_LEMON,SKU-LEMON,Lemon,fruit,kg,90.0,,0,1,1,0.9,,0
+ING_BEANS,SKU-BEANS,French beans,soft_veg,kg,60.0,,0,1,1,0.8,,0
+ING_MUSHROOM,SKU-MUSHROOM,Mushroom,soft_veg,kg,220.0,,0,1,1,2.9,,0
+ING_CUCUMBER,SKU-CUCUMBER,Cucumber,soft_veg,kg,35.0,,0,1,1,0.6,,0
+ING_BANANA,SKU-BANANA,Banana,fruit,kg,55.0,,0,1,1,0.8,,0
+ING_CHICKEN,SKU-CHICKEN,Chicken,meat,kg,210.0,,0,1,0,6.9,,0
+ING_MUTTON,SKU-MUTTON,Mutton,meat,kg,720.0,,0,1,0,39.2,,0
+ING_FISH,SKU-FISH,Seer fish,meat,kg,480.0,,0,1,0,5.4,,0
+ING_EGG,SKU-EGG,Egg,dairy,kg,140.0,,0,1,0,4.7,,0
+ING_PANEER,SKU-PANEER,Paneer,dairy,kg,380.0,,0,1,0,8.6,,0
+ING_CURD,SKU-CURD,Curd,dairy,kg,70.0,,0,1,0,2.2,,0
+ING_MILK,SKU-MILK,Milk,dairy,kg,58.0,,0,1,0,1.4,,0
+ING_CREAM,SKU-CREAM,Cream,dairy,kg,220.0,,0,1,0,5.3,,0
+ING_BUTTER,SKU-BUTTER,Butter,dairy,kg,520.0,,0,1,0,12.1,,0
+ING_GHEE,SKU-GHEE,Ghee,dry,kg,640.0,,0,0,0,14.8,,0
+ING_RICE,SKU-RICE,Basmati rice,dry,kg,120.0,,0,0,0,2.7,,0
+ING_ATTA,SKU-ATTA,Wheat flour,dry,kg,48.0,,0,0,0,1.4,,0
+ING_BESAN,SKU-BESAN,Gram flour,dry,kg,90.0,,0,0,0,1.6,,0
+ING_OIL,SKU-OIL,Refined oil,dry,kg,145.0,,0,0,0,3.3,,0
+ING_CASHEW,SKU-CASHEW,Cashew,dry,kg,850.0,,0,0,0,4.1,,0
+ING_COCONUT,SKU-COCONUT,Coconut,dry,kg,45.0,,0,0,0,1.1,,0
+ING_TOORDAL,SKU-TOORDAL,Toor dal,dry,kg,165.0,,0,0,0,1.8,,0
+ING_BATTER,SKU-BATTER,Dosa batter,prepared,kg,70.0,,0,1,0,1.5,,0
+DSH_CHBIRYANI,MENU-CHBIRYANI,Chicken Biryani,dish,portion,95.28,275.0,1,1,0,2.527,0.45,1
+DSH_VGBIRYANI,MENU-VGBIRYANI,Veg Biryani,dish,portion,45.65,210.0,1,1,0,0.952,0.42,1
+DSH_PBM,MENU-PBM,Paneer Butter Masala,dish,portion,86.85,235.0,1,1,0,1.87,0.3,1
+DSH_GOBIMANCH,MENU-GOBIMANCH,Gobi Manchurian,dish,portion,28.98,180.0,1,1,0,0.522,0.28,1
+DSH_PALAK,MENU-PALAK,Palak Paneer,dish,portion,54.11,220.0,1,1,0,1.202,0.3,1
+DSH_NAAN,MENU-NAAN,Butter Naan,dish,portion,9.91,48.0,1,1,0,0.263,0.09,0
+DSH_ROTI,MENU-ROTI,Tandoori Roti,dish,portion,3.74,28.0,1,1,0,0.109,0.07,0
+DSH_JEERARICE,MENU-JEERARICE,Jeera Rice,dish,portion,24.36,130.0,1,1,0,0.547,0.28,1
+DSH_DALTADKA,MENU-DALTADKA,Dal Tadka,dish,portion,23.08,145.0,1,1,0,0.358,0.3,1
+DSH_ROGANJOSH,MENU-ROGANJOSH,Mutton Rogan Josh,dish,portion,210.18,385.0,1,1,0,10.704,0.32,1
+DSH_VEGPULAO,MENU-VEGPULAO,Veg Pulao,dish,portion,35.7,170.0,1,1,0,0.723,0.35,1
+DSH_DOSA,MENU-DOSA,Masala Dosa,dish,portion,23.41,105.0,1,1,0,0.473,0.25,0
+DSH_MIXVEG,MENU-MIXVEG,Mixed Veg Curry,dish,portion,20.02,185.0,1,1,0,0.375,0.3,1
+DSH_FISHCURRY,MENU-FISHCURRY,Fish Curry,dish,portion,107.77,290.0,1,1,0,1.302,0.3,1
+DSH_SIDES,MENU-SIDES,"Salad, Raita & Accompaniments",dish,portion,9.11,0.0,1,1,0,0.189,0.25,0

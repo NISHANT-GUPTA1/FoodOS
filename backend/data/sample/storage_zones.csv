@@ -1,0 +1,6 @@
+storage_zone_id,site_id,name,mean_temp_c,temp_source
+ZN_COLD,SITE_KIT_01,Cold room,4.0,declared
+ZN_DRY,SITE_KIT_01,Dry store,26.0,declared
+ZN_FREEZE,SITE_KIT_01,Freezer,-18.0,declared
+ZN_PREP,SITE_KIT_01,Prep area,28.0,declared
+ZN_DOCK,SITE_KIT_01,Receiving dock,31.0,simulated
