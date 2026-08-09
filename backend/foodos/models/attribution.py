@@ -123,8 +123,13 @@ def attribute(
         prod_w.merge(sales_w, on=["date", "dish_id"], how="left")
         .merge(forecast_median, on=["date", "dish_id"], how="left")
     )
+    # Over-production waste is recorded against the dish, so product_id holds a dish id here.
     over = waste_w[waste_w["reason"] == "overproduction"]
-    over_by_key = over.set_index(["date", "dish_id"])[["value_inr", "qty_kg"]]
+    over_by_key = (
+        over.groupby(["date", "product_id"])[["value_inr", "qty_kg"]].sum()
+        if not over.empty
+        else over.set_index(["date", "product_id"])[["value_inr", "qty_kg"]]
+    )
 
     dish_damage: dict[str, float] = {}
 
@@ -188,13 +193,18 @@ def attribute(
     total_value = sum(b.value_inr for b in buckets.values())
     total_kg = sum(b.kg for b in buckets.values())
 
+    days = max(1, window_days)
+
+    # Contributor values are reported PER DAY, like the headline they add up to. Reporting
+    # the window total next to a daily headline is how a screen ends up claiming that more
+    # than a hundred per cent of today's risk was preventable.
     contributors = [
         {
             "key": b.key,
             "name": b.name,
             "share": round(100.0 * b.value_inr / total_value, 1) if total_value else 0.0,
-            "value_inr": round(b.value_inr, 2),
-            "kg": round(b.kg, 3),
+            "value_inr": round(b.value_inr / days, 2),
+            "kg": round(b.kg / days, 3),
             "evidence": b.evidence,
         }
         for b in buckets.values()
@@ -211,7 +221,6 @@ def attribute(
         worst_ingredient = min(ingredient_yields, key=ingredient_yields.get)
         worst_yield = ingredient_yields[worst_ingredient]
 
-    days = max(1, window_days)
     return AttributionResult(
         date=date,
         window_days=window_days,

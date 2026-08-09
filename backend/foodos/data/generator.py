@@ -45,9 +45,12 @@ PATHOLOGY_DISH = "gobi_manchurian"
 PATHOLOGY_WEEKDAY_FACTOR = 0.76
 PATHOLOGY_FROZEN_PLAN = 80.0
 
-#: The prep sheet is written from memory of a month ago, not from the forecast. This is
-#: the lag that turns a correct forecast into wasted food.
-PREP_SHEET_LAG_DAYS = 32
+#: The prep sheet is a trailing average, so it lags demand by a week or two. That is
+#: ordinary and mostly harmless — a competent kitchen tracks its own volumes. What is NOT
+#: harmless is one dish whose number stopped moving altogether, which is pathology one.
+#: Keeping the systemic lag small is deliberate: if every dish over-plans badly, the kitchen
+#: just looks incompetent and the planted failure has nothing to stand out against.
+PREP_SHEET_LAG_DAYS = 10
 PREP_SHEET_WINDOW = 14
 PREP_SHEET_CUSHION = 1.06
 
@@ -205,10 +208,14 @@ class Generator:
         if dish_id == PATHOLOGY_DISH and date.weekday() < 4:
             return PATHOLOGY_FROZEN_PLAN
 
+        # Same weekday, two to five weeks back — "what did we do this time last month".
+        # Kitchens do know that Saturday is not Tuesday, so a par level blind to weekday
+        # would make every dish look mismanaged and leave the planted failure with nothing
+        # to stand out against.
         window = [
-            history[date - dt.timedelta(days=PREP_SHEET_LAG_DAYS + k)]
-            for k in range(PREP_SHEET_WINDOW)
-            if (date - dt.timedelta(days=PREP_SHEET_LAG_DAYS + k)) in history
+            history[date - dt.timedelta(days=7 * week)]
+            for week in range(2, 6)
+            if (date - dt.timedelta(days=7 * week)) in history
         ]
         if not window:
             base = DEMAND[dish_id].base * DOW_FACTOR[date.weekday()]
