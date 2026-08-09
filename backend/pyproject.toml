@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "foodos"
+version = "0.1.0"
+description = "Decision infrastructure for perishable inventory"
+requires-python = ">=3.11"
+readme = "../README.md"
+
+# The approved stack, and nothing else. Adding a line here needs Person B's sign-off
+# and a one-sentence justification. Lower bounds are the versions the team agreed at
+# H0; upper bounds keep a surprise major release from breaking the demo at hour 34.
+dependencies = [
+    "fastapi>=0.115,<1.0",
+    "uvicorn[standard]>=0.32,<1.0",
+    "sqlalchemy>=2.0,<3.0",
+    "pydantic>=2.9,<3.0",
+    "pandas>=2.2,<3.0",
+    "numpy>=1.26",
+    "lightgbm>=4.5,<5.0",
+    "scikit-learn>=1.5,<2.0",
+    "anthropic>=0.40",
+    "python-dotenv>=1.0,<2.0",
+    # Implied by "YAML for content" in Person D's stack. The only reader of
+    # backend/foodos/content/*.yaml, and the reason no bespoke parser exists.
+    "pyyaml>=6.0,<7.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3"]
+
+[project.scripts]
+foodos-seed = "foodos.ingest.seed:main"
+
+[tool.setuptools.packages.find]
+include = ["foodos*"]
+
+[tool.setuptools.package-data]
+"foodos.content" = ["*.yaml"]
+"foodos.agents.prompts" = ["*.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning"]
