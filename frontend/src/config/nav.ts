@@ -68,7 +68,10 @@ export const BATCH_NAV: NavGroup = {
       icon: SlidersHorizontal,
     },
     {
-      to: '/batches/TOM-KLR-00001/passport',
+      // T1024 is the batch the seed actually creates. TOM-KLR-00001 was the
+      // identity layer's example code from a docstring and exists in no
+      // database, so this link 404'd on every click.
+      to: '/batches/T1024/passport',
       label: 'Batch Passport',
       description: 'Identity, custody chain and full event history',
       icon: QrCode,

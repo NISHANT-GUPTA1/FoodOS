@@ -12,6 +12,7 @@
 import { getApiMode } from './config'
 import { fetchJson, postForm, postJson } from './http'
 import {
+  type BatchListRow,
   batchPaths,
   type BatchListResponse,
   type BatchProfile,
@@ -90,12 +91,40 @@ export async function getQuestionnaire(commodity = 'tomato'): Promise<Questionna
   return TOMATO_QUESTIONNAIRE
 }
 
+/**
+ * Batches registered through the wizard during this session.
+ *
+ * Mock mode used to answer `createBatch` with a hardcoded `T1042` that was in
+ * no list, so finishing the wizard navigated straight to "No batch T1042" —
+ * the demo's own happy path dead-ended on its last step. A created batch has to
+ * be retrievable afterwards, so it is kept here and consulted by `listBatches`
+ * and `getBatch` alongside the fixtures.
+ *
+ * Session-scoped on purpose: a reload clears it, which matches a mock backend
+ * with no database behind it. Live mode never touches this.
+ */
+const CREATED: BatchListRow[] = []
+
 export async function createBatch(body: CreateBatchRequest): Promise<CreateBatchResponse> {
   if (isLive('createBatch')) {
     return postJson<CreateBatchResponse>(batchPaths.batches, body)
   }
   await delay(260)
-  return { id: 'T1042', status: 'assessed', photos_expected: 3 }
+
+  const id = `T${1024 + BATCH_LIST.batches.length + CREATED.length + 1}`
+  const reference = BATCH_LIST.batches[0]
+
+  CREATED.push({
+    ...reference,
+    id,
+    commodity: body.commodity,
+    qty_kg: body.qty_kg,
+    origin: body.origin,
+    destination: body.destination,
+    status: 'assessed',
+  })
+
+  return { id, status: 'assessed', photos_expected: 3 }
 }
 
 export async function uploadPhotos(batchId: string, files: File[]): Promise<PhotoUploadResponse> {
@@ -128,7 +157,7 @@ export async function getBatches(filters: BatchListFilters = {}): Promise<BatchL
   }
 
   await delay(140)
-  const batches = BATCH_LIST.batches.filter(
+  const batches = [...BATCH_LIST.batches, ...CREATED].filter(
     (b) => (!filters.status || b.status === filters.status) && (!filters.risk || b.level === filters.risk),
   )
   return { ...BATCH_LIST, batches }
@@ -153,7 +182,7 @@ export async function getBatch(id: string): Promise<BatchProfile> {
   // /batches/T1042 and the header still read T1024. A judge changing the URL,
   // or a wrong click mid-demo, would have caught that. A "batch not found" is a
   // thousand times better than a confident wrong number.
-  const row = BATCH_LIST.batches.find((b) => b.id === id)
+  const row = [...BATCH_LIST.batches, ...CREATED].find((b) => b.id === id)
   if (!row) throw new BatchNotFoundError(id)
   if (id === T1024_PROFILE.id) return T1024_PROFILE
   return {
