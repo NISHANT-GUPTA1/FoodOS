@@ -301,14 +301,23 @@ def questionnaire(commodity: str = Query("tomato")) -> dict:
     except Exception as exc:
         raise HTTPException(status_code=404, detail=f"no questionnaire for {commodity}") from exc
 
-    by_id = {q["id"]: q for q in tree.get("questions", [])}
+    all_questions = tree.get("questions", [])
+    by_id = {q["id"]: q for q in all_questions}
     steps = []
     for step in tree.get("steps", []):
+        # Two kinds of step in D's tree, and they carry their questions
+        # differently. A `questions` step owns every question whose `group`
+        # names it. A `fixed` step lists literal form inputs in `fields`
+        # (commodity, qty_kg, origin...) which C renders natively and which are
+        # not questions at all — joining on those yields nothing, which is how
+        # this returned empty steps before.
+        if step.get("kind") == "questions":
+            source = [q for q in all_questions if q.get("group") == step["id"]]
+        else:
+            source = [by_id[f] for f in (step.get("fields") or []) if f in by_id]
+
         questions = []
-        for field_id in step.get("fields", []):
-            q = by_id.get(field_id)
-            if not q:
-                continue
+        for q in source:
             questions.append(
                 {
                     "id": q["id"],
