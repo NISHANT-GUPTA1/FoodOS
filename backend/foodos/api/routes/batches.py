@@ -489,8 +489,20 @@ def list_batches(
 
 
 @router.get("/batches/{code}")
-def get_batch(code: str, session: SessionDep) -> dict:
-    return _profile(_get(session, code))
+def get_batch(code: str, session: SessionDep, ctx: ContextDep) -> dict:
+    """Screen 3's hero. Scores on first read if the seed has not been scored.
+
+    Without this a freshly seeded batch has no LossRiskScore row, and the hero
+    renders 0% loss / 0h RUL — which reads as "this shipment is fine" rather
+    than "not assessed yet". Screen 3 loads the profile before the matrix, so
+    the profile has to be the thing that triggers scoring.
+    """
+    row = _get(session, code)
+    if row.risk is None:
+        _score_batch(session, row, ctx)
+        session.commit()
+        session.refresh(row)
+    return _profile(row)
 
 
 @router.get("/batches/{code}/plans")

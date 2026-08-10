@@ -133,7 +133,45 @@ def load(session: Session, org_id: int | None = None) -> dict:
         created += 1
 
     session.flush()
-    return {"created": created, "source": "content/questionnaire demo_answers"}
+    scored = _score_all(session)
+    return {
+        "created": created,
+        "scored": scored,
+        "source": "content/questionnaire demo_answers",
+    }
+
+
+def _score_all(session: Session) -> int:
+    """Score every unscored consignment as part of the seed.
+
+    Screen 1 is the demo's entry point and it groups by risk band. An unscored
+    row lands there as 0.00% / LOW, which reads as "this shipment is fine"
+    rather than "not assessed yet" — the one misreading a Command Center must
+    not produce. Scoring here also keeps the first page load off the critical
+    path during the demo.
+
+    Import is local: the API layer imports this module during seed, and a
+    module-level import would close the cycle.
+    """
+    from datetime import date  # noqa: PLC0415
+
+    from foodos.api.routes.batches import _score_batch  # noqa: PLC0415
+    from foodos.engine.context import DecisionContext  # noqa: PLC0415
+
+    ctx = DecisionContext(today=date.today(), site_id=1)
+    done = 0
+    for row in session.scalars(select(Consignment)).all():
+        if row.risk is not None:
+            continue
+        try:
+            _score_batch(session, row, ctx)
+            done += 1
+        except Exception:
+            # A seed that dies because A's model is unavailable is worse than a
+            # seed that leaves a row unscored; the API scores lazily on read.
+            session.rollback()
+    session.flush()
+    return done
 
 
 def _float(value) -> float | None:
