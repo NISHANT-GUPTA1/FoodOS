@@ -10,6 +10,35 @@ A demo dataset with no structure produces a demo with nothing to say. These thre
 pathologies are planted deliberately, one per horizon, so that each screen has a real story
 and the judges see three different kinds of failure rather than three views of one.
 
+> ## ⚠ This document is out of date — read this before the deck
+>
+> The three sections below describe pathologies that **are not the ones in the dataset.**
+> `FoodOS-Team-Split.md` §5 froze the planted faults at H0–3, and Person A's generator
+> implements those exactly — `python -m foodos.verify` passes 14/14 against them. This
+> file drifted from that list, so the deck and demo script built on it describe a demo
+> that will not appear on screen.
+>
+> **What is actually planted, with the numbers the code produces today:**
+>
+> | # | Planted fault (§5, authoritative) | Horizon | Measured value |
+> |---|---|---|---|
+> | 1 | Friday over-prep of Chicken Biryani | PREVENT | **36.2% over on Fri**, vs 20.6% overall |
+> | 2 | Cauliflower trim yield below the standard table | PRESERVE | **0.512 actual vs 0.58 standard** — 268.4 kg / ₹10,735 avoidable |
+> | 3 | Dock temperature excursion on a spinach receipt | PRESERVE | batch B01674 — label says 4 days, really 0.81 days, **overstated by 3.2** |
+>
+> **What this file currently says instead:** plan drift on *Gobi Manchurian* (§1), an
+> *under-counter chiller* (§2), and a *Sunday chicken* over-order with no route to sell
+> (§3). The first two are the right mechanism attached to the wrong subject. The third
+> has no counterpart in the data at all, and the cauliflower trim yield — a real planted
+> fault, and the one that demonstrates the trim detector — is missing from this file
+> entirely.
+>
+> The header above already anticipated this: *"Person A's generator must reproduce them
+> within a rounding. If it does not, one of the two is wrong."* A is right; this file is
+> wrong. **Person D owns the rewrite of the three narrative sections below.** They are
+> left in place rather than deleted so the prose can be re-pointed rather than rewritten
+> from nothing.
+
 | # | Pathology | Horizon | Screen it lands on | Agent that speaks |
 |---|---|---|---|---|
 | 1 | Chronic over-production of a soft-weekday dish | PREVENT | Today → Why → Plan | Diagnostician |
