@@ -25,7 +25,8 @@ from foodos.api.schemas import (
     RescueOut,
     TodayOut,
 )
-from foodos.engine import queries, recommendation, simulator
+from foodos.engine import queries, recommendation, simulator, waterfall
+from foodos.ingest import agmarknet
 from foodos.engine.optimiser import ScoredAction
 from foodos.engine.planner import (
     build_batch_decisions,
@@ -69,6 +70,7 @@ def _rec_out(rec: Recommendation) -> RecommendationOut:
 
 def _action_out(scored: ScoredAction) -> ActionOut:
     a = scored.action
+    tier = waterfall.tier_of_action(a.action_type)
     return ActionOut(
         label=a.label,
         action_type=str(a.action_type),
@@ -85,6 +87,8 @@ def _action_out(scored: ScoredAction) -> ActionOut:
         exclusion_reason=scored.exclusion_reason,
         terms={k: round(v, 2) for k, v in scored.terms.items()},
         channel_id=a.channel_id,
+        waterfall_tier=tier.code if tier else None,
+        waterfall_tier_rank=tier.rank if tier else None,
     )
 
 
@@ -318,6 +322,10 @@ def rescue(session: SessionDep, ctx: ContextDep) -> RescueOut:
     items = []
     for d in decisions:
         best = d.ranked.best
+        # The blueprint's fixed remaining-life ladder, alongside the exit the
+        # objective function actually chose. Reported, never enforced.
+        ladder = waterfall.tier_of_rsl(d.risk.rsl_days)
+        engine = waterfall.tier_of_action(best.action.action_type) if best else None
         items.append(
             RescueItemOut(
                 batch_id=d.risk.batch_id,
@@ -331,6 +339,10 @@ def rescue(session: SessionDep, ctx: ContextDep) -> RescueOut:
                 excluded=[_action_out(s) for s in d.ranked.excluded],
                 best_recovery=round(best.net_recovery, 2) if best else 0.0,
                 uplift_vs_doing_nothing=round(d.ranked.uplift(), 2),
+                ladder_tier=ladder.code,
+                engine_tier=engine.code if engine else None,
+                tier_agrees=engine is not None and engine.rank == ladder.rank,
+                market_reference=agmarknet.latest_for(session, d.risk.label, ctx.today),
             )
         )
     return RescueOut(

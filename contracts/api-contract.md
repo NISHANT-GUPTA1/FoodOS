@@ -4,6 +4,13 @@
 never after. `backend/foodos/api/schemas.py` is the machine-readable version; if the two
 ever disagree, the code wins and this document is stale.
 
+> **Post-freeze changes, all additive — nothing existing moved or was renamed.**
+> `2026-08-10` · `SiteOut.geo_id`, and on `/api/rescue`: `waterfall_tier` /
+> `waterfall_tier_rank` per action, plus `ladder_tier`, `engine_tier`, `tier_agrees`
+> and `market_reference` per item. Existing fields are byte-identical — see
+> `docs/FoodOS-Blueprint-Reconciliation.md` for why they exist. Ignoring all of them
+> leaves every screen exactly as it was.
+
 - Base URL: `http://localhost:8000`
 - Interactive docs: `/docs` (generated from the same Pydantic models)
 - Exact response bodies: `contracts/mocks/*.json`, regenerated with
@@ -127,6 +134,49 @@ Note `net_recovery` and `score` differ: `net_recovery` is cash (`recovered − c
 `score` is the objective value including the risk, sustainability and social terms.
 Show cash to the user; `terms{}` has the full breakdown for a tooltip. A donation row
 can legitimately show ₹0 cash and still rank first.
+
+#### Waterfall tiers — a label, not the order
+
+Post-freeze additive change (2026-08-10). Every `ActionOut` now carries
+`waterfall_tier` (`TIER_0_PRIMARY_FRESH` … `TIER_5_BIOREFINERY`) and
+`waterfall_tier_rank` (0–5); both are `null` on the do-nothing baseline. Use them as
+a chip on the row.
+
+**Do not sort by them.** `ranked[]` is already ordered by `score` and that order is
+the product. Each item also reports the comparison:
+
+| field | meaning |
+| --- | --- |
+| `ladder_tier` | the tier a fixed remaining-life ladder would assign from `rsl_days` alone |
+| `engine_tier` | the tier of the option the optimiser actually ranked first |
+| `tier_agrees` | whether those two match |
+
+`tier_agrees: false` is **not an error state** — it is the interesting case, and it is
+common on this screen by construction (a batch only reaches Rescue because forecast
+demand will not clear it, so "keep selling it fresh" is usually wrong even when it
+still has fresh-retail life). Render the disagreement as a note, never as a warning.
+
+#### `market_reference`
+
+Nullable per item. When AGMARKNET mandi data is loaded and the product maps to a
+recognised commodity, this is the latest quotation on or before `as_of`:
+
+```jsonc
+{
+  "commodity": "Spinach",
+  "market": "Bangalore",
+  "arrival_date": "2026-02-12",
+  "days_stale": 0,
+  "modal_price_per_kg": 13.4,
+  "min_price_per_kg": 11.4,
+  "max_price_per_kg": 15.8,
+  "source": "agmarknet"
+}
+```
+
+`null` is normal — meat, dairy, spices and prepared dishes have no mandi quotation.
+It is **context beside the recovery figure, not a term in it**: no number in
+`ranked[]` is derived from it. Show `days_stale > 1` as stale.
 
 ### `GET /api/impact`
 

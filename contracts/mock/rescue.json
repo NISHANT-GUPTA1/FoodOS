@@ -34,7 +34,9 @@
             "social": 0.0,
             "total": 3216.32
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -58,7 +60,9 @@
             "social": 0.0,
             "total": 2963.58
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "In-store markdown 30%",
@@ -82,7 +86,9 @@
             "social": 0.0,
             "total": 2058.97
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Staff meal",
@@ -106,7 +112,9 @@
             "social": 0.0,
             "total": 1949.1
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Dairy co-op feed line",
@@ -130,7 +138,9 @@
             "social": 0.0,
             "total": 153.36
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         },
         {
           "label": "On-site composter",
@@ -154,7 +164,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Feeding Hands NGO",
@@ -178,7 +190,9 @@
             "social": 146.0,
             "total": -390.1
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Use Mutton first",
@@ -202,7 +216,9 @@
             "social": 0.0,
             "total": -427.05
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Do nothing",
@@ -226,7 +242,9 @@
             "social": 0.0,
             "total": -5256.0
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -252,11 +270,17 @@
             "social": 0.0,
             "total": 1412.29
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         }
       ],
       "best_recovery": 3654.32,
-      "uplift_vs_doing_nothing": 8472.32
+      "uplift_vs_doing_nothing": 8472.32,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_1_B2B_KITCHENS",
+      "tier_agrees": false,
+      "market_reference": null
     },
     {
       "batch_id": 39,
@@ -289,7 +313,9 @@
             "social": 0.0,
             "total": 1950.75
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -313,7 +339,9 @@
             "social": 0.0,
             "total": 1783.93
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "In-store markdown 30%",
@@ -337,7 +365,9 @@
             "social": 0.0,
             "total": 1283.99
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Staff meal",
@@ -361,7 +391,9 @@
             "social": 0.0,
             "total": 1237.04
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Dairy co-op feed line",
@@ -385,7 +417,9 @@
             "social": 0.0,
             "total": 24.48
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         },
         {
           "label": "On-site composter",
@@ -409,7 +443,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Feeding Hands NGO",
@@ -433,7 +469,9 @@
             "social": 163.58,
             "total": -133.99
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Use Paneer first",
@@ -457,7 +495,9 @@
             "social": 0.0,
             "total": -200.37
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Do nothing",
@@ -481,7 +521,9 @@
             "social": 0.0,
             "total": -3108.02
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -507,11 +549,17 @@
             "social": 0.0,
             "total": 814.43
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         }
       ],
       "best_recovery": 2107.77,
-      "uplift_vs_doing_nothing": 5058.77
+      "uplift_vs_doing_nothing": 5058.77,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_1_B2B_KITCHENS",
+      "tier_agrees": false,
+      "market_reference": null
     },
     {
       "batch_id": 34,
@@ -544,7 +592,9 @@
             "social": 0.0,
             "total": 1706.42
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -568,7 +618,9 @@
             "social": 0.0,
             "total": 1562.7
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "In-store markdown 30%",
@@ -592,7 +644,9 @@
             "social": 0.0,
             "total": 1157.43
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Staff meal",
@@ -616,7 +670,9 @@
             "social": 0.0,
             "total": 772.59
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Feeding Hands NGO",
@@ -640,7 +696,9 @@
             "social": 241.0,
             "total": 105.7
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Dairy co-op feed line",
@@ -664,7 +722,9 @@
             "social": 0.0,
             "total": -10.17
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         },
         {
           "label": "On-site composter",
@@ -688,7 +748,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Use Chicken first",
@@ -712,7 +774,9 @@
             "social": 0.0,
             "total": -90.36
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Do nothing",
@@ -736,7 +800,9 @@
             "social": 0.0,
             "total": -2530.5
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -762,11 +828,17 @@
             "social": 0.0,
             "total": 757.25
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         }
       ],
       "best_recovery": 1691.96,
-      "uplift_vs_doing_nothing": 4236.92
+      "uplift_vs_doing_nothing": 4236.92,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_1_B2B_KITCHENS",
+      "tier_agrees": false,
+      "market_reference": null
     },
     {
       "batch_id": 36,
@@ -799,7 +871,9 @@
             "social": 0.0,
             "total": 1346.41
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "In-store markdown 30%",
@@ -823,7 +897,9 @@
             "social": 0.0,
             "total": 889.67
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Staff meal",
@@ -847,7 +923,9 @@
             "social": 0.0,
             "total": 881.91
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -871,7 +949,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Use Seer fish first",
@@ -895,7 +975,9 @@
             "social": 0.0,
             "total": -162.01
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Feeding Hands NGO",
@@ -919,7 +1001,9 @@
             "social": 93.92,
             "total": -212.31
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Do nothing",
@@ -943,7 +1027,9 @@
             "social": 0.0,
             "total": -2254.08
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -969,7 +1055,9 @@
             "social": 0.0,
             "total": 1213.74
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nandini Puree Unit",
@@ -993,7 +1081,9 @@
             "social": 0.0,
             "total": 467.52
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -1017,11 +1107,17 @@
             "social": 0.0,
             "total": -26.75
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 1492.94,
-      "uplift_vs_doing_nothing": 3600.49
+      "uplift_vs_doing_nothing": 3600.49,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_1_B2B_KITCHENS",
+      "tier_agrees": false,
+      "market_reference": null
     },
     {
       "batch_id": 5,
@@ -1054,7 +1150,9 @@
             "social": 0.0,
             "total": 1594.72
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -1078,7 +1176,9 @@
             "social": 798.48,
             "total": 1557.05
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -1102,7 +1202,9 @@
             "social": 0.0,
             "total": 1507.5
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "In-store markdown 30%",
@@ -1126,7 +1228,9 @@
             "social": 0.0,
             "total": 1261.9
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Use Potato first",
@@ -1150,7 +1254,9 @@
             "social": 0.0,
             "total": 427.19
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Staff meal",
@@ -1174,7 +1280,9 @@
             "social": 0.0,
             "total": 291.24
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -1198,7 +1306,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Dairy co-op feed line",
@@ -1222,7 +1332,9 @@
             "social": 0.0,
             "total": -94.93
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         },
         {
           "label": "Do nothing",
@@ -1246,7 +1358,9 @@
             "social": 0.0,
             "total": -1117.87
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -1272,11 +1386,26 @@
             "social": 0.0,
             "total": 1142.03
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         }
       ],
       "best_recovery": 674.87,
-      "uplift_vs_doing_nothing": 2712.59
+      "uplift_vs_doing_nothing": 2712.59,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_1_B2B_KITCHENS",
+      "tier_agrees": false,
+      "market_reference": {
+        "commodity": "Potato",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 17.8,
+        "min_price_per_kg": 15.1,
+        "max_price_per_kg": 21.0,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 43,
@@ -1309,7 +1438,9 @@
             "social": 0.0,
             "total": 787.41
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Staff meal",
@@ -1333,7 +1464,9 @@
             "social": 0.0,
             "total": 544.92
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "In-store markdown 30%",
@@ -1357,7 +1490,9 @@
             "social": 0.0,
             "total": 532.59
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "On-site composter",
@@ -1381,7 +1516,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Use Butter first",
@@ -1405,7 +1542,9 @@
             "social": 0.0,
             "total": -104.38
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Do nothing",
@@ -1429,7 +1568,9 @@
             "social": 0.0,
             "total": -1409.72
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -1455,7 +1596,9 @@
             "social": 0.0,
             "total": 688.52
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -1479,7 +1622,9 @@
             "social": 54.22,
             "total": -221.15
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Nandini Puree Unit",
@@ -1503,7 +1648,9 @@
             "social": 0.0,
             "total": 166.06
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -1527,11 +1674,17 @@
             "social": 0.0,
             "total": -77.41
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 885.0,
-      "uplift_vs_doing_nothing": 2197.13
+      "uplift_vs_doing_nothing": 2197.13,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_1_B2B_KITCHENS",
+      "tier_agrees": false,
+      "market_reference": null
     },
     {
       "batch_id": 16,
@@ -1564,7 +1717,9 @@
             "social": 0.0,
             "total": 646.3
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -1588,7 +1743,9 @@
             "social": 0.0,
             "total": 562.21
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Staff meal",
@@ -1612,7 +1769,9 @@
             "social": 0.0,
             "total": 512.9
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "In-store markdown 30%",
@@ -1636,7 +1795,9 @@
             "social": 0.0,
             "total": 464.64
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Use Garlic first",
@@ -1660,7 +1821,9 @@
             "social": 0.0,
             "total": -25.99
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -1684,7 +1847,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Feeding Hands NGO",
@@ -1708,7 +1873,9 @@
             "social": 115.52,
             "total": -40.11
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Dairy co-op feed line",
@@ -1732,7 +1899,9 @@
             "social": 0.0,
             "total": -99.62
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         },
         {
           "label": "Do nothing",
@@ -1756,7 +1925,9 @@
             "social": 0.0,
             "total": -1039.68
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -1782,11 +1953,26 @@
             "social": 0.0,
             "total": 146.12
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         }
       ],
       "best_recovery": 618.57,
-      "uplift_vs_doing_nothing": 1685.98
+      "uplift_vs_doing_nothing": 1685.98,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_1_B2B_KITCHENS",
+      "tier_agrees": false,
+      "market_reference": {
+        "commodity": "Garlic",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 120.0,
+        "min_price_per_kg": 102.0,
+        "max_price_per_kg": 141.6,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 9,
@@ -1819,7 +2005,9 @@
             "social": 0.0,
             "total": 908.96
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -1843,7 +2031,9 @@
             "social": 0.0,
             "total": 838.38
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "In-store markdown 30%",
@@ -1867,7 +2057,9 @@
             "social": 0.0,
             "total": 736.24
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Move Spinach away from Green chilli",
@@ -1891,7 +2083,9 @@
             "social": 0.0,
             "total": 536.6
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Staff meal",
@@ -1915,7 +2109,9 @@
             "social": 0.0,
             "total": 305.16
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Use Spinach first",
@@ -1939,7 +2135,9 @@
             "social": 0.0,
             "total": 245.7
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -1963,7 +2161,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Do nothing",
@@ -1987,7 +2187,9 @@
             "social": 0.0,
             "total": -702.0
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -2013,7 +2215,9 @@
             "social": 468.0,
             "total": 822.0
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Nandini Puree Unit",
@@ -2037,7 +2241,9 @@
             "social": 0.0,
             "total": 550.48
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -2061,11 +2267,26 @@
             "social": 0.0,
             "total": -119.88
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 375.44,
-      "uplift_vs_doing_nothing": 1610.96
+      "uplift_vs_doing_nothing": 1610.96,
+      "ladder_tier": "TIER_2_PROCESSING",
+      "engine_tier": "TIER_1_B2B_KITCHENS",
+      "tier_agrees": false,
+      "market_reference": {
+        "commodity": "Spinach",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 13.4,
+        "min_price_per_kg": 11.4,
+        "max_price_per_kg": 15.8,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 40,
@@ -2098,7 +2319,9 @@
             "social": 0.0,
             "total": 646.63
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -2122,7 +2345,9 @@
             "social": 0.0,
             "total": 572.34
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "In-store markdown 30%",
@@ -2146,7 +2371,9 @@
             "social": 0.0,
             "total": 499.51
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Staff meal",
@@ -2170,7 +2397,9 @@
             "social": 0.0,
             "total": 415.3
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Feeding Hands NGO",
@@ -2194,7 +2423,9 @@
             "social": 227.08,
             "total": 246.57
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Use Curd first",
@@ -2218,7 +2449,9 @@
             "social": 0.0,
             "total": 73.79
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -2242,7 +2475,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Dairy co-op feed line",
@@ -2266,7 +2501,9 @@
             "social": 0.0,
             "total": -114.32
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         },
         {
           "label": "Do nothing",
@@ -2290,7 +2527,9 @@
             "social": 0.0,
             "total": -794.78
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -2316,11 +2555,17 @@
             "social": 0.0,
             "total": 234.07
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         }
       ],
       "best_recovery": 442.24,
-      "uplift_vs_doing_nothing": 1441.41
+      "uplift_vs_doing_nothing": 1441.41,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_1_B2B_KITCHENS",
+      "tier_agrees": false,
+      "market_reference": null
     },
     {
       "batch_id": 33,
@@ -2353,7 +2598,9 @@
             "social": 0.0,
             "total": 370.51
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -2377,7 +2624,9 @@
             "social": 0.0,
             "total": 332.84
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "In-store markdown 30%",
@@ -2401,7 +2650,9 @@
             "social": 0.0,
             "total": 283.89
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -2425,7 +2676,9 @@
             "social": 0.0,
             "total": 273.2
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -2449,7 +2702,9 @@
             "social": 155.84,
             "total": 115.77
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Use Banana first",
@@ -2473,7 +2728,9 @@
             "social": 0.0,
             "total": 62.32
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -2497,7 +2754,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Dairy co-op feed line",
@@ -2521,7 +2780,9 @@
             "social": 0.0,
             "total": -136.29
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         },
         {
           "label": "Do nothing",
@@ -2545,7 +2806,9 @@
             "social": 0.0,
             "total": -428.56
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -2571,11 +2834,26 @@
             "social": 0.0,
             "total": 26.34
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         }
       ],
       "best_recovery": 150.0,
-      "uplift_vs_doing_nothing": 799.07
+      "uplift_vs_doing_nothing": 799.07,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": {
+        "commodity": "Banana",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 26.9,
+        "min_price_per_kg": 22.9,
+        "max_price_per_kg": 31.7,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 42,
@@ -2608,7 +2886,9 @@
             "social": 0.0,
             "total": 257.92
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Staff meal",
@@ -2632,7 +2912,9 @@
             "social": 0.0,
             "total": 249.79
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "In-store markdown 30%",
@@ -2656,7 +2938,9 @@
             "social": 0.0,
             "total": 204.46
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Use Cream first",
@@ -2680,7 +2964,9 @@
             "social": 0.0,
             "total": -20.82
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -2704,7 +2990,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Do nothing",
@@ -2728,7 +3016,9 @@
             "social": 0.0,
             "total": -538.78
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -2754,7 +3044,9 @@
             "social": 0.0,
             "total": 193.87
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -2778,7 +3070,9 @@
             "social": 48.98,
             "total": -146.38
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Nandini Puree Unit",
@@ -2802,7 +3096,9 @@
             "social": 0.0,
             "total": -93.94
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -2826,11 +3122,17 @@
             "social": 0.0,
             "total": -129.68
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 257.92,
-      "uplift_vs_doing_nothing": 796.7
+      "uplift_vs_doing_nothing": 796.7,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_1_B2B_KITCHENS",
+      "tier_agrees": false,
+      "market_reference": null
     },
     {
       "batch_id": 29,
@@ -2863,7 +3165,9 @@
             "social": 0.0,
             "total": 295.5
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -2887,7 +3191,9 @@
             "social": 0.0,
             "total": 272.0
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "In-store markdown 30%",
@@ -2911,7 +3217,9 @@
             "social": 0.0,
             "total": 229.0
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -2935,7 +3243,9 @@
             "social": 0.0,
             "total": 211.5
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Use Lemon first",
@@ -2959,7 +3269,9 @@
             "social": 0.0,
             "total": 22.5
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Feeding Hands NGO",
@@ -2983,7 +3295,9 @@
             "social": 100.0,
             "total": -17.6
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "On-site composter",
@@ -3007,7 +3321,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Dairy co-op feed line",
@@ -3031,7 +3347,9 @@
             "social": 0.0,
             "total": -135.0
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         },
         {
           "label": "Do nothing",
@@ -3055,7 +3373,9 @@
             "social": 0.0,
             "total": -450.0
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -3081,11 +3401,26 @@
             "social": 0.0,
             "total": -47.0
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         }
       ],
       "best_recovery": 157.5,
-      "uplift_vs_doing_nothing": 745.5
+      "uplift_vs_doing_nothing": 745.5,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": {
+        "commodity": "Lemon",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 48.0,
+        "min_price_per_kg": 40.8,
+        "max_price_per_kg": 56.6,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 38,
@@ -3118,7 +3453,9 @@
             "social": 0.0,
             "total": 226.12
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -3142,7 +3479,9 @@
             "social": 0.0,
             "total": 200.2
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "In-store markdown 30%",
@@ -3166,7 +3505,9 @@
             "social": 0.0,
             "total": 172.22
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Use Egg first",
@@ -3190,7 +3531,9 @@
             "social": 0.0,
             "total": -1.5
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -3214,7 +3557,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Do nothing",
@@ -3238,7 +3583,9 @@
             "social": 0.0,
             "total": -418.74
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -3264,7 +3611,9 @@
             "social": 0.0,
             "total": 140.95
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -3288,7 +3637,9 @@
             "social": 59.82,
             "total": -108.89
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Nandini Puree Unit",
@@ -3312,7 +3663,9 @@
             "social": 0.0,
             "total": -113.34
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -3336,11 +3689,17 @@
             "social": 0.0,
             "total": -136.87
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 146.56,
-      "uplift_vs_doing_nothing": 644.86
+      "uplift_vs_doing_nothing": 644.86,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": null
     },
     {
       "batch_id": 17,
@@ -3373,7 +3732,9 @@
             "social": 0.0,
             "total": 306.31
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -3397,7 +3758,9 @@
             "social": 0.0,
             "total": 239.62
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "In-store markdown 30%",
@@ -3421,7 +3784,9 @@
             "social": 0.0,
             "total": 220.98
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -3445,7 +3810,9 @@
             "social": 0.0,
             "total": 184.66
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Move Carrot away from Green chilli",
@@ -3469,7 +3836,9 @@
             "social": 0.0,
             "total": 161.88
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Feeding Hands NGO",
@@ -3493,7 +3862,9 @@
             "social": 138.44,
             "total": 86.59
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Use Carrot first",
@@ -3517,7 +3888,9 @@
             "social": 0.0,
             "total": 62.3
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -3541,7 +3914,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Dairy co-op feed line",
@@ -3565,7 +3940,9 @@
             "social": 0.0,
             "total": -143.31
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         },
         {
           "label": "Do nothing",
@@ -3589,7 +3966,9 @@
             "social": 0.0,
             "total": -311.49
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -3615,11 +3994,26 @@
             "social": 0.0,
             "total": -32.38
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         }
       ],
       "best_recovery": 109.02,
-      "uplift_vs_doing_nothing": 617.8
+      "uplift_vs_doing_nothing": 617.8,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": {
+        "commodity": "Carrot",
+        "market": "Chikkaballapura",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 24.0,
+        "min_price_per_kg": 20.4,
+        "max_price_per_kg": 28.3,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 50,
@@ -3652,7 +4046,9 @@
             "social": 0.0,
             "total": 240.87
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -3676,7 +4072,9 @@
             "social": 0.0,
             "total": 197.71
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "In-store markdown 30%",
@@ -3700,7 +4098,9 @@
             "social": 0.0,
             "total": 177.44
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Use Gram flour first",
@@ -3724,7 +4124,9 @@
             "social": 0.0,
             "total": 18.34
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -3748,7 +4150,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Feeding Hands NGO",
@@ -3772,7 +4176,9 @@
             "social": 81.52,
             "total": -52.72
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Do nothing",
@@ -3796,7 +4202,9 @@
             "social": 0.0,
             "total": -366.84
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -3822,7 +4230,9 @@
             "social": 0.0,
             "total": 140.54
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nandini Puree Unit",
@@ -3846,7 +4256,9 @@
             "social": 0.0,
             "total": -97.45
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -3870,11 +4282,17 @@
             "social": 0.0,
             "total": -139.99
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 128.39,
-      "uplift_vs_doing_nothing": 607.71
+      "uplift_vs_doing_nothing": 607.71,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": null
     },
     {
       "batch_id": 31,
@@ -3907,7 +4325,9 @@
             "social": 0.0,
             "total": 180.86
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "In-store markdown 30%",
@@ -3931,7 +4351,9 @@
             "social": 0.0,
             "total": 134.23
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Use Mushroom first",
@@ -3955,7 +4377,9 @@
             "social": 0.0,
             "total": -15.06
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -3979,7 +4403,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Do nothing",
@@ -4003,7 +4429,9 @@
             "social": 0.0,
             "total": -390.06
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -4029,7 +4457,9 @@
             "social": 0.0,
             "total": 150.83
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -4053,7 +4483,9 @@
             "social": 0.0,
             "total": 92.73
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -4077,7 +4509,9 @@
             "social": 35.46,
             "total": -163.27
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Nandini Puree Unit",
@@ -4101,7 +4535,9 @@
             "social": 0.0,
             "total": -156.36
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -4125,11 +4561,26 @@
             "social": 0.0,
             "total": -138.6
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 136.52,
-      "uplift_vs_doing_nothing": 570.92
+      "uplift_vs_doing_nothing": 570.92,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": {
+        "commodity": "Mushroom",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 134.4,
+        "min_price_per_kg": 114.2,
+        "max_price_per_kg": 158.6,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 18,
@@ -4162,7 +4613,9 @@
             "social": 0.0,
             "total": 221.82
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -4186,7 +4639,9 @@
             "social": 0.0,
             "total": 165.74
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "In-store markdown 30%",
@@ -4210,7 +4665,9 @@
             "social": 0.0,
             "total": 157.09
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Use Capsicum first",
@@ -4234,7 +4691,9 @@
             "social": 0.0,
             "total": 21.87
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -4258,7 +4717,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Feeding Hands NGO",
@@ -4282,7 +4743,9 @@
             "social": 79.5,
             "total": -52.56
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Do nothing",
@@ -4306,7 +4769,9 @@
             "social": 0.0,
             "total": -318.0
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -4332,7 +4797,9 @@
             "social": 0.0,
             "total": 110.52
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nandini Puree Unit",
@@ -4356,7 +4823,9 @@
             "social": 0.0,
             "total": -114.5
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -4380,11 +4849,26 @@
             "social": 0.0,
             "total": -142.92
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 111.3,
-      "uplift_vs_doing_nothing": 539.82
+      "uplift_vs_doing_nothing": 539.82,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": {
+        "commodity": "Capsicum",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 43.2,
+        "min_price_per_kg": 36.7,
+        "max_price_per_kg": 51.0,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 22,
@@ -4417,7 +4901,9 @@
             "social": 0.0,
             "total": 216.59
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "In-store markdown 30%",
@@ -4441,7 +4927,9 @@
             "social": 0.0,
             "total": 145.18
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -4465,7 +4953,9 @@
             "social": 0.0,
             "total": 140.56
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Use Okra first",
@@ -4489,7 +4979,9 @@
             "social": 0.0,
             "total": 36.45
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Feeding Hands NGO",
@@ -4513,7 +5005,9 @@
             "social": 91.1,
             "total": -18.58
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "On-site composter",
@@ -4537,7 +5031,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Do nothing",
@@ -4561,7 +5057,9 @@
             "social": 0.0,
             "total": -250.52
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -4587,7 +5085,9 @@
             "social": 0.0,
             "total": 88.04
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nandini Puree Unit",
@@ -4611,7 +5111,9 @@
             "social": 0.0,
             "total": -117.54
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -4635,11 +5137,26 @@
             "social": 0.0,
             "total": -146.97
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 87.68,
-      "uplift_vs_doing_nothing": 467.11
+      "uplift_vs_doing_nothing": 467.11,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": {
+        "commodity": "Bhindi(Ladies Finger)",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 28.8,
+        "min_price_per_kg": 24.5,
+        "max_price_per_kg": 34.0,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 59,
@@ -4672,7 +5189,9 @@
             "social": 0.0,
             "total": 182.69
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "In-store markdown 30%",
@@ -4696,7 +5215,9 @@
             "social": 0.0,
             "total": 118.43
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -4720,7 +5241,9 @@
             "social": 0.0,
             "total": 108.02
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Use Dosa batter first",
@@ -4744,7 +5267,9 @@
             "social": 0.0,
             "total": 22.62
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -4768,7 +5293,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Feeding Hands NGO",
@@ -4792,7 +5319,9 @@
             "social": 69.6,
             "total": -68.4
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Do nothing",
@@ -4816,7 +5345,9 @@
             "social": 0.0,
             "total": -243.6
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -4842,7 +5373,9 @@
             "social": 0.0,
             "total": 55.78
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nandini Puree Unit",
@@ -4866,7 +5399,9 @@
             "social": 0.0,
             "total": -150.18
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -4890,11 +5425,17 @@
             "social": 0.0,
             "total": -147.38
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 85.26,
-      "uplift_vs_doing_nothing": 426.29
+      "uplift_vs_doing_nothing": 426.29,
+      "ladder_tier": "TIER_1_B2B_KITCHENS",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": false,
+      "market_reference": null
     },
     {
       "batch_id": 30,
@@ -4927,7 +5468,9 @@
             "social": 0.0,
             "total": 190.84
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "In-store markdown 30%",
@@ -4951,7 +5494,9 @@
             "social": 0.0,
             "total": 123.39
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -4975,7 +5520,9 @@
             "social": 0.0,
             "total": 112.06
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Use French beans first",
@@ -4999,7 +5546,9 @@
             "social": 0.0,
             "total": 29.1
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -5023,7 +5572,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Feeding Hands NGO",
@@ -5047,7 +5598,9 @@
             "social": 77.58,
             "total": -48.56
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Do nothing",
@@ -5071,7 +5624,9 @@
             "social": 0.0,
             "total": -232.74
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -5097,7 +5652,9 @@
             "social": 0.0,
             "total": 60.25
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nandini Puree Unit",
@@ -5121,7 +5678,9 @@
             "social": 0.0,
             "total": -141.96
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -5145,11 +5704,26 @@
             "social": 0.0,
             "total": -148.03
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 81.46,
-      "uplift_vs_doing_nothing": 423.58
+      "uplift_vs_doing_nothing": 423.58,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": {
+        "commodity": "French Beans (Frasbean)",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 34.6,
+        "min_price_per_kg": 29.4,
+        "max_price_per_kg": 40.8,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 8,
@@ -5182,7 +5756,9 @@
             "social": 0.0,
             "total": 212.98
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "In-store markdown 30%",
@@ -5206,7 +5782,9 @@
             "social": 0.0,
             "total": 132.07
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -5230,7 +5808,9 @@
             "social": 0.0,
             "total": 110.61
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Move Spinach away from Green chilli",
@@ -5254,7 +5834,9 @@
             "social": 0.0,
             "total": 105.04
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -5278,7 +5860,9 @@
             "social": 0.0,
             "total": 61.61
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Use Spinach first",
@@ -5302,7 +5886,9 @@
             "social": 0.0,
             "total": 56.92
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Feeding Hands NGO",
@@ -5326,7 +5912,9 @@
             "social": 108.38,
             "total": 30.83
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "On-site composter",
@@ -5350,7 +5938,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Dairy co-op feed line",
@@ -5374,7 +5964,9 @@
             "social": 0.0,
             "total": -152.24
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         },
         {
           "label": "Do nothing",
@@ -5398,7 +5990,9 @@
             "social": 0.0,
             "total": -162.57
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -5424,11 +6018,26 @@
             "social": 0.0,
             "total": -118.42
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         }
       ],
       "best_recovery": 56.9,
-      "uplift_vs_doing_nothing": 375.55
+      "uplift_vs_doing_nothing": 375.55,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": {
+        "commodity": "Spinach",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 13.4,
+        "min_price_per_kg": 11.4,
+        "max_price_per_kg": 15.8,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 24,
@@ -5461,7 +6070,9 @@
             "social": 0.0,
             "total": 143.72
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "In-store markdown 30%",
@@ -5485,7 +6096,9 @@
             "social": 0.0,
             "total": 85.71
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -5509,7 +6122,9 @@
             "social": 0.0,
             "total": 65.52
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Use Green peas first",
@@ -5533,7 +6148,9 @@
             "social": 0.0,
             "total": 10.94
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -5557,7 +6174,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Do nothing",
@@ -5581,7 +6200,9 @@
             "social": 0.0,
             "total": -218.88
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -5607,7 +6228,9 @@
             "social": 0.0,
             "total": 14.27
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -5631,7 +6254,9 @@
             "social": 48.64,
             "total": -115.18
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Nandini Puree Unit",
@@ -5655,7 +6280,9 @@
             "social": 0.0,
             "total": -187.22
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -5679,11 +6306,26 @@
             "social": 0.0,
             "total": -148.87
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 76.61,
-      "uplift_vs_doing_nothing": 362.6
+      "uplift_vs_doing_nothing": 362.6,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": {
+        "commodity": "Green Peas",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 44.2,
+        "min_price_per_kg": 37.6,
+        "max_price_per_kg": 52.2,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 32,
@@ -5716,7 +6358,9 @@
             "social": 0.0,
             "total": 172.24
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "In-store markdown 30%",
@@ -5740,7 +6384,9 @@
             "social": 0.0,
             "total": 99.12
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Move Cucumber away from Green chilli",
@@ -5764,7 +6410,9 @@
             "social": 0.0,
             "total": 80.17
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -5788,7 +6436,9 @@
             "social": 0.0,
             "total": 69.35
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Use Cucumber first",
@@ -5812,7 +6462,9 @@
             "social": 0.0,
             "total": 42.06
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Feeding Hands NGO",
@@ -5836,7 +6488,9 @@
             "social": 84.12,
             "total": -24.65
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "On-site composter",
@@ -5860,7 +6514,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Do nothing",
@@ -5884,7 +6540,9 @@
             "social": 0.0,
             "total": -147.21
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -5910,7 +6568,9 @@
             "social": 0.0,
             "total": 20.96
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nandini Puree Unit",
@@ -5934,7 +6594,9 @@
             "social": 0.0,
             "total": -157.43
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -5958,11 +6620,26 @@
             "social": 0.0,
             "total": -153.16
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 51.52,
-      "uplift_vs_doing_nothing": 319.45
+      "uplift_vs_doing_nothing": 319.45,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": {
+        "commodity": "Cucumbar(Kheera)",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 17.3,
+        "min_price_per_kg": 14.7,
+        "max_price_per_kg": 20.4,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 13,
@@ -5995,7 +6672,9 @@
             "social": 0.0,
             "total": 128.57
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "In-store markdown 30%",
@@ -6019,7 +6698,9 @@
             "social": 0.0,
             "total": 68.54
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -6043,7 +6724,9 @@
             "social": 0.0,
             "total": 37.51
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Use Green chilli first",
@@ -6067,7 +6750,9 @@
             "social": 0.0,
             "total": 15.91
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -6091,7 +6776,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Do nothing",
@@ -6115,7 +6802,9 @@
             "social": 0.0,
             "total": -171.43
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -6141,7 +6830,9 @@
             "social": 0.0,
             "total": -11.85
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -6165,7 +6856,9 @@
             "social": 48.98,
             "total": -109.64
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Nandini Puree Unit",
@@ -6189,7 +6882,9 @@
             "social": 0.0,
             "total": -200.47
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -6213,11 +6908,26 @@
             "social": 0.0,
             "total": -151.72
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 60.0,
-      "uplift_vs_doing_nothing": 300.0
+      "uplift_vs_doing_nothing": 300.0,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": {
+        "commodity": "Green Chilli",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 38.4,
+        "min_price_per_kg": 32.6,
+        "max_price_per_kg": 45.3,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 11,
@@ -6250,7 +6960,9 @@
             "social": 0.0,
             "total": 98.4
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "In-store markdown 30%",
@@ -6274,7 +6986,9 @@
             "social": 0.0,
             "total": 39.4
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Move Coriander leaves away from Green chilli",
@@ -6298,7 +7012,9 @@
             "social": 0.0,
             "total": 35.0
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Use Coriander leaves first",
@@ -6322,7 +7038,9 @@
             "social": 0.0,
             "total": 15.0
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -6346,7 +7064,9 @@
             "social": 0.0,
             "total": -5.2
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "On-site composter",
@@ -6370,7 +7090,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Do nothing",
@@ -6394,7 +7116,9 @@
             "social": 0.0,
             "total": -120.0
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -6420,7 +7144,9 @@
             "social": 0.0,
             "total": -52.5
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -6444,7 +7170,9 @@
             "social": 40.0,
             "total": -125.6
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Nandini Puree Unit",
@@ -6468,7 +7196,9 @@
             "social": 0.0,
             "total": -228.2
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -6492,11 +7222,26 @@
             "social": 0.0,
             "total": -154.8
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 42.0,
-      "uplift_vs_doing_nothing": 218.4
+      "uplift_vs_doing_nothing": 218.4,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": {
+        "commodity": "Coriander(Leaves)",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 33.6,
+        "min_price_per_kg": 28.6,
+        "max_price_per_kg": 39.6,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 19,
@@ -6529,7 +7274,9 @@
             "social": 0.0,
             "total": 102.46
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Move Cabbage away from Green chilli",
@@ -6553,7 +7300,9 @@
             "social": 0.0,
             "total": 37.6
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "In-store markdown 30%",
@@ -6577,7 +7326,9 @@
             "social": 0.0,
             "total": 36.4
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Use Cabbage first",
@@ -6601,7 +7352,9 @@
             "social": 0.0,
             "total": 29.91
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -6625,7 +7378,9 @@
             "social": 0.0,
             "total": -17.36
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "On-site composter",
@@ -6649,7 +7404,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Do nothing",
@@ -6673,7 +7430,9 @@
             "social": 0.0,
             "total": -68.03
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -6699,7 +7458,9 @@
             "social": 0.0,
             "total": -62.58
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -6723,7 +7484,9 @@
             "social": 54.42,
             "total": -86.51
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Nandini Puree Unit",
@@ -6747,7 +7510,9 @@
             "social": 0.0,
             "total": -222.72
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -6771,11 +7536,26 @@
             "social": 0.0,
             "total": -157.92
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 23.81,
-      "uplift_vs_doing_nothing": 170.49
+      "uplift_vs_doing_nothing": 170.49,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": {
+        "commodity": "Cabbage",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 9.6,
+        "min_price_per_kg": 8.2,
+        "max_price_per_kg": 11.3,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 41,
@@ -6808,7 +7588,9 @@
             "social": 0.0,
             "total": 62.71
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Use Milk first",
@@ -6832,7 +7614,9 @@
             "social": 0.0,
             "total": 9.93
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "In-store markdown 30%",
@@ -6856,7 +7640,9 @@
             "social": 0.0,
             "total": 6.8
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "On-site composter",
@@ -6880,7 +7666,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Do nothing",
@@ -6904,7 +7692,9 @@
             "social": 0.0,
             "total": -74.94
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -6930,7 +7720,9 @@
             "social": 0.0,
             "total": -50.93
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -6954,7 +7746,9 @@
             "social": 0.0,
             "total": -96.42
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -6978,7 +7772,9 @@
             "social": 25.84,
             "total": -154.36
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Nandini Puree Unit",
@@ -7002,7 +7798,9 @@
             "social": 0.0,
             "total": -261.46
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -7026,11 +7824,17 @@
             "social": 0.0,
             "total": -157.51
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 26.23,
-      "uplift_vs_doing_nothing": 137.65
+      "uplift_vs_doing_nothing": 137.65,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": null
     },
     {
       "batch_id": 25,
@@ -7063,7 +7867,9 @@
             "social": 0.0,
             "total": 43.64
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Use Mint leaves first",
@@ -7087,7 +7893,9 @@
             "social": 0.0,
             "total": 6.65
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Move Mint leaves away from Green chilli",
@@ -7111,7 +7919,9 @@
             "social": 0.0,
             "total": 1.6
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -7135,7 +7945,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Do nothing",
@@ -7159,7 +7971,9 @@
             "social": 0.0,
             "total": -53.22
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -7185,7 +7999,9 @@
             "social": 0.0,
             "total": -10.35
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -7209,7 +8025,9 @@
             "social": 0.0,
             "total": -74.64
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -7233,7 +8051,9 @@
             "social": 0.0,
             "total": -119.27
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -7257,7 +8077,9 @@
             "social": 17.74,
             "total": -171.24
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Nandini Puree Unit",
@@ -7281,7 +8103,9 @@
             "social": 0.0,
             "total": -279.28
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -7305,11 +8129,26 @@
             "social": 0.0,
             "total": -158.8
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 18.63,
-      "uplift_vs_doing_nothing": 96.86
+      "uplift_vs_doing_nothing": 96.86,
+      "ladder_tier": "TIER_1_B2B_KITCHENS",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": false,
+      "market_reference": {
+        "commodity": "Mint(Pudina)",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 28.8,
+        "min_price_per_kg": 24.5,
+        "max_price_per_kg": 34.0,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 10,
@@ -7342,7 +8181,9 @@
             "social": 0.0,
             "total": 42.96
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Use Coriander leaves first",
@@ -7366,7 +8207,9 @@
             "social": 0.0,
             "total": 6.55
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Move Coriander leaves away from Green chilli",
@@ -7390,7 +8233,9 @@
             "social": 0.0,
             "total": 1.2
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -7414,7 +8259,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Do nothing",
@@ -7438,7 +8285,9 @@
             "social": 0.0,
             "total": -52.38
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -7464,7 +8313,9 @@
             "social": 0.0,
             "total": -10.96
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -7488,7 +8339,9 @@
             "social": 0.0,
             "total": -75.54
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -7512,7 +8365,9 @@
             "social": 0.0,
             "total": -120.13
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -7536,7 +8391,9 @@
             "social": 17.46,
             "total": -171.8
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Nandini Puree Unit",
@@ -7560,7 +8417,9 @@
             "social": 0.0,
             "total": -279.94
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -7584,11 +8443,26 @@
             "social": 0.0,
             "total": -158.86
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 18.33,
-      "uplift_vs_doing_nothing": 95.34
+      "uplift_vs_doing_nothing": 95.34,
+      "ladder_tier": "TIER_1_B2B_KITCHENS",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": false,
+      "market_reference": {
+        "commodity": "Coriander(Leaves)",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 33.6,
+        "min_price_per_kg": 28.6,
+        "max_price_per_kg": 39.6,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 27,
@@ -7621,7 +8495,9 @@
             "social": 0.0,
             "total": 38.33
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Use Curry leaves first",
@@ -7645,7 +8521,9 @@
             "social": 0.0,
             "total": 3.77
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Move Curry leaves away from Green chilli",
@@ -7669,7 +8547,9 @@
             "social": 0.0,
             "total": -1.64
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -7693,7 +8573,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Do nothing",
@@ -7717,7 +8599,9 @@
             "social": 0.0,
             "total": -54.96
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -7743,7 +8627,9 @@
             "social": 0.0,
             "total": -14.21
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -7767,7 +8653,9 @@
             "social": 0.0,
             "total": -78.88
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -7791,7 +8679,9 @@
             "social": 0.0,
             "total": -123.58
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -7815,7 +8705,9 @@
             "social": 13.74,
             "total": -180.82
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Nandini Puree Unit",
@@ -7839,7 +8731,9 @@
             "social": 0.0,
             "total": -284.47
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -7863,11 +8757,26 @@
             "social": 0.0,
             "total": -158.7
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 19.24,
-      "uplift_vs_doing_nothing": 93.29
+      "uplift_vs_doing_nothing": 93.29,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": {
+        "commodity": "Curry Leaves",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 38.4,
+        "min_price_per_kg": 32.6,
+        "max_price_per_kg": 45.3,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 26,
@@ -7900,7 +8809,9 @@
             "social": 0.0,
             "total": 36.9
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Use Mint leaves first",
@@ -7924,7 +8835,9 @@
             "social": 0.0,
             "total": 5.64
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Move Mint leaves away from Green chilli",
@@ -7948,7 +8861,9 @@
             "social": 0.0,
             "total": -2.5
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -7972,7 +8887,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Do nothing",
@@ -7996,7 +8913,9 @@
             "social": 0.0,
             "total": -45.0
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -8022,7 +8941,9 @@
             "social": 0.0,
             "total": -16.49
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -8046,7 +8967,9 @@
             "social": 0.0,
             "total": -83.2
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -8070,7 +8993,9 @@
             "social": 0.0,
             "total": -127.5
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -8094,7 +9019,9 @@
             "social": 15.0,
             "total": -176.85
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Nandini Puree Unit",
@@ -8118,7 +9045,9 @@
             "social": 0.0,
             "total": -285.59
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -8142,11 +9071,26 @@
             "social": 0.0,
             "total": -159.3
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 15.75,
-      "uplift_vs_doing_nothing": 81.9
+      "uplift_vs_doing_nothing": 81.9,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": {
+        "commodity": "Mint(Pudina)",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 28.8,
+        "min_price_per_kg": 24.5,
+        "max_price_per_kg": 34.0,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 12,
@@ -8179,7 +9123,9 @@
             "social": 0.0,
             "total": 2.94
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "On-site composter",
@@ -8203,7 +9149,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         },
         {
           "label": "Do nothing",
@@ -8227,7 +9175,9 @@
             "social": 0.0,
             "total": -31.57
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -8253,7 +9203,9 @@
             "social": 0.0,
             "total": 23.68
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "In-store markdown 30%",
@@ -8277,7 +9229,9 @@
             "social": 0.0,
             "total": -28.18
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -8301,7 +9255,9 @@
             "social": 0.0,
             "total": -99.15
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -8325,7 +9281,9 @@
             "social": 0.0,
             "total": -142.91
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -8349,7 +9307,9 @@
             "social": 9.02,
             "total": -189.56
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Nandini Puree Unit",
@@ -8373,7 +9333,9 @@
             "social": 0.0,
             "total": -298.01
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -8397,11 +9359,26 @@
             "social": 0.0,
             "total": -160.1
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 14.21,
-      "uplift_vs_doing_nothing": 34.51
+      "uplift_vs_doing_nothing": 34.51,
+      "ladder_tier": "TIER_1_B2B_KITCHENS",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": false,
+      "market_reference": {
+        "commodity": "Green Chilli",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 38.4,
+        "min_price_per_kg": 32.6,
+        "max_price_per_kg": 45.3,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 23,
@@ -8434,7 +9411,9 @@
             "social": 0.0,
             "total": 1.37
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Do nothing",
@@ -8458,7 +9437,9 @@
             "social": 0.0,
             "total": -27.36
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         },
         {
           "label": "On-site composter",
@@ -8482,7 +9463,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         }
       ],
       "excluded": [
@@ -8508,7 +9491,9 @@
             "social": 0.0,
             "total": 17.97
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "In-store markdown 30%",
@@ -8532,7 +9517,9 @@
             "social": 0.0,
             "total": -33.04
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -8556,7 +9543,9 @@
             "social": 0.0,
             "total": -105.54
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -8580,7 +9569,9 @@
             "social": 0.0,
             "total": -149.14
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -8604,7 +9595,9 @@
             "social": 6.08,
             "total": -196.04
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Nandini Puree Unit",
@@ -8628,7 +9621,9 @@
             "social": 0.0,
             "total": -303.4
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -8652,11 +9647,26 @@
             "social": 0.0,
             "total": -160.36
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 12.31,
-      "uplift_vs_doing_nothing": 28.73
+      "uplift_vs_doing_nothing": 28.73,
+      "ladder_tier": "TIER_1_B2B_KITCHENS",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": false,
+      "market_reference": {
+        "commodity": "Green Peas",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 44.2,
+        "min_price_per_kg": 37.6,
+        "max_price_per_kg": 52.2,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 28,
@@ -8689,7 +9699,9 @@
             "social": 0.0,
             "total": 0.63
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Do nothing",
@@ -8713,7 +9725,9 @@
             "social": 0.0,
             "total": -12.33
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         },
         {
           "label": "On-site composter",
@@ -8737,7 +9751,9 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         }
       ],
       "excluded": [
@@ -8763,7 +9779,9 @@
             "social": 0.0,
             "total": 8.09
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "In-store markdown 30%",
@@ -8787,7 +9805,9 @@
             "social": 0.0,
             "total": -42.35
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -8811,7 +9831,9 @@
             "social": 0.0,
             "total": -118.97
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -8835,7 +9857,9 @@
             "social": 0.0,
             "total": -161.97
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -8859,7 +9883,9 @@
             "social": 2.74,
             "total": -202.4
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Nandini Puree Unit",
@@ -8883,7 +9909,9 @@
             "social": 0.0,
             "total": -312.53
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -8907,11 +9935,26 @@
             "social": 0.0,
             "total": -161.26
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         }
       ],
       "best_recovery": 5.55,
-      "uplift_vs_doing_nothing": 12.96
+      "uplift_vs_doing_nothing": 12.96,
+      "ladder_tier": "TIER_0_PRIMARY_FRESH",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": true,
+      "market_reference": {
+        "commodity": "Lemon",
+        "market": "Bangalore",
+        "arrival_date": "2026-02-12",
+        "days_stale": 0,
+        "modal_price_per_kg": 48.0,
+        "min_price_per_kg": 40.8,
+        "max_price_per_kg": 56.6,
+        "source": "agmarknet"
+      }
     },
     {
       "batch_id": 37,
@@ -8944,7 +9987,9 @@
             "social": 0.0,
             "total": -0.01
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "Do nothing",
@@ -8968,7 +10013,9 @@
             "social": 0.0,
             "total": -5.88
           },
-          "channel_id": null
+          "channel_id": null,
+          "waterfall_tier": null,
+          "waterfall_tier_rank": null
         }
       ],
       "excluded": [
@@ -8994,7 +10041,9 @@
             "social": 0.0,
             "total": 3.17
           },
-          "channel_id": 1
+          "channel_id": 1,
+          "waterfall_tier": "TIER_0_PRIMARY_FRESH",
+          "waterfall_tier_rank": 0
         },
         {
           "label": "In-store markdown 30%",
@@ -9018,7 +10067,9 @@
             "social": 0.0,
             "total": -46.86
           },
-          "channel_id": 2
+          "channel_id": 2,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Nalapaka Kitchen (400 m)",
@@ -9042,7 +10093,9 @@
             "social": 0.0,
             "total": -125.37
           },
-          "channel_id": 3
+          "channel_id": 3,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Anna Canteen (2.1 km)",
@@ -9066,7 +10119,9 @@
             "social": 0.0,
             "total": -168.1
           },
-          "channel_id": 4
+          "channel_id": 4,
+          "waterfall_tier": "TIER_1_B2B_KITCHENS",
+          "waterfall_tier_rank": 1
         },
         {
           "label": "Feeding Hands NGO",
@@ -9090,7 +10145,9 @@
             "social": 0.84,
             "total": -206.21
           },
-          "channel_id": 5
+          "channel_id": 5,
+          "waterfall_tier": "TIER_3_HUMANITARIAN",
+          "waterfall_tier_rank": 3
         },
         {
           "label": "Nandini Puree Unit",
@@ -9114,7 +10171,9 @@
             "social": 0.0,
             "total": -317.09
           },
-          "channel_id": 6
+          "channel_id": 6,
+          "waterfall_tier": "TIER_2_PROCESSING",
+          "waterfall_tier_rank": 2
         },
         {
           "label": "Dairy co-op feed line",
@@ -9138,7 +10197,9 @@
             "social": 0.0,
             "total": -161.65
           },
-          "channel_id": 7
+          "channel_id": 7,
+          "waterfall_tier": "TIER_4_ANIMAL_FEED",
+          "waterfall_tier_rank": 4
         },
         {
           "label": "On-site composter",
@@ -9162,11 +10223,17 @@
             "social": 0.0,
             "total": -30.0
           },
-          "channel_id": 8
+          "channel_id": 8,
+          "waterfall_tier": "TIER_5_BIOREFINERY",
+          "waterfall_tier_rank": 5
         }
       ],
       "best_recovery": 2.65,
-      "uplift_vs_doing_nothing": 5.87
+      "uplift_vs_doing_nothing": 5.87,
+      "ladder_tier": "TIER_5_BIOREFINERY",
+      "engine_tier": "TIER_0_PRIMARY_FRESH",
+      "tier_agrees": false,
+      "market_reference": null
     }
   ],
   "total_recoverable": 13838.46

@@ -22,6 +22,7 @@ from foodos.schema.tables import (
     DemandContext,
     Forecast,
     InventoryEvent,
+    MarketPrice,
     ModelRun,
     Organization,
     Product,
@@ -80,4 +81,5 @@ __all__ = [
     "RecommendationOutcome",
     "Channel",
     "RescueOffer",
+    "MarketPrice",
 ]

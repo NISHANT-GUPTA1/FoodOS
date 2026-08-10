@@ -29,7 +29,7 @@ from foodos.config import settings
 from foodos.db import create_all, drop_all, session_scope
 from foodos.engine.context import default_context
 from foodos.engine.recommendation import generate
-from foodos.ingest import channels, loader, sample_data
+from foodos.ingest import agmarknet, channels, loader, sample_data
 from foodos.schema.tables import Organization, Site
 
 
@@ -67,6 +67,14 @@ def run(source: str = "auto", quiet: bool = False) -> dict:
         org = session.scalars(select(Organization).limit(1)).first()
         count, channel_source = channels.load(session, org.id)
         summary["channels"] = {"count": count, "source": channel_source}
+
+        # Mandi prices describe the market, not this customer, so they load
+        # from whichever directory has the file regardless of --source.
+        for candidate in (settings.data_dir, settings.sample_dir):
+            market = agmarknet.load(session, candidate)
+            if market["loaded"]:
+                break
+        summary["market_prices"] = market
 
         generated = {}
         for site_id in session.scalars(select(Site.id).order_by(Site.id)):

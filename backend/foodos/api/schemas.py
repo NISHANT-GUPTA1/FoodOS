@@ -17,6 +17,8 @@ class SiteOut(BaseModel):
     id: int
     name: str
     type: str
+    #: AgStack Asset Registry GeoID, when the source data carries one.
+    geo_id: str | None = None
 
 
 class HealthOut(BaseModel):
@@ -53,6 +55,10 @@ class ActionOut(BaseModel):
     exclusion_reason: str | None = None
     terms: dict[str, float] = Field(default_factory=dict)
     channel_id: int | None = None
+    # Cascading-waterfall vocabulary. A label on the exit, not a gate on it —
+    # `score` still decides the order. Null on the do-nothing baseline.
+    waterfall_tier: str | None = None
+    waterfall_tier_rank: int | None = None
 
 
 class RecommendationOut(BaseModel):
@@ -197,6 +203,14 @@ class RescueItemOut(BaseModel):
     excluded: list[ActionOut]
     best_recovery: float
     uplift_vs_doing_nothing: float
+    # What a fixed remaining-life ladder would have picked, versus what the
+    # objective function did pick. Where they differ, the difference is the
+    # argument for the optimiser.
+    ladder_tier: str
+    engine_tier: str | None = None
+    tier_agrees: bool = True
+    # Mandi modal price for this commodity, when AGMARKNET data is loaded.
+    market_reference: dict | None = None
 
 
 class RescueOut(BaseModel):

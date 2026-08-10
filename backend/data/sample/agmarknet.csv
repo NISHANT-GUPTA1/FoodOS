@@ -1,0 +1,67 @@
+State,District,Market,Commodity,Variety,Grade,Arrival_Date,Min_Price,Max_Price,Modal_Price
+Karnataka,Kolar,Kolar,Tomato,Local,FAQ,10/02/2026,1530,2120,1800
+Karnataka,Bangalore,Bangalore,Onion,Bellary,FAQ,10/02/2026,1870,2600,2200
+Karnataka,Bangalore,Bangalore,Potato,Local,FAQ,10/02/2026,1570,2180,1850
+Karnataka,Bangalore,Bangalore,Cauliflower,Local,FAQ,10/02/2026,1280,1770,1500
+Karnataka,Bangalore,Bangalore,Spinach,Local,FAQ,10/02/2026,1190,1650,1400
+Karnataka,Bangalore,Bangalore,Coriander(Leaves),Local,FAQ,10/02/2026,2980,4130,3500
+Karnataka,Bangalore,Bangalore,Green Chilli,Local,FAQ,10/02/2026,3400,4720,4000
+Karnataka,Bangalore,Bangalore,Ginger(Green),Local,FAQ,10/02/2026,6970,9680,8200
+Karnataka,Bangalore,Bangalore,Garlic,Local,FAQ,10/02/2026,10620,14750,12500
+Karnataka,Chikkaballapur,Chikkaballapura,Carrot,Local,FAQ,10/02/2026,2120,2950,2500
+Karnataka,Bangalore,Bangalore,Capsicum,Local,FAQ,10/02/2026,3820,5310,4500
+Karnataka,Bangalore,Bangalore,Cabbage,Local,FAQ,10/02/2026,850,1180,1000
+Karnataka,Bangalore,Bangalore,Brinjal,Local,FAQ,10/02/2026,1700,2360,2000
+Karnataka,Bangalore,Bangalore,Bhindi(Ladies Finger),Local,FAQ,10/02/2026,2550,3540,3000
+Karnataka,Bangalore,Bangalore,Green Peas,Local,FAQ,10/02/2026,3910,5430,4600
+Karnataka,Bangalore,Bangalore,Mint(Pudina),Local,FAQ,10/02/2026,2550,3540,3000
+Karnataka,Bangalore,Bangalore,Curry Leaves,Local,FAQ,10/02/2026,3400,4720,4000
+Karnataka,Bangalore,Bangalore,Lemon,Local,FAQ,10/02/2026,4250,5900,5000
+Karnataka,Bangalore,Bangalore,French Beans (Frasbean),Local,FAQ,10/02/2026,3060,4250,3600
+Karnataka,Bangalore,Bangalore,Mushroom,Local,FAQ,10/02/2026,11900,16520,14000
+Karnataka,Bangalore,Bangalore,Cucumbar(Kheera),Local,FAQ,10/02/2026,1530,2120,1800
+Karnataka,Bangalore,Bangalore,Banana,Yelakki,FAQ,10/02/2026,2380,3300,2800
+Karnataka,Kolar,Kolar,Tomato,Local,FAQ,11/02/2026,1320,1830,1550
+Karnataka,Bangalore,Bangalore,Onion,Bellary,FAQ,11/02/2026,1840,2550,2160
+Karnataka,Bangalore,Bangalore,Potato,Local,FAQ,11/02/2026,1540,2140,1810
+Karnataka,Bangalore,Bangalore,Cauliflower,Local,FAQ,11/02/2026,1250,1730,1470
+Karnataka,Bangalore,Bangalore,Spinach,Local,FAQ,11/02/2026,1160,1620,1370
+Karnataka,Bangalore,Bangalore,Coriander(Leaves),Local,FAQ,11/02/2026,2920,4050,3430
+Karnataka,Bangalore,Bangalore,Green Chilli,Local,FAQ,11/02/2026,3330,4630,3920
+Karnataka,Bangalore,Bangalore,Ginger(Green),Local,FAQ,11/02/2026,6830,9490,8040
+Karnataka,Bangalore,Bangalore,Garlic,Local,FAQ,11/02/2026,10410,14460,12250
+Karnataka,Chikkaballapur,Chikkaballapura,Carrot,Local,FAQ,11/02/2026,2080,2890,2450
+Karnataka,Bangalore,Bangalore,Capsicum,Local,FAQ,11/02/2026,3750,5200,4410
+Karnataka,Bangalore,Bangalore,Cabbage,Local,FAQ,11/02/2026,830,1160,980
+Karnataka,Bangalore,Bangalore,Brinjal,Local,FAQ,11/02/2026,1670,2310,1960
+Karnataka,Bangalore,Bangalore,Bhindi(Ladies Finger),Local,FAQ,11/02/2026,2500,3470,2940
+Karnataka,Bangalore,Bangalore,Green Peas,Local,FAQ,11/02/2026,3830,5320,4510
+Karnataka,Bangalore,Bangalore,Mint(Pudina),Local,FAQ,11/02/2026,2500,3470,2940
+Karnataka,Bangalore,Bangalore,Curry Leaves,Local,FAQ,11/02/2026,3330,4630,3920
+Karnataka,Bangalore,Bangalore,Lemon,Local,FAQ,11/02/2026,4160,5780,4900
+Karnataka,Bangalore,Bangalore,French Beans (Frasbean),Local,FAQ,11/02/2026,3000,4170,3530
+Karnataka,Bangalore,Bangalore,Mushroom,Local,FAQ,11/02/2026,11660,16190,13720
+Karnataka,Bangalore,Bangalore,Cucumbar(Kheera),Local,FAQ,11/02/2026,1500,2080,1760
+Karnataka,Bangalore,Bangalore,Banana,Yelakki,FAQ,11/02/2026,2330,3230,2740
+Karnataka,Kolar,Kolar,Tomato,Local,FAQ,12/02/2026,1100,1530,1300
+Karnataka,Bangalore,Bangalore,Onion,Bellary,FAQ,12/02/2026,1790,2490,2110
+Karnataka,Bangalore,Bangalore,Potato,Local,FAQ,12/02/2026,1510,2100,1780
+Karnataka,Bangalore,Bangalore,Cauliflower,Local,FAQ,12/02/2026,1220,1700,1440
+Karnataka,Bangalore,Bangalore,Spinach,Local,FAQ,12/02/2026,1140,1580,1340
+Karnataka,Bangalore,Bangalore,Coriander(Leaves),Local,FAQ,12/02/2026,2860,3960,3360
+Karnataka,Bangalore,Bangalore,Green Chilli,Local,FAQ,12/02/2026,3260,4530,3840
+Karnataka,Bangalore,Bangalore,Ginger(Green),Local,FAQ,12/02/2026,6690,9290,7870
+Karnataka,Bangalore,Bangalore,Garlic,Local,FAQ,12/02/2026,10200,14160,12000
+Karnataka,Chikkaballapur,Chikkaballapura,Carrot,Local,FAQ,12/02/2026,2040,2830,2400
+Karnataka,Bangalore,Bangalore,Capsicum,Local,FAQ,12/02/2026,3670,5100,4320
+Karnataka,Bangalore,Bangalore,Cabbage,Local,FAQ,12/02/2026,820,1130,960
+Karnataka,Bangalore,Bangalore,Brinjal,Local,FAQ,12/02/2026,1630,2270,1920
+Karnataka,Bangalore,Bangalore,Bhindi(Ladies Finger),Local,FAQ,12/02/2026,2450,3400,2880
+Karnataka,Bangalore,Bangalore,Green Peas,Local,FAQ,12/02/2026,3760,5220,4420
+Karnataka,Bangalore,Bangalore,Mint(Pudina),Local,FAQ,12/02/2026,2450,3400,2880
+Karnataka,Bangalore,Bangalore,Curry Leaves,Local,FAQ,12/02/2026,3260,4530,3840
+Karnataka,Bangalore,Bangalore,Lemon,Local,FAQ,12/02/2026,4080,5660,4800
+Karnataka,Bangalore,Bangalore,French Beans (Frasbean),Local,FAQ,12/02/2026,2940,4080,3460
+Karnataka,Bangalore,Bangalore,Mushroom,Local,FAQ,12/02/2026,11420,15860,13440
+Karnataka,Bangalore,Bangalore,Cucumbar(Kheera),Local,FAQ,12/02/2026,1470,2040,1730
+Karnataka,Bangalore,Bangalore,Banana,Yelakki,FAQ,12/02/2026,2290,3170,2690

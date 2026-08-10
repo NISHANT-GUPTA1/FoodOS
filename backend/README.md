@@ -49,6 +49,10 @@ In order, first one that exists:
 | 2 | `backend/data/sample/*.csv` | fresh clone — committed on purpose |
 | 3 | built-in fixture | `--source fixture`, or neither of the above |
 
+`agmarknet.csv` is the exception: it describes the mandi, not the customer, so it loads
+from whichever of those directories has it regardless of `--source`. Absent is fine —
+`market_reference` just comes back `null`.
+
 Force one with `--source generated | sample | fixture`. The built-in fixture is **B's**,
 not a substitute for A's data — it exists so the engine and API are never blocked.
 
@@ -127,6 +131,7 @@ foodos/
     profiles.py       category -> shelf-life constants (B reference data)
     shelf_life.py     deterministic Q10 fallback
     channels.py       rescue channels (D's content, B defaults)
+    agmarknet.py      AGMARKNET mandi price CSV -> MarketPrice (file, not network)
     sample_data.py    B's built-in fixture
     seed.py           *** python -m foodos.ingest.seed ***
   engine/
@@ -142,6 +147,7 @@ foodos/
     recommendation.py Recommendation lifecycle + acceptance rate
     simulator.py      savings simulator + backtest counterfactual
     tracks.py         retail + production action spaces
+    waterfall.py      cascading diversion tiers — labels, never the ranking
     queries.py        every SELECT lives here
   api/                FastAPI app — 11 screen endpoints + health + upload
 tests/test_engine/

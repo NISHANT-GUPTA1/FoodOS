@@ -31,7 +31,10 @@ def health(session: SessionDep) -> HealthOut:
         version=__version__,
         demo_today=settings.demo_today,
         default_site_id=sites[0].id if sites else None,
-        sites=[SiteOut(id=s.id, name=s.name, type=str(s.type)) for s in sites],
+        sites=[
+            SiteOut(id=s.id, name=s.name, type=str(s.type), geo_id=s.geo_id)
+            for s in sites
+        ],
         seeded=seeded,
     )
 

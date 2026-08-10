@@ -12,7 +12,8 @@ name, so a renamed product never silently splits into two.
 Expected files (all optional except `products.csv`; the loader ingests what is
 present and reports what was missing, so a partial drop still works):
 
-    sites.csv             site_id, name, type, timezone, currency
+    sites.csv             site_id, name, type, timezone, currency, geo_id
+    agmarknet.csv         AGMARKNET mandi price export — see ingest/agmarknet.py
     products.csv          product_id, sku, name, category, uom, unit_cost,
                           unit_price, is_dish, perishable, is_produce,
                           co2e_kg_per_uom, portion_kg, plannable
@@ -130,6 +131,9 @@ def load_all(session: Session, data_dir: Path, today: date) -> dict:
                 org_id=org.id,
                 name=(row.get("name") or key or "Site").strip(),
                 type=stype,
+                # AgStack GeoID, if the source carries one. Stored verbatim,
+                # never derived — B has no boundary geometry to hash.
+                geo_id=(row.get("geo_id") or row.get("geoid") or "").strip() or None,
             )
             session.add(site)
             session.flush()

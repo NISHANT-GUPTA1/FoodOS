@@ -62,6 +62,10 @@ class Site(Base):
     org_id: Mapped[int] = mapped_column(ForeignKey("organization.id"))
     name: Mapped[str] = mapped_column(String(120))
     type: Mapped[SiteType] = mapped_column(String(20), default=SiteType.KITCHEN)
+    # AgStack Asset Registry GeoID — a 16-character geohash-derived key for a
+    # registered field or facility boundary. Carried, never computed: B stores
+    # whatever the source data supplies and nothing else depends on it yet.
+    geo_id: Mapped[str | None] = mapped_column(String(32), nullable=True)
 
     org: Mapped[Organization] = relationship(back_populates="sites")
 
@@ -481,3 +485,35 @@ class RescueOffer(Base):
     )
     sent_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     responded_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+
+
+# --------------------------------------------------------------------------
+# EXTERNAL REFERENCE DATA
+# --------------------------------------------------------------------------
+
+
+class MarketPrice(Base):
+    """A wholesale mandi quotation, as published by AGMARKNET / e-NAM.
+
+    Reference data about the outside world, not an observation of this
+    customer's stock, so it hangs off nothing. Prices arrive per quintal and
+    are stored per kilogram — see `ingest/agmarknet.py`.
+    """
+
+    __tablename__ = "market_price"
+    __table_args__ = (
+        Index("ix_market_price_commodity_date", "commodity", "arrival_date"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    commodity: Mapped[str] = mapped_column(String(64))
+    variety: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    grade: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    state: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    district: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    market: Mapped[str] = mapped_column(String(120))
+    arrival_date: Mapped[date] = mapped_column(Date)
+    min_price_per_kg: Mapped[float] = mapped_column(Float, default=0.0)
+    max_price_per_kg: Mapped[float] = mapped_column(Float, default=0.0)
+    modal_price_per_kg: Mapped[float] = mapped_column(Float, default=0.0)
+    source: Mapped[str] = mapped_column(String(32), default="agmarknet")
