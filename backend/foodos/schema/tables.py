@@ -30,10 +30,14 @@ from foodos.schema.enums import (
     Confidence,
     Horizon,
     InventoryEventType,
+    MaturityStage,
+    PackagingType,
     RecommendationStatus,
     RescueOfferStatus,
+    RiskLevel,
     SiteType,
     Track,
+    TransportMode,
     WasteReason,
     WasteStage,
 )
@@ -517,3 +521,253 @@ class MarketPrice(Base):
     max_price_per_kg: Mapped[float] = mapped_column(Float, default=0.0)
     modal_price_per_kg: Mapped[float] = mapped_column(Float, default=0.0)
     source: Mapped[str] = mapped_column(String(32), default="agmarknet")
+
+
+# --------------------------------------------------------------------------
+# AGRI BATCH — added at H2-3 per FoodOS-Team-Split-v2.md §4.
+#
+# Ruling 1: additive. Nothing above this line is altered, and none of these
+# tables duplicates one that already exists. `Batch` above is a kitchen lot
+# sitting in a storage zone; a `Consignment` is a farm-gate shipment in transit
+# between two places. Different subjects on the same engine — which is the
+# platform claim — so they are separate tables rather than one overloaded one.
+#
+# Shape follows the Batch Profile frozen in Contract 2 §2. Field names match
+# the wire, so the API layer is a projection rather than a translation.
+# --------------------------------------------------------------------------
+
+
+class Consignment(Base, TimestampMixin):
+    """A shipment of one commodity from an origin to a destination.
+
+    `code` is the public identifier the demo says out loud ("T1024"); `id` is
+    the surrogate key everything joins on. Two columns because a judge reads
+    T1024 off the screen and a foreign key should not carry meaning.
+
+    The `state` block of the Batch Profile is stored flat here rather than as
+    JSON: quality_score and field_heat_hours are filtered and sorted on Screen
+    1, and a JSON blob cannot be indexed for that.
+    """
+
+    __tablename__ = "consignment"
+    __table_args__ = (
+        UniqueConstraint("code", name="uq_consignment_code"),
+        Index("ix_consignment_commodity_status", "commodity", "status"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    code: Mapped[str] = mapped_column(String(32))
+    org_id: Mapped[int] = mapped_column(ForeignKey("organization.id"))
+
+    commodity: Mapped[str] = mapped_column(String(64))
+    qty_kg: Mapped[float] = mapped_column(Float)
+    origin: Mapped[str] = mapped_column(String(120))
+    destination: Mapped[str] = mapped_column(String(120))
+    harvested_at: Mapped[datetime] = mapped_column(DateTime)
+    status: Mapped[str] = mapped_column(String(24), default="registered")
+
+    # --- the `state` block of the Batch Profile -----------------------------
+    # Written by A's quality_score() and the questionnaire. B ships a
+    # deterministic placeholder for rows A has not scored yet (§4, H21-26):
+    # an A outage degrades the number, it never 500s the screen.
+    quality_score: Mapped[float | None] = mapped_column(Float, nullable=True)
+    grade: Mapped[str | None] = mapped_column(String(8), nullable=True)
+    maturity: Mapped[MaturityStage | None] = mapped_column(String(8), nullable=True)
+    damage_factor: Mapped[str | None] = mapped_column(String(16), nullable=True)
+    field_heat_hours_over_30c: Mapped[float | None] = mapped_column(Float, nullable=True)
+
+    assessment: Mapped[BatchAssessment | None] = relationship(
+        back_populates="consignment", uselist=False, cascade="all, delete-orphan"
+    )
+    journey: Mapped[ShipmentJourney | None] = relationship(
+        back_populates="consignment", uselist=False, cascade="all, delete-orphan"
+    )
+    weather: Mapped[list[WeatherExposure]] = relationship(
+        back_populates="consignment", cascade="all, delete-orphan"
+    )
+    risk: Mapped[LossRiskScore | None] = relationship(
+        back_populates="consignment", uselist=False, cascade="all, delete-orphan"
+    )
+
+
+class BatchAssessment(Base, TimestampMixin):
+    """What the farmer answered and what the photos showed. 1:1 with a consignment.
+
+    Both sides are JSON on purpose. `answers` is keyed by D's `feature_key`
+    from content/questionnaire/*.yaml, and adding a question there must not
+    need a migration here — that is the whole point of the tree being data.
+    `photo_features` is A's `extract_photo_features()` verbatim.
+
+    `photo_paths` points at files under backend/data/photos/, which §8 does NOT
+    commit. A fresh clone will not have them, and a batch with no photos still
+    has to score, so nothing may treat an empty list as an error.
+    """
+
+    __tablename__ = "batch_assessment"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    consignment_id: Mapped[int] = mapped_column(
+        ForeignKey("consignment.id"), unique=True
+    )
+
+    answers: Mapped[dict] = mapped_column(JSON, default=dict)
+    photo_paths: Mapped[list] = mapped_column(JSON, default=list)
+    photo_features: Mapped[dict] = mapped_column(JSON, default=dict)
+    photo_confidence: Mapped[Confidence | None] = mapped_column(String(8), nullable=True)
+
+    consignment: Mapped[Consignment] = relationship(back_populates="assessment")
+
+
+class ShipmentJourney(Base, TimestampMixin):
+    """How it travels, and the route snapshot it was scored against. 1:1.
+
+    `route_source` carries D's `source` stamp ("snapshot" | "live") straight
+    through to the UI. Ruling 3 says that field is never hidden, so it is a
+    stored column rather than something reconstructed at render time.
+    """
+
+    __tablename__ = "shipment_journey"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    consignment_id: Mapped[int] = mapped_column(
+        ForeignKey("consignment.id"), unique=True
+    )
+
+    transport: Mapped[TransportMode] = mapped_column(
+        String(24), default=TransportMode.OPEN_TRUCK
+    )
+    packaging: Mapped[PackagingType] = mapped_column(
+        String(32), default=PackagingType.VENTILATED_PLASTIC_CRATE
+    )
+    depart_at: Mapped[datetime] = mapped_column(DateTime)
+
+    # --- snapshot from D's external/routes.py::route_profile() --------------
+    distance_km: Mapped[float] = mapped_column(Float, default=0.0)
+    transit_hours: Mapped[float] = mapped_column(Float, default=0.0)
+    road_quality: Mapped[str | None] = mapped_column(String(16), nullable=True)
+    vibration_index: Mapped[float | None] = mapped_column(Float, nullable=True)
+    route_source: Mapped[str] = mapped_column(String(16), default="snapshot")
+
+    consignment: Mapped[Consignment] = relationship(back_populates="journey")
+
+
+class WeatherExposure(Base):
+    """One hour of the route weather the batch was scored against. 1:N.
+
+    Stored per hour rather than as a min/max pair because the Q10 decay
+    integrates over the curve. A 38 degC spike in hour three and a flat 33 degC
+    are not the same journey, and collapsing them to a mean loses exactly the
+    signal the loss model is reading.
+    """
+
+    __tablename__ = "weather_exposure"
+    __table_args__ = (
+        Index("ix_weather_exposure_consignment_hour", "consignment_id", "hour_offset"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    consignment_id: Mapped[int] = mapped_column(ForeignKey("consignment.id"))
+
+    hour_offset: Mapped[int] = mapped_column(Integer)
+    temp_c: Mapped[float] = mapped_column(Float)
+    rh: Mapped[float | None] = mapped_column(Float, nullable=True)
+    solar: Mapped[float | None] = mapped_column(Float, nullable=True)
+    source: Mapped[str] = mapped_column(String(16), default="snapshot")
+
+    consignment: Mapped[Consignment] = relationship(back_populates="weather")
+
+
+class LossRiskScore(Base, TimestampMixin):
+    """A's loss and RUL prediction for one consignment. 1:1.
+
+    `low`/`high` are the quantile band, kept beside the point estimate because
+    Screen 3 renders a band and not a point (§5, H14-20). Dropping them here
+    would force the frontend to invent one.
+
+    `model_run_id` is what makes every figure on screen traceable to a model
+    run — A's H30-36 rule. A row scored by B's deterministic placeholder
+    carries null here, which is how the two are told apart.
+    """
+
+    __tablename__ = "loss_risk_score"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    consignment_id: Mapped[int] = mapped_column(
+        ForeignKey("consignment.id"), unique=True
+    )
+    model_run_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+
+    loss_pct: Mapped[float] = mapped_column(Float)
+    loss_kg: Mapped[float] = mapped_column(Float)
+    low: Mapped[float | None] = mapped_column(Float, nullable=True)
+    high: Mapped[float | None] = mapped_column(Float, nullable=True)
+    rul_hours: Mapped[float] = mapped_column(Float)
+
+    level: Mapped[RiskLevel] = mapped_column(String(8), default=RiskLevel.LOW)
+    confidence: Mapped[Confidence] = mapped_column(String(8), default=Confidence.MEDIUM)
+
+    # A's ranked contributions: [{"name": ..., "contribution": 0.31, "text": ...}]
+    drivers: Mapped[list] = mapped_column(JSON, default=list)
+
+    # Points at one of `plans` below. use_alter because the two tables
+    # reference each other and SQLite needs the constraint added after both
+    # exist rather than inline in CREATE TABLE.
+    best_plan_id: Mapped[int | None] = mapped_column(
+        ForeignKey("candidate_plan.id", use_alter=True, name="fk_risk_best_plan"),
+        nullable=True,
+    )
+
+    consignment: Mapped[Consignment] = relationship(back_populates="risk")
+    plans: Mapped[list[CandidatePlan]] = relationship(
+        back_populates="risk_score",
+        cascade="all, delete-orphan",
+        foreign_keys="CandidatePlan.loss_risk_score_id",
+    )
+
+
+class CandidatePlan(Base, TimestampMixin):
+    """One row of the Action Evaluation Matrix. 1:N off the risk score.
+
+    Every numeric column here is an output of `engine/optimiser.py::score()`.
+    None is computed in the API layer — Ruling 1, and B's hard rule: one
+    `score()`, many action spaces.
+
+    `terms` carries the full breakdown of V(a) so no figure in the matrix is
+    unattributable when a judge asks where it came from. `action_params` is the
+    parameter dict A's orchestrator proposed, kept so an accepted plan can be
+    replayed exactly rather than re-derived.
+
+    Infeasible plans are rows too, carrying `exclusion_reason`. §4 H13-17:
+    every excluded plan is returned with its reason, never hidden.
+    """
+
+    __tablename__ = "candidate_plan"
+    __table_args__ = (
+        Index("ix_candidate_plan_risk", "loss_risk_score_id", "net_value"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    loss_risk_score_id: Mapped[int] = mapped_column(ForeignKey("loss_risk_score.id"))
+
+    label: Mapped[str] = mapped_column(String(200))
+    action_type: Mapped[str] = mapped_column(String(32))
+    horizon: Mapped[Horizon] = mapped_column(String(16), default=Horizon.PREVENT)
+    action_params: Mapped[dict] = mapped_column(JSON, default=dict)
+
+    loss_pct: Mapped[float] = mapped_column(Float, default=0.0)
+    loss_kg: Mapped[float] = mapped_column(Float, default=0.0)
+    logistics_cost: Mapped[float] = mapped_column(Float, default=0.0)
+    gross_revenue: Mapped[float] = mapped_column(Float, default=0.0)
+    net_value: Mapped[float] = mapped_column(Float, default=0.0)
+    delta_vs_baseline: Mapped[float] = mapped_column(Float, default=0.0)
+
+    is_baseline: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_best: Mapped[bool] = mapped_column(Boolean, default=False)
+    feasible: Mapped[bool] = mapped_column(Boolean, default=True)
+    exclusion_reason: Mapped[str | None] = mapped_column(String(240), nullable=True)
+
+    terms: Mapped[dict] = mapped_column(JSON, default=dict)
+
+    risk_score: Mapped[LossRiskScore] = relationship(
+        back_populates="plans", foreign_keys=[loss_risk_score_id]
+    )

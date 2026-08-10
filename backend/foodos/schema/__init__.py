@@ -8,15 +8,25 @@ from foodos.schema.enums import (
     ChannelType,
     Confidence,
     Horizon,
+    MaturityStage,
+    PackagingType,
     InventoryEventType,
     RecommendationStatus,
     RescueOfferStatus,
+    RiskLevel,
     SiteType,
     Track,
+    TransportMode,
     WasteReason,
     WasteStage,
 )
 from foodos.schema.tables import (
+    BatchAssessment,
+    CandidatePlan,
+    Consignment,
+    LossRiskScore,
+    ShipmentJourney,
+    WeatherExposure,
     Batch,
     Channel,
     DemandContext,
@@ -42,6 +52,17 @@ from foodos.schema.tables import (
 )
 
 __all__ = [
+    # agri batch (v2 §4, H2-3)
+    "BatchAssessment",
+    "CandidatePlan",
+    "Consignment",
+    "LossRiskScore",
+    "MaturityStage",
+    "PackagingType",
+    "RiskLevel",
+    "ShipmentJourney",
+    "TransportMode",
+    "WeatherExposure",
     "Base",
     "TimestampMixin",
     "utcnow",

@@ -200,3 +200,148 @@ a coverage far from 0.8 means the confidence band is not honest and should be sa
 3. `null` means "not computed", not zero. `acceptance_rate` is `null` until something
    has been decided; render "—", not "0%".
 4. Build against `contracts/mocks/` until B says an endpoint is live.
+
+
+---
+
+# Contract 2b — the agri batch surface
+
+Added at H2–3 per `FoodOS-Team-Split-v2.md` §2. **Frozen at H3.**
+
+This section is **additive**. Every one of the 11 kitchen endpoints above keeps
+working byte for byte, and `tests/test_engine/` proves it on every run — that
+regression suite is the platform claim, not a slide.
+
+Same base, `http://localhost:8000`. Same error envelope. Same recommendation
+card shape: `GET /api/batches/{id}.recommendation` is the card documented
+above, unchanged, so C reuses `RecommendationCard` rather than writing a second.
+
+## The 11 batch endpoints
+
+| # | Method | Path | Screen |
+| --- | --- | --- | --- |
+| 1 | GET | `/api/questionnaire?commodity=tomato` | 2 — Create Batch, steps 1–3 |
+| 2 | POST | `/api/batches` | 2 — submit answers + logistics |
+| 3 | POST | `/api/batches/{id}/photos` (multipart, 3–5) | 2 — step 4 |
+| 4 | GET | `/api/batches?status=&risk=` | 1 — Command Center |
+| 5 | GET | `/api/batches/{id}` | 3 — Batch Intelligence hero |
+| 6 | GET | `/api/batches/{id}/plans` | 3 — action evaluation matrix |
+| 7 | POST | `/api/batches/{id}/simulate` | 4 — What-If |
+| 8 | POST | `/api/plans/{id}/accept` | any card |
+| 9 | POST | `/api/plans/{id}/override` body `{reason}` | any card |
+| 10 | GET | `/api/markets?commodity=&near=` | 3/4 — destination price context |
+| 11 | GET | `/api/health` | unchanged, already above |
+
+## Shared query parameters
+
+`lambda` behaves exactly as it does on the kitchen endpoints — it is the same
+`DecisionContext.lam` reaching the same `score()`. On this surface it is
+surfaced to C as `w_preserve`; both spellings are accepted and mean one thing.
+There is one objective function.
+
+## `GET /api/batches/{id}` — the Batch Profile
+
+```jsonc
+{
+  "id": "T1024", "commodity": "tomato", "qty_kg": 10000,
+  "origin": "Kolar Collection Hub", "destination": "Delhi APMC",
+  "harvested_at": "2026-08-10T06:00:00", "transport": "open_truck",
+  "packaging": "ventilated_plastic_crate",
+  "state": { "quality_score": 72, "grade": "B+", "maturity": "high",
+             "damage_factor": "moderate", "field_heat_hours_over_30c": 4.2 },
+  "risk": { "loss_pct": 8.4, "loss_kg": 840, "low": 6.7, "high": 10.9,
+            "rul_hours": 31, "level": "HIGH", "confidence": "HIGH" },
+  "drivers": [ { "name": "field_heat_hours", "contribution": 0.31, "text": "..." } ],
+  "best_plan_id": 4,
+  "recommendation": { /* the frozen card shape, unchanged */ }
+}
+```
+
+Field notes C should build against:
+
+| field | meaning |
+| --- | --- |
+| `id` | the public code (`T1024`), not the database key. Safe to display. |
+| `risk.low` / `risk.high` | the quantile band. **Render a band, never a point.** A missing band means the row was scored by the deterministic fallback, not by A's model. |
+| `risk.level` | `LOW` \| `MEDIUM` \| `HIGH`. Drives Screen 1 grouping and the risk colour token. |
+| `risk.confidence` | `LOW` \| `MEDIUM` \| `HIGH`. **Independent of `level`.** A batch can be HIGH risk at LOW confidence; that pairing is the reason the band exists. |
+| `drivers[]` | ranked, `contribution` sums to ~1.0. Model output — never a hardcoded list. |
+| `state.*` | any field may be `null` before the questionnaire or photos land. Screen 3 must render a partial profile rather than blank. |
+| `best_plan_id` | points into `/plans`. `null` until plans are generated. |
+
+## `GET /api/batches/{id}/plans` — the action evaluation matrix
+
+```jsonc
+{ "id": 4, "label": "Split 6T Delhi / 4T Jaipur + depart 6h earlier",
+  "loss_pct": 3.9, "loss_kg": 390, "logistics_cost": 31500,
+  "gross_revenue": 153760, "net_value": 122260,
+  "delta_vs_baseline": 7700, "is_baseline": false, "is_best": true,
+  "feasible": true, "exclusion_reason": null,
+  "terms": { /* every term of V(a), so no number is unattributable */ } }
+```
+
+Rules this endpoint guarantees:
+
+- **The baseline is always present**, exactly one row with `is_baseline: true`.
+  `delta_vs_baseline` on every other row is measured against it.
+- **Infeasible plans are returned, not filtered.** `feasible: false` with a
+  populated `exclusion_reason`. Grey the row and show the reason — a hidden
+  option looks like the engine never considered it.
+- Exactly one row carries `is_best: true`, and it matches
+  `batch.best_plan_id`.
+- `terms` is the full V(a) breakdown. If a judge asks where `net_value` came
+  from, the answer is in this object.
+
+## `POST /api/batches/{id}/simulate` — What-If
+
+Request is exactly Screen 4's four controls:
+
+```jsonc
+{ "departure_shift_hours": -6, "transport": "tarpaulin",
+  "destinations": [{"mandi": "delhi_apmc", "qty_kg": 6000},
+                   {"mandi": "jaipur_apmc", "qty_kg": 4000}] }
+```
+
+Response is **the same plan object** as a `/plans` row, through the same
+`score()`. This is not a similar code path — it is the same one. If the
+simulator and the recommendation ever disagree on stage, one of them is a
+second objective function and the pitch is fiction.
+
+`destinations[].qty_kg` must sum to the batch `qty_kg`; a mismatch returns 422
+rather than silently rescaling.
+
+## `GET /api/questionnaire?commodity=tomato`
+
+Returns D's adaptive tree from `content/questionnaire/{commodity}.yaml` as
+data. Every node carries the `feature_key` it writes into A's `fuse()`.
+
+**C never hardcodes a question in TSX.** Adding a second commodity has to be a
+content change, not a frontend release.
+
+## `POST /api/batches/{id}/photos`
+
+Multipart, 3–5 images. Returns the updated `state` block.
+
+Photos are optional at every step. A batch registered with zero photos still
+scores through A's rule-based fallback, at lower `confidence`. The upload
+endpoint existing is not the same as the upload being required.
+
+## `GET /api/markets?commodity=&near=`
+
+Destination price context from D's `external/agmarknet.py`, per kilogram.
+
+Carries `source: "snapshot" | "live"`. **Render it.** Ruling 3 — the demo runs
+offline, prices come from a committed snapshot, and a stale price shown as
+live is the one number a judge could catch us on.
+
+## Degradation contract
+
+A is the only owner of a model, and A may not have landed one yet. Every field
+above that comes from A has a deterministic placeholder behind the same shape:
+
+- `risk.*` — a Q10 fallback, `model_run_id: null`, `confidence: "LOW"`.
+- `drivers[]` — may be `[]`. Screen 3 hides the block rather than showing an
+  empty chart.
+- `state.quality_score` — may be `null` before the questionnaire.
+
+**An A outage degrades the number. It never 500s the screen.**
