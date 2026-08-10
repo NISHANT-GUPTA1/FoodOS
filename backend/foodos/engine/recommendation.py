@@ -1,194 +1,263 @@
-"""Recommendations: building them, and the accept/override lifecycle.
+"""The Recommendation lifecycle.
 
-A Recommendation is the only thing the UI renders. Whatever horizon produced it, it has
-the same shape — a title, a quantity change, what it saves in three units, why, and a
-confidence. That uniformity is not cosmetic: it is what lets one card component show a
-production cut, a tray move and a B2B transfer without the operator having to learn three
-mental models.
+A recommendation nobody follows has zero impact regardless of its accuracy, so
+acceptance rate is a first-class metric here rather than an afterthought.
 
-An override is not a failure. It is the operator telling us something the model does not
-know, and the acceptance rate on the Impact screen is only worth reporting because
-overriding is a first-class action rather than a way of dismissing a nag.
-
-Owner: Person B.
+`baseline_value` is persisted alongside `recommended_value` because that is the
+only way the saving can be honestly computed — and later verified against what
+actually happened.
 """
 
 from __future__ import annotations
 
-import datetime as dt
-import hashlib
+from datetime import date, datetime, timedelta
 
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from ..config import get_config
-from ..schema import Recommendation, RecommendationOutcome
-
-HORIZON_PREVENT = "PREVENT"
-HORIZON_PRESERVE = "PRESERVE"
-HORIZON_RECOVER = "RECOVER"
-
-
-def make_id(*parts: object) -> str:
-    """Deterministic id, so reseeding does not invalidate a screenshot in the deck."""
-    digest = hashlib.sha1("|".join(str(p) for p in parts).encode("utf-8")).hexdigest()
-    return f"rec_{digest[:12]}"
+from foodos.engine.context import DecisionContext
+from foodos.engine.optimiser import ScoredAction
+from foodos.engine.planner import BatchDecision, build_batch_decisions, build_prevent_plans
+from foodos.engine.prevent import PreventPlan
+from foodos.schema.base import utcnow
+from foodos.schema.enums import Confidence, Horizon, RecommendationStatus
+from foodos.schema.tables import Recommendation, RecommendationOutcome
 
 
-def confidence_from_spread(median: float, spread: float) -> float:
-    """Wide forecast, low confidence. Reported next to the card, never inside the sentence.
-
-    Coefficient of variation mapped onto a 0.45-0.95 band. A dish selling four portions a
-    day is never going to earn high confidence, and pretending otherwise would be the most
-    obvious lie in the product.
-    """
-    if median <= 0:
-        return 0.45
-    cv = spread / median
-    return round(min(0.95, max(0.45, 0.95 - cv)), 2)
+# --------------------------------------------------------------- generation
 
 
-def build(
-    *,
-    date: dt.date,
-    horizon: str,
-    action_kind: str,
-    title: str,
-    subject_id: str,
-    subject_name: str,
-    saving_inr: float,
-    saving_kg: float = 0.0,
-    saving_co2e_kg: float = 0.0,
-    lambda_used: float,
-    why: list[dict],
-    confidence: float = 0.7,
-    current_qty: float | None = None,
-    recommended_qty: float | None = None,
-    qty_unit: str = "portions",
-    channel_id: str | None = None,
-    expires_at: dt.datetime | None = None,
+def _prevent_row(
+    plan: PreventPlan, ctx: DecisionContext, target: date
 ) -> Recommendation:
-    config = get_config()
+    delta = plan.baseline_qty - plan.recommended_qty
+    direction = "Reduce" if delta > 0 else "Increase"
     return Recommendation(
-        id=make_id(date, horizon, subject_id, action_kind, round(lambda_used, 3)),
-        date=date,
-        horizon=horizon,
-        action_kind=action_kind,
-        title=title,
-        subject_id=subject_id,
-        subject_name=subject_name,
-        current_qty=current_qty,
-        recommended_qty=recommended_qty,
-        qty_unit=qty_unit,
-        saving_inr=round(saving_inr, 2),
-        saving_kg=round(saving_kg, 3),
-        saving_co2e_kg=round(saving_co2e_kg, 3),
-        confidence=confidence,
-        why=why,
-        lambda_used=round(lambda_used, 3),
-        expires_at=expires_at
-        or dt.datetime.combine(date, dt.time(11, 30))
-        + dt.timedelta(hours=config.recommendation_ttl_hours),
-        status="open",
-        channel_id=channel_id,
+        site_id=ctx.site_id,
+        business_date=target,
+        horizon=Horizon.PREVENT,
+        subject_type="dish",
+        subject_id=plan.product_id,
+        subject_label=plan.label,
+        action_type="set_prep_qty",
+        action_params={"qty": plan.recommended_qty, "uom": plan.uom},
+        baseline_value=plan.baseline_qty,
+        recommended_value=plan.recommended_qty,
+        expected_saving_kg=plan.saving_kg,
+        expected_saving_money=plan.saving_money,
+        expected_co2e=plan.saving_co2e,
+        confidence=plan.confidence,
+        rationale_facts={**plan.economics, **plan.facts},
+        rationale_text=(
+            f"{direction} tomorrow's {plan.label} from {plan.baseline_qty:.0f} to "
+            f"{plan.recommended_qty:.0f} {plan.uom}. Forecast median "
+            f"{plan.forecast_median:.0f} (10-90 band {plan.forecast_low:.0f}-"
+            f"{plan.forecast_high:.0f}). Optimal service level "
+            f"{plan.q_star:.2f} given a Rs {plan.economics['cu']:.0f} margin "
+            f"and Rs {plan.economics['co_effective']:.0f} cost per unsold unit."
+        ),
+        expires_at=datetime.combine(target, datetime.min.time()) + timedelta(hours=6),
     )
 
 
-def persist(session: Session, recommendations: list[Recommendation]) -> list[Recommendation]:
-    """Upsert by id, preserving any accept/override already recorded against it.
+def _batch_row(
+    decision: BatchDecision, best: ScoredAction, ctx: DecisionContext
+) -> Recommendation:
+    action = best.action
+    risk = decision.risk
+    baseline = decision.ranked.baseline
 
-    Reseeding or changing λ must not silently discard an operator's decision — that is how
-    a system quietly loses the audit trail it is claiming to provide.
-    """
-    stored: list[Recommendation] = []
-    for rec in recommendations:
-        existing = session.get(Recommendation, rec.id)
-        if existing is None:
-            session.add(rec)
-            stored.append(rec)
+    # baseline/recommended are *quantities*, because that is what the UI shows
+    # next to a unit. Doing nothing actions zero; the recommendation actions
+    # `action.qty`. The objective-function values live in the facts below,
+    # where they belong.
+    return Recommendation(
+        site_id=ctx.site_id,
+        business_date=ctx.today,
+        horizon=action.horizon,
+        subject_type="batch",
+        subject_id=risk.batch_id,
+        subject_label=risk.label,
+        action_type=str(action.action_type),
+        action_params=action.params,
+        baseline_value=0.0,
+        recommended_value=round(action.qty, 3),
+        expected_saving_kg=action.kg_food_saved,
+        expected_saving_money=round(best.net_recovery, 2),
+        expected_co2e=action.co2e_saved_kg,
+        confidence=(
+            Confidence.HIGH
+            if risk.waste_probability >= 0.6
+            else Confidence.MEDIUM
+            if risk.waste_probability >= 0.3
+            else Confidence.LOW
+        ),
+        rationale_facts={
+            "rsl_days": risk.rsl_days,
+            "qty_at_risk": risk.qty_at_risk,
+            "waste_probability": risk.waste_probability,
+            "value_at_risk": risk.value_at_risk,
+            "uom": risk.uom,
+            "terms": {k: round(v, 2) for k, v in best.terms.items()},
+            "objective_value": round(best.value, 2),
+            "objective_value_of_doing_nothing": (
+                round(baseline.value, 2) if baseline else 0.0
+            ),
+            **action.facts,
+        },
+        rationale_text=(
+            f"{risk.qty_at_risk:.1f} {risk.uom} of {risk.label} is at risk "
+            f"(remaining life {risk.rsl_days:.1f} days, "
+            f"P(waste) {risk.waste_probability:.0%}, Rs {risk.value_at_risk:.0f} "
+            f"exposed). Best open action: {action.label} — "
+            f"Rs {best.net_recovery:.0f} recovered against Rs 0 for doing nothing."
+        ),
+        expires_at=datetime.combine(ctx.today, datetime.min.time())
+        + timedelta(days=1),
+    )
+
+
+def generate(
+    session: Session,
+    ctx: DecisionContext,
+    target: date | None = None,
+    replace_existing: bool = True,
+) -> list[Recommendation]:
+    """Rebuild today's recommendation set from the current data."""
+    target = target or (ctx.today + timedelta(days=1))
+
+    if replace_existing:
+        session.query(Recommendation).filter(
+            Recommendation.site_id == ctx.site_id,
+            Recommendation.status == RecommendationStatus.PENDING,
+        ).delete(synchronize_session=False)
+
+    rows: list[Recommendation] = []
+
+    for plan in build_prevent_plans(session, ctx, target):
+        if abs(plan.saving_money) < ctx.min_recommendation_value:
             continue
-        for field in (
-            "title", "saving_inr", "saving_kg", "saving_co2e_kg", "confidence",
-            "why", "current_qty", "recommended_qty", "expires_at", "lambda_used",
-        ):
-            setattr(existing, field, getattr(rec, field))
-        stored.append(existing)
+        rows.append(_prevent_row(plan, ctx, target))
+
+    for decision in build_batch_decisions(session, ctx):
+        best = decision.ranked.best
+        if best is None or best.action.is_baseline:
+            continue
+        if decision.ranked.uplift() < ctx.min_recommendation_value:
+            continue
+        rows.append(_batch_row(decision, best, ctx))
+
+    session.add_all(rows)
     session.flush()
-    return stored
+    return rows
 
 
-# --- lifecycle ---------------------------------------------------------------
-
-class RecommendationNotFound(Exception):
-    pass
+# ---------------------------------------------------------------- lifecycle
 
 
-def accept(session: Session, rec_id: str, *, note: str | None = None, now: dt.datetime | None = None) -> Recommendation:
-    rec = session.get(Recommendation, rec_id)
+def accept(session: Session, recommendation_id: int) -> Recommendation:
+    rec = session.get(Recommendation, recommendation_id)
     if rec is None:
-        raise RecommendationNotFound(rec_id)
-    rec.status = "accepted"
-    session.add(
-        RecommendationOutcome(
-            recommendation_id=rec.id,
-            status="accepted",
-            reason=note,
-            ts=now or dt.datetime.now(),
-        )
-    )
+        raise LookupError(f"recommendation {recommendation_id} not found")
+    rec.status = RecommendationStatus.ACCEPTED
     session.flush()
     return rec
 
 
 def override(
     session: Session,
-    rec_id: str,
-    *,
+    recommendation_id: int,
     reason: str,
-    override_qty: float | None = None,
-    now: dt.datetime | None = None,
+    value: float | None = None,
 ) -> Recommendation:
-    rec = session.get(Recommendation, rec_id)
+    """An override is a signal, not a failure.
+
+    A chef who always preps 10% above us on Fridays is telling us something our
+    features missed, so the reason is stored and handed back to A.
+    """
+    rec = session.get(Recommendation, recommendation_id)
     if rec is None:
-        raise RecommendationNotFound(rec_id)
-    rec.status = "overridden"
-    session.add(
-        RecommendationOutcome(
-            recommendation_id=rec.id,
-            status="overridden",
-            reason=reason,
-            override_qty=override_qty,
-            ts=now or dt.datetime.now(),
-        )
-    )
+        raise LookupError(f"recommendation {recommendation_id} not found")
+    rec.status = RecommendationStatus.OVERRIDDEN
+    rec.override_reason = reason
+    rec.override_value = value
     session.flush()
     return rec
 
 
-def acceptance_rate(session: Session) -> float:
-    """Accepted as a share of everything decided. Open cards are not counted either way."""
-    decided = session.scalar(
-        select(func.count(Recommendation.id)).where(Recommendation.status != "open")
-    ) or 0
-    if decided == 0:
-        return 0.0
-    accepted = session.scalar(
-        select(func.count(Recommendation.id)).where(Recommendation.status == "accepted")
-    ) or 0
-    return round(100.0 * accepted / decided, 1)
-
-
-def counts(session: Session) -> tuple[int, int]:
-    shown = session.scalar(select(func.count(Recommendation.id))) or 0
-    accepted = session.scalar(
-        select(func.count(Recommendation.id)).where(Recommendation.status == "accepted")
-    ) or 0
-    return shown, accepted
-
-
-def realised_saving(session: Session) -> float:
-    """Only what was accepted. A saving we recommended and the kitchen declined is not ours."""
-    total = session.scalar(
-        select(func.sum(Recommendation.saving_inr)).where(Recommendation.status == "accepted")
+def expire_stale(session: Session, now: datetime | None = None) -> int:
+    now = now or utcnow()
+    q = session.query(Recommendation).filter(
+        Recommendation.status == RecommendationStatus.PENDING,
+        Recommendation.expires_at.is_not(None),
+        Recommendation.expires_at < now.replace(tzinfo=None),
     )
-    return round(float(total or 0.0), 2)
+    n = q.count()
+    q.update({"status": RecommendationStatus.EXPIRED}, synchronize_session=False)
+    return n
+
+
+# ------------------------------------------------------------------ metrics
+
+
+def acceptance_rate(session: Session, site_id: int) -> dict:
+    rows = session.execute(
+        select(Recommendation.status, func.count(Recommendation.id))
+        .where(Recommendation.site_id == site_id)
+        .group_by(Recommendation.status)
+    ).all()
+    counts = {str(status): int(n) for status, n in rows}
+    accepted = counts.get(RecommendationStatus.ACCEPTED, 0)
+    overridden = counts.get(RecommendationStatus.OVERRIDDEN, 0)
+    decided = accepted + overridden
+    return {
+        "counts": counts,
+        "decided": decided,
+        "accepted": accepted,
+        "overridden": overridden,
+        "acceptance_rate": round(accepted / decided, 4) if decided else None,
+    }
+
+
+def record_outcome(
+    session: Session,
+    recommendation_id: int,
+    actual_value: float,
+    actual_saving_kg: float,
+    actual_saving_money: float,
+) -> RecommendationOutcome:
+    outcome = RecommendationOutcome(
+        recommendation_id=recommendation_id,
+        measured_at=utcnow().replace(tzinfo=None),
+        actual_value=actual_value,
+        actual_saving_kg=actual_saving_kg,
+        actual_saving_money=actual_saving_money,
+    )
+    session.add(outcome)
+    session.flush()
+    return outcome
+
+
+def realised_vs_projected(session: Session, site_id: int) -> dict:
+    rows = session.execute(
+        select(
+            func.sum(Recommendation.expected_saving_money),
+            func.sum(Recommendation.expected_saving_kg),
+            func.sum(RecommendationOutcome.actual_saving_money),
+            func.sum(RecommendationOutcome.actual_saving_kg),
+        )
+        .select_from(Recommendation)
+        .join(
+            RecommendationOutcome,
+            RecommendationOutcome.recommendation_id == Recommendation.id,
+        )
+        .where(Recommendation.site_id == site_id)
+    ).one()
+    proj_money, proj_kg, act_money, act_kg = (float(v or 0) for v in rows)
+    return {
+        "projected_money": round(proj_money, 2),
+        "projected_kg": round(proj_kg, 2),
+        "actual_money": round(act_money, 2),
+        "actual_kg": round(act_kg, 2),
+        "realisation_rate": round(act_money / proj_money, 4) if proj_money else None,
+    }

@@ -1,54 +1,56 @@
-"""FastAPI dependencies.
-
-The service context is built once at import — reading five YAML files on every request
-would be a silly way to spend a demo's latency budget.
-
-Owner: Person B.
-"""
+"""Shared FastAPI dependencies."""
 
 from __future__ import annotations
 
-from collections.abc import Iterator
-from functools import lru_cache
+from datetime import date
+from typing import Annotated
 
-from fastapi import Depends, Query
+from fastapi import Depends, HTTPException, Query
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from ..config import Config, get_config
-from ..engine.service import FoodosService, ServiceContext
-from ..ingest.content import exclusion_reasons, labour_cost, prices_from_pack
-from ..schema import get_session
+from foodos.config import settings
+from foodos.db import get_session
+from foodos.engine.context import DecisionContext, default_context
+from foodos.schema.tables import Site
+
+SessionDep = Annotated[Session, Depends(get_session)]
 
 
-@lru_cache(maxsize=1)
-def get_context() -> ServiceContext:
-    return ServiceContext(
-        prices=prices_from_pack(),
-        labour_cost=labour_cost(),
-        exclusion_reasons=exclusion_reasons(),
-    )
+def resolve_site(session: Session, site_id: int | None) -> Site:
+    if site_id is not None:
+        site = session.get(Site, site_id)
+        if site is None:
+            raise HTTPException(404, f"site {site_id} not found")
+        return site
+    site = session.scalars(select(Site).order_by(Site.id).limit(1)).first()
+    if site is None:
+        raise HTTPException(
+            503, "database is empty — run `python -m foodos.ingest.seed`"
+        )
+    return site
 
 
-def db() -> Iterator[Session]:
-    yield from get_session()
+def get_context(
+    session: SessionDep,
+    site_id: Annotated[int | None, Query(description="defaults to the first site")] = None,
+    lam: Annotated[
+        float | None,
+        Query(
+            ge=0.0,
+            le=5.0,
+            alias="lambda",
+            description=(
+                "Sustainability weight. 0 = pure profit. Moves C_o, which moves "
+                "q*, which moves every quantity in the plan."
+            ),
+        ),
+    ] = None,
+    today: Annotated[date | None, Query(description="override the demo clock")] = None,
+) -> DecisionContext:
+    site = resolve_site(session, site_id)
+    ctx = default_context(site.id, today or settings.demo_today)
+    return ctx.with_lambda(lam)
 
 
-def service(session: Session = Depends(db)) -> FoodosService:
-    return FoodosService(session, get_context(), get_config())
-
-
-def lambda_param(
-    lambda_: float | None = Query(
-        None,
-        alias="lambda",
-        ge=0.0,
-        le=1.0,
-        description="Sustainability weight, 0 to 1. Omitted means the configured default.",
-    ),
-) -> float:
-    """Clamped in exactly one place, and echoed back by every response that uses it."""
-    return get_config().clamp_lambda(lambda_)
-
-
-def config() -> Config:
-    return get_config()
+ContextDep = Annotated[DecisionContext, Depends(get_context)]

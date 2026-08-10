@@ -1,7 +1,4 @@
-"""FoodOS — decision infrastructure for perishable inventory.
+"""FoodOS — B2B Food Waste Intelligence Platform."""
 
-Package skeleton. Person B owns this file and the schema/, engine/, api/ and ingest/
-subpackages; it is created here only so the agents package is importable before H0.5.
-"""
-
+# Shared file. Kept to one line on purpose so A, B and D never conflict here.
 __version__ = "0.1.0"

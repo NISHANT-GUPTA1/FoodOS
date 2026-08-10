@@ -122,7 +122,7 @@ export interface OutcomeResponse {
 
 export const apiPaths = {
   today: '/api/today',
-  why: '/api/why',
+  why: '/api/attribution',
   plan: '/api/plan',
   ledger: '/api/ledger',
   rescue: '/api/rescue',

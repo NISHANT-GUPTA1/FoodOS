@@ -69,7 +69,7 @@ class FoodosApiClient:
         return self.get("/api/today")
 
     def why(self) -> dict[str, Any]:
-        return self.get("/api/why")
+        return self.get("/api/attribution")
 
     def plan(self, lambda_: float = 0.5) -> dict[str, Any]:
         return self.get("/api/plan", **{"lambda": lambda_})
@@ -91,7 +91,7 @@ class FixtureClient:
     #: path -> fixture filename. Update in one place when the contract freezes at H3.
     ROUTES = {
         "/api/today": "today.json",
-        "/api/why": "why.json",
+        "/api/attribution": "why.json",
         "/api/plan": "plan.json",
         "/api/ledger": "ledger.json",
         "/api/rescue": "rescue.json",
@@ -117,7 +117,7 @@ class FixtureClient:
         return self.get("/api/today")
 
     def why(self) -> dict[str, Any]:
-        return self.get("/api/why")
+        return self.get("/api/attribution")
 
     def plan(self, lambda_: float = 0.5) -> dict[str, Any]:
         return self.get("/api/plan", **{"lambda": lambda_})

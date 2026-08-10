@@ -1,109 +1,106 @@
-"""Paths, prices, lambda, and every other constant the engine reads.
+"""Settings and economic defaults.
 
-One place. If a number is hard-coded anywhere in engine/, api/ or ingest/, it is a bug —
-it belongs here or in backend/foodos/content/.
-
-Owner: Person B.
+Everything the objective function needs that is not per-item lives here, so a
+judge can see exactly which numbers are assumptions and which are computed.
 """
 
 from __future__ import annotations
 
-import datetime as dt
 import os
 from dataclasses import dataclass, field
+from datetime import date
 from pathlib import Path
 
-try:
-    from dotenv import load_dotenv
-
-    load_dotenv()
-except Exception:  # pragma: no cover - optional at runtime
-    pass
-
-# backend/foodos/config.py -> backend/
-BACKEND_ROOT = Path(__file__).resolve().parent.parent
+BACKEND_ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = BACKEND_ROOT.parent
-
 DATA_DIR = BACKEND_ROOT / "data"
 SAMPLE_DIR = DATA_DIR / "sample"
-CONTENT_DIR = BACKEND_ROOT / "foodos" / "content"
-CONTRACTS_DIR = REPO_ROOT / "contracts"
-MOCK_DIR = CONTRACTS_DIR / "mock"
-
-DB_PATH = DATA_DIR / "foodos.db"
-DB_URL = f"sqlite:///{DB_PATH}"
-
-#: CSV files the generator writes and the loader reads. Order matters — it is the
-#: dependency order the seed applies them in.
-CSV_FILES = (
-    "demand_context.csv",
-    "sales.csv",
-    "production.csv",
-    "batches.csv",
-    "inventory_events.csv",
-    "waste_events.csv",
-    "zone_temperatures.csv",
-)
 
 
-def _date(name: str, default: str) -> dt.date:
-    return dt.date.fromisoformat(os.getenv(name, default))
+def _env_float(key: str, default: float) -> float:
+    raw = os.environ.get(key)
+    return default if raw is None else float(raw)
+
+
+def _env_str(key: str, default: str) -> str:
+    return os.environ.get(key, default)
 
 
 @dataclass(frozen=True)
-class Config:
-    """Every field is a default_factory so environment changes are picked up per call."""
-
-    # --- paths -------------------------------------------------------------
-    db_url: str = field(default_factory=lambda: os.getenv("FOODOS_DB_URL", DB_URL))
+class Settings:
+    # --- storage -----------------------------------------------------------
+    database_url: str = field(
+        default_factory=lambda: _env_str(
+            "FOODOS_DATABASE_URL", f"sqlite:///{(DATA_DIR / 'foodos.db').as_posix()}"
+        )
+    )
+    # A writes generated CSVs to backend/data/ and commits a copy under
+    # backend/data/sample/. Seed prefers the generated set and falls back to
+    # the committed sample, so a fresh clone is never blocked.
     data_dir: Path = field(default_factory=lambda: DATA_DIR)
-    content_dir: Path = field(default_factory=lambda: CONTENT_DIR)
+    sample_dir: Path = field(default_factory=lambda: SAMPLE_DIR)
 
-    # --- the objective -----------------------------------------------------
-    #: Default sustainability weight. Every endpoint that depends on it takes ?lambda=
-    #: and echoes the value it actually used back in the response.
-    default_lambda: float = field(default_factory=lambda: float(os.getenv("FOODOS_LAMBDA", "0.5")))
-    lambda_min: float = 0.0
-    lambda_max: float = 1.0
+    # --- demo clock --------------------------------------------------------
+    # The demo runs against a fixed dataset, so "today" is pinned rather than
+    # read from the wall clock. Overridable for tests and for the live demo.
+    demo_today: date = field(
+        default_factory=lambda: date.fromisoformat(
+            _env_str("FOODOS_DEMO_TODAY", "2026-02-12")
+        )
+    )
 
-    # --- demo dataset ------------------------------------------------------
-    #: Must be a Tuesday. The NGO channel runs Mon/Wed/Fri, and pathology three depends
-    #: on that exclusion firing. tests/test_engine/test_rescue.py asserts it.
-    demo_date: dt.date = field(default_factory=lambda: _date("FOODOS_DEMO_DATE", "2026-08-11"))
-    history_days: int = field(default_factory=lambda: int(os.getenv("FOODOS_HISTORY_DAYS", "180")))
-    seed: int = field(default_factory=lambda: int(os.getenv("FOODOS_SEED", "20260811")))
+    # --- objective function weights ---------------------------------------
+    # lambda: dimensionless sustainability weight. 0 = pure profit,
+    #         1 = a kilogram of CO2e is priced at co2e_price_per_kg,
+    #         >1 = the operator is willing to pay above market to avoid waste.
+    lam: float = field(default_factory=lambda: _env_float("FOODOS_LAMBDA", 1.0))
+    # mu: weight on non-cash social impact (donation channels only).
+    mu: float = field(default_factory=lambda: _env_float("FOODOS_MU", 0.5))
 
-    # --- forecasting -------------------------------------------------------
-    #: Quantiles LightGBM is trained on. q* lands between 0.53 and 0.81 across the menu,
-    #: so the grid brackets it comfortably and the engine interpolates between levels.
-    forecast_quantiles: tuple[float, ...] = (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
-    backtest_days: int = 28
+    # Rupee value the operator puts on keeping one kilogram of food out of the
+    # bin — the shadow price lambda scales. Derived rather than invented:
+    # full-cost estimates put the environmental externality of wasted food at
+    # roughly 20-30% of its market value, and mid-market produce runs about
+    # Rs 100-200/kg, so Rs 30/kg is the conservative end of that band.
+    # This is the objective weight. CO2e below is *reported*, not optimised.
+    waste_aversion_per_kg: float = field(
+        default_factory=lambda: _env_float("FOODOS_WASTE_AVERSION_PER_KG", 30.0)
+    )
 
-    # --- risk thresholds ---------------------------------------------------
-    critical_rsl_days: float = 1.0
-    warning_rsl_days: float = 2.5
+    co2e_price_per_kg: float = field(
+        default_factory=lambda: _env_float("FOODOS_CO2E_PRICE", 3.0)
+    )  # INR per kg CO2e, for reporting
 
-    # --- recommendations ---------------------------------------------------
-    #: Recommendations worth less than this are noise and are not shown. A manager who
-    #: is handed twenty cards acts on none of them.
-    min_saving_inr: float = 75.0
-    max_recommendations: int = 12
-    recommendation_ttl_hours: int = 14
+    # --- economic defaults, used when an item does not override them -------
+    disposal_cost_per_kg: float = field(
+        default_factory=lambda: _env_float("FOODOS_DISPOSAL_COST_PER_KG", 4.0)
+    )
+    co2e_kg_per_kg_food: float = field(
+        default_factory=lambda: _env_float("FOODOS_CO2E_PER_KG_FOOD", 2.5)
+    )
+    social_value_per_kg_donated: float = field(
+        default_factory=lambda: _env_float("FOODOS_SOCIAL_VALUE_PER_KG", 40.0)
+    )
+
+    # --- feasibility -------------------------------------------------------
+    # Safety buffer added to every channel's lead time before the RSL gate.
+    handling_margin_hours: float = field(
+        default_factory=lambda: _env_float("FOODOS_HANDLING_MARGIN_HOURS", 4.0)
+    )
+    # A recommendation below this rupee value is not worth a human's attention.
+    min_recommendation_value: float = field(
+        default_factory=lambda: _env_float("FOODOS_MIN_REC_VALUE", 50.0)
+    )
+
+    # --- forecasting fallback ---------------------------------------------
+    # Number of Monte Carlo draws used to turn a quantile grid back into a
+    # distribution. Deterministic: the sampler uses a fixed grid, not RNG.
+    distribution_grid: int = 2001
 
     @property
-    def demo_datetime(self) -> dt.datetime:
-        """Service-time on the demo date. Cutoff checks are made against this."""
-        return dt.datetime.combine(self.demo_date, dt.time(11, 30))
-
-    def clamp_lambda(self, value: float | None) -> float:
-        if value is None:
-            return self.default_lambda
-        return max(self.lambda_min, min(self.lambda_max, float(value)))
+    def lambda_(self) -> float:
+        """Alias — `lambda` is a keyword."""
+        return self.lam
 
 
-def get_config() -> Config:
-    return Config()
-
-
-#: Convenience singleton for modules that do not need a fresh read.
-config = get_config()
+settings = Settings()

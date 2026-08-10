@@ -1,370 +1,519 @@
-"""SQLAlchemy tables — the canonical schema.
+"""Canonical schema — design doc §5.
 
-Sixteen entities. This is the shape every other module agrees on, so it is the one file
-worth reading before writing anything else.
-
-Design notes worth knowing:
-
-* Product covers ingredients and dishes both, discriminated by ``kind``. A recipe line
-  points at an ingredient Product; a sales record points at a dish Product. Keeping them
-  in one table is what lets an ingredient shortage and a dish over-production be compared
-  by the same optimiser.
-* Money is REAL, not integer paise. This is a demo, and the rounding error over a 36-hour
-  dataset is smaller than the rounding on the menu prices themselves.
-* Nothing here stores a derived figure that the engine can recompute, with two exceptions:
-  Forecast and RiskScore, which cache expensive model output per day.
-
-Owner: Person B.
+One schema for every track. A restaurant dish, a retail SKU and a manufactured
+product are all `Product`; a prep container, a crate and a production lot are
+all `Batch`. That is what lets one engine serve three tracks.
 """
 
 from __future__ import annotations
 
-import datetime as dt
+from datetime import date, datetime
 
 from sqlalchemy import (
+    JSON,
     Boolean,
     Date,
     DateTime,
     Float,
     ForeignKey,
+    Index,
     Integer,
-    JSON,
     String,
-    Text,
     UniqueConstraint,
 )
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from foodos.schema.base import Base, TimestampMixin
+from foodos.schema.enums import (
+    BatchState,
+    ChannelType,
+    Confidence,
+    Horizon,
+    InventoryEventType,
+    RecommendationStatus,
+    RescueOfferStatus,
+    SiteType,
+    Track,
+    WasteReason,
+    WasteStage,
+)
+
+# --------------------------------------------------------------------------
+# ORGANISATION
+# --------------------------------------------------------------------------
 
 
-class Base(DeclarativeBase):
-    pass
+class Organization(Base):
+    __tablename__ = "organization"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(120))
+    track: Mapped[Track] = mapped_column(String(20), default=Track.KITCHEN)
+    timezone: Mapped[str] = mapped_column(String(40), default="Asia/Kolkata")
+    currency: Mapped[str] = mapped_column(String(8), default="INR")
+
+    sites: Mapped[list["Site"]] = relationship(back_populates="org")
 
 
-# --- reference data ---------------------------------------------------------
+class Site(Base):
+    __tablename__ = "site"
 
-class ShelfLifeProfile(Base):
-    """One per category in content/shelf_life.yaml. The constants behind the RSL model."""
+    id: Mapped[int] = mapped_column(primary_key=True)
+    org_id: Mapped[int] = mapped_column(ForeignKey("organization.id"))
+    name: Mapped[str] = mapped_column(String(120))
+    type: Mapped[SiteType] = mapped_column(String(20), default=SiteType.KITCHEN)
+    # AgStack Asset Registry GeoID — a 16-character geohash-derived key for a
+    # registered field or facility boundary. Carried, never computed: B stores
+    # whatever the source data supplies and nothing else depends on it yet.
+    geo_id: Mapped[str | None] = mapped_column(String(32), nullable=True)
 
-    __tablename__ = "shelf_life_profile"
-
-    id: Mapped[str] = mapped_column(String(40), primary_key=True)  # e.g. "dairy_fresh"
-    base_shelf_life_days: Mapped[float] = mapped_column(Float)
-    ref_temp_c: Mapped[float] = mapped_column(Float)
-    q10: Mapped[float] = mapped_column(Float)
-    cut_life_factor: Mapped[float] = mapped_column(Float)
-    ethylene_producer: Mapped[bool] = mapped_column(Boolean, default=False)
-    ethylene_sensitive: Mapped[bool] = mapped_column(Boolean, default=False)
-    freeze_tolerant: Mapped[bool] = mapped_column(Boolean, default=False)
-    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    org: Mapped[Organization] = relationship(back_populates="sites")
 
 
-class StorageZone(Base):
-    """A fridge. ``typical_temp_c`` is what it actually runs at, which is the whole point."""
-
-    __tablename__ = "storage_zone"
-
-    id: Mapped[str] = mapped_column(String(20), primary_key=True)
-    name: Mapped[str] = mapped_column(String(80))
-    set_temp_c: Mapped[float] = mapped_column(Float)
-    typical_temp_c: Mapped[float] = mapped_column(Float)
-    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
-
-    @property
-    def is_running_warm(self) -> bool:
-        return self.typical_temp_c - self.set_temp_c >= 1.5
+# --------------------------------------------------------------------------
+# CATALOGUE
+# --------------------------------------------------------------------------
 
 
 class Product(Base):
-    """An ingredient or a dish."""
-
     __tablename__ = "product"
+    __table_args__ = (UniqueConstraint("org_id", "sku", name="uq_product_org_sku"),)
 
-    id: Mapped[str] = mapped_column(String(60), primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    org_id: Mapped[int] = mapped_column(ForeignKey("organization.id"))
+    sku: Mapped[str] = mapped_column(String(64))
     name: Mapped[str] = mapped_column(String(120))
-    kind: Mapped[str] = mapped_column(String(12))  # "ingredient" | "dish"
-    category: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    category: Mapped[str] = mapped_column(String(64), default="general")
+    uom: Mapped[str] = mapped_column(String(16), default="kg")
 
-    # ingredient economics
-    unit_cost_per_kg: Mapped[float | None] = mapped_column(Float, nullable=True)
-    co2e_kg_per_kg: Mapped[float | None] = mapped_column(Float, nullable=True)
-    disposal_cost_per_kg: Mapped[float | None] = mapped_column(Float, nullable=True)
-    prep_yield: Mapped[float] = mapped_column(Float, default=1.0)
-    shelf_life_profile_id: Mapped[str | None] = mapped_column(
+    unit_cost: Mapped[float] = mapped_column(Float, default=0.0)
+    unit_price: Mapped[float] = mapped_column(Float, default=0.0)
+    # A's `portion_kg`. Converts a quantity in portions into kilograms.
+    unit_weight_kg: Mapped[float] = mapped_column(Float, default=1.0)
+
+    is_dish: Mapped[bool] = mapped_column(Boolean, default=False)
+    perishable: Mapped[bool] = mapped_column(Boolean, default=True)
+    # Fruit and veg flag, straight from A. Authoritative for the produce share
+    # headline — never infer it from the category string.
+    is_produce: Mapped[bool] = mapped_column(Boolean, default=False)
+    # Per-product CO2e intensity from A, in kg CO2e per unit of measure.
+    # Falls back to the global default only when A has not supplied one.
+    co2e_kg_per_uom: Mapped[float | None] = mapped_column(Float, nullable=True)
+    # Does this product get a PREVENT quantity recommendation? A decides.
+    plannable: Mapped[bool] = mapped_column(Boolean, default=False)
+    shelf_life_profile_id: Mapped[int | None] = mapped_column(
         ForeignKey("shelf_life_profile.id"), nullable=True
     )
 
-    # dish economics — derived at seed time from the bill of materials, never hand-entered
-    price: Mapped[float | None] = mapped_column(Float, nullable=True)
-    portion_g: Mapped[float | None] = mapped_column(Float, nullable=True)
-    station: Mapped[str | None] = mapped_column(String(40), nullable=True)
-    prep_ahead_hours: Mapped[float | None] = mapped_column(Float, nullable=True)
-    is_veg: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
-    food_cost_per_portion: Mapped[float | None] = mapped_column(Float, nullable=True)
-    contribution_margin: Mapped[float | None] = mapped_column(Float, nullable=True)
-    co2e_kg_per_portion: Mapped[float | None] = mapped_column(Float, nullable=True)
-    input_kg_per_portion: Mapped[float | None] = mapped_column(Float, nullable=True)
-    disposal_cost_per_portion: Mapped[float | None] = mapped_column(Float, nullable=True)
+    shelf_life_profile: Mapped["ShelfLifeProfile | None"] = relationship()
+    recipe: Mapped["Recipe | None"] = relationship(
+        back_populates="product", uselist=False
+    )
 
-    shelf_life: Mapped[ShelfLifeProfile | None] = relationship(lazy="joined")
-    recipe: Mapped["Recipe | None"] = relationship(back_populates="dish", uselist=False)
+    @property
+    def margin(self) -> float:
+        """Contribution margin per unit — the underage cost C_u."""
+        return max(self.unit_price - self.unit_cost, 0.0)
 
 
 class Recipe(Base):
     __tablename__ = "recipe"
 
-    id: Mapped[str] = mapped_column(String(60), primary_key=True)
-    dish_id: Mapped[str] = mapped_column(ForeignKey("product.id"), unique=True)
-    portion_g: Mapped[float] = mapped_column(Float)
-    station: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    product_id: Mapped[int] = mapped_column(ForeignKey("product.id"), unique=True)
+    yield_qty: Mapped[float] = mapped_column(Float, default=1.0)
+    yield_uom: Mapped[str] = mapped_column(String(16), default="portion")
 
-    dish: Mapped[Product] = relationship(back_populates="recipe")
+    product: Mapped[Product] = relationship(back_populates="recipe")
     lines: Mapped[list["RecipeLine"]] = relationship(
-        back_populates="recipe", cascade="all, delete-orphan", lazy="selectin"
+        back_populates="recipe", cascade="all, delete-orphan"
     )
 
 
 class RecipeLine(Base):
-    """One ingredient in one dish, in PREPPED weight.
-
-    Purchase quantity is ``qty_kg / product.prep_yield``. That division is the bill of
-    materials explosion, and it is the only place it happens.
-    """
-
     __tablename__ = "recipe_line"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    recipe_id: Mapped[str] = mapped_column(ForeignKey("recipe.id"))
-    ingredient_id: Mapped[str] = mapped_column(ForeignKey("product.id"))
-    qty_kg: Mapped[float] = mapped_column(Float)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    recipe_id: Mapped[int] = mapped_column(ForeignKey("recipe.id"))
+    ingredient_product_id: Mapped[int] = mapped_column(ForeignKey("product.id"))
+    qty: Mapped[float] = mapped_column(Float)
+    uom: Mapped[str] = mapped_column(String(16), default="kg")
+    # Standard culinary yield, e.g. cauliflower 0.58. Actual below this is
+    # avoidable trim, which is the most produce-specific signal in the product.
+    standard_yield_pct: Mapped[float] = mapped_column(Float, default=1.0)
 
     recipe: Mapped[Recipe] = relationship(back_populates="lines")
-    ingredient: Mapped[Product] = relationship(lazy="joined")
-
-    __table_args__ = (UniqueConstraint("recipe_id", "ingredient_id", name="uq_recipe_ingredient"),)
+    ingredient: Mapped[Product] = relationship(foreign_keys=[ingredient_product_id])
 
 
-class Channel(Base):
-    """A recovery route, with the feasibility gate stored as data rather than as code."""
+class ShelfLifeProfile(Base):
+    __tablename__ = "shelf_life_profile"
 
-    __tablename__ = "channel"
-
-    id: Mapped[str] = mapped_column(String(40), primary_key=True)
-    name: Mapped[str] = mapped_column(String(80))
-    type: Mapped[str] = mapped_column(String(30))
-    basis: Mapped[str] = mapped_column(String(20))  # "menu_price" | "food_cost"
-    recovery_factor: Mapped[float] = mapped_column(Float)
-    lead_time_hours: Mapped[float] = mapped_column(Float)
-    min_residual_life_hours: Mapped[float] = mapped_column(Float)
-    min_qty_kg: Mapped[float] = mapped_column(Float, default=0.0)
-    max_qty_kg: Mapped[float | None] = mapped_column(Float, nullable=True)
-    states: Mapped[list] = mapped_column(JSON)
-    allowed_categories: Mapped[list | str] = mapped_column(JSON)
-    available_days: Mapped[list] = mapped_column(JSON)
-    cutoff_hour: Mapped[int] = mapped_column(Integer)
-    requires: Mapped[list] = mapped_column(JSON)
-    co2e_avoided_factor: Mapped[float] = mapped_column(Float, default=1.0)
-    is_baseline: Mapped[bool] = mapped_column(Boolean, default=False)
-    counterparty: Mapped[str | None] = mapped_column(String(80), nullable=True)
-    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    category: Mapped[str] = mapped_column(String(64), unique=True)
+    base_shelf_life_days: Mapped[float] = mapped_column(Float)
+    ref_temp_c: Mapped[float] = mapped_column(Float, default=4.0)
+    q10: Mapped[float] = mapped_column(Float, default=2.5)
+    cut_life_factor: Mapped[float] = mapped_column(Float, default=0.35)
+    ethylene_sensitive: Mapped[bool] = mapped_column(Boolean, default=False)
+    ethylene_emitter: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
-# --- transactional data -----------------------------------------------------
+class StorageZone(Base):
+    __tablename__ = "storage_zone"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    site_id: Mapped[int] = mapped_column(ForeignKey("site.id"))
+    name: Mapped[str] = mapped_column(String(64))
+    mean_temp_c: Mapped[float] = mapped_column(Float, default=4.0)
+    # 'declared' | 'logged' | 'simulated' — never a physical sensor.
+    temp_source: Mapped[str] = mapped_column(String(20), default="declared")
+
+
+# --------------------------------------------------------------------------
+# INVENTORY
+# --------------------------------------------------------------------------
+
 
 class Batch(Base):
-    """A physical lot of one product, in one zone, with an age."""
-
     __tablename__ = "batch"
+    __table_args__ = (Index("ix_batch_site_product", "site_id", "product_id"),)
 
-    id: Mapped[str] = mapped_column(String(30), primary_key=True)
-    product_id: Mapped[str] = mapped_column(ForeignKey("product.id"))
-    zone_id: Mapped[str] = mapped_column(ForeignKey("storage_zone.id"))
-    qty_kg: Mapped[float] = mapped_column(Float)
-    received_at: Mapped[dt.datetime] = mapped_column(DateTime)
-    state: Mapped[str] = mapped_column(String(20), default="raw")  # raw|prepped|cooked|trim
-    is_cut: Mapped[bool] = mapped_column(Boolean, default=False)
-    unit_cost_per_kg: Mapped[float] = mapped_column(Float)
-    is_open: Mapped[bool] = mapped_column(Boolean, default=True)
-    ethylene_exposed: Mapped[bool] = mapped_column(Boolean, default=False)
-    cold_chain_available: Mapped[bool] = mapped_column(Boolean, default=True)
-    unopened_packaging: Mapped[bool] = mapped_column(Boolean, default=False)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    site_id: Mapped[int] = mapped_column(ForeignKey("site.id"))
+    product_id: Mapped[int] = mapped_column(ForeignKey("product.id"))
+    lot_code: Mapped[str] = mapped_column(String(64))
 
-    product: Mapped[Product] = relationship(lazy="joined")
-    zone: Mapped[StorageZone] = relationship(lazy="joined")
+    received_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    produced_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    printed_expiry: Mapped[date | None] = mapped_column(Date, nullable=True)
 
-    def age_days(self, at: dt.datetime) -> float:
-        return max(0.0, (at - self.received_at).total_seconds() / 86400.0)
+    qty_received: Mapped[float] = mapped_column(Float)
+    qty_remaining: Mapped[float] = mapped_column(Float)
+    uom: Mapped[str] = mapped_column(String(16), default="kg")
+
+    storage_zone_id: Mapped[int | None] = mapped_column(
+        ForeignKey("storage_zone.id"), nullable=True
+    )
+    intake_grade: Mapped[float] = mapped_column(Float, default=1.0)  # 0..1
+    state: Mapped[BatchState] = mapped_column(String(16), default=BatchState.WHOLE)
+    unit_cost: Mapped[float] = mapped_column(Float, default=0.0)
+
+    # Written by A's RSL model (open_batches.csv). B ships a deterministic Q10
+    # fallback for rows A has not scored. Never computed inside the engine.
+    rsl_days: Mapped[float | None] = mapped_column(Float, nullable=True)
+    life_used: Mapped[float | None] = mapped_column(Float, nullable=True)
+    rsl_explanation: Mapped[str | None] = mapped_column(String(400), nullable=True)
+
+    product: Mapped[Product] = relationship()
+    storage_zone: Mapped[StorageZone | None] = relationship()
 
 
 class InventoryEvent(Base):
     __tablename__ = "inventory_event"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    batch_id: Mapped[str] = mapped_column(ForeignKey("batch.id"))
-    ts: Mapped[dt.datetime] = mapped_column(DateTime)
-    event_type: Mapped[str] = mapped_column(String(20))  # receive|consume|waste|transfer|adjust
-    qty_kg: Mapped[float] = mapped_column(Float)
-    note: Mapped[str | None] = mapped_column(Text, nullable=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    batch_id: Mapped[int] = mapped_column(ForeignKey("batch.id"))
+    ts: Mapped[datetime] = mapped_column(DateTime)
+    type: Mapped[InventoryEventType] = mapped_column(String(20))
+    qty: Mapped[float] = mapped_column(Float)
+    ref: Mapped[str | None] = mapped_column(String(120), nullable=True)
+
+
+class StorageReading(Base):
+    """Digital storage-condition input. Declared, uploaded or simulated —
+    never read from a physical sensor."""
+
+    __tablename__ = "storage_reading"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    storage_zone_id: Mapped[int] = mapped_column(ForeignKey("storage_zone.id"))
+    ts: Mapped[datetime] = mapped_column(DateTime)
+    temp_c: Mapped[float] = mapped_column(Float)
+    source: Mapped[str] = mapped_column(String(20), default="simulated")
+
+
+# --------------------------------------------------------------------------
+# DEMAND & PRODUCTION
+# --------------------------------------------------------------------------
 
 
 class SalesRecord(Base):
     __tablename__ = "sales_record"
+    __table_args__ = (
+        Index("ix_sales_site_product_date", "site_id", "product_id", "business_date"),
+    )
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    date: Mapped[dt.date] = mapped_column(Date, index=True)
-    dish_id: Mapped[str] = mapped_column(ForeignKey("product.id"), index=True)
-    qty_portions: Mapped[float] = mapped_column(Float)
-    revenue_inr: Mapped[float] = mapped_column(Float)
-
-    __table_args__ = (UniqueConstraint("date", "dish_id", name="uq_sales_date_dish"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    site_id: Mapped[int] = mapped_column(ForeignKey("site.id"))
+    product_id: Mapped[int] = mapped_column(ForeignKey("product.id"))
+    business_date: Mapped[date] = mapped_column(Date)
+    qty: Mapped[float] = mapped_column(Float)
+    revenue: Mapped[float] = mapped_column(Float, default=0.0)
+    channel: Mapped[str] = mapped_column(String(32), default="dine_in")
 
 
 class ProductionRecord(Base):
-    """What the prep sheet said, and what the kitchen actually made.
-
-    The gap between ``planned_portions`` and the forecast is plan drift — pathology one.
-    """
-
     __tablename__ = "production_record"
+    __table_args__ = (
+        Index("ix_prod_site_product_date", "site_id", "product_id", "business_date"),
+    )
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    date: Mapped[dt.date] = mapped_column(Date, index=True)
-    dish_id: Mapped[str] = mapped_column(ForeignKey("product.id"), index=True)
-    planned_portions: Mapped[float] = mapped_column(Float)
-    produced_portions: Mapped[float] = mapped_column(Float)
-
-    __table_args__ = (UniqueConstraint("date", "dish_id", name="uq_production_date_dish"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    site_id: Mapped[int] = mapped_column(ForeignKey("site.id"))
+    product_id: Mapped[int] = mapped_column(ForeignKey("product.id"))
+    business_date: Mapped[date] = mapped_column(Date)
+    planned_qty: Mapped[float] = mapped_column(Float, default=0.0)
+    actual_qty: Mapped[float] = mapped_column(Float, default=0.0)
+    uom: Mapped[str] = mapped_column(String(16), default="portion")
 
 
 class DemandContext(Base):
-    """The exogenous features the forecaster is allowed to see."""
-
     __tablename__ = "demand_context"
+    __table_args__ = (
+        UniqueConstraint("site_id", "business_date", name="uq_demand_ctx"),
+    )
 
-    date: Mapped[dt.date] = mapped_column(Date, primary_key=True)
-    dow: Mapped[int] = mapped_column(Integer)  # 0 = Monday
-    is_weekend: Mapped[bool] = mapped_column(Boolean)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    site_id: Mapped[int] = mapped_column(ForeignKey("site.id"))
+    business_date: Mapped[date] = mapped_column(Date)
+    dow: Mapped[int] = mapped_column(Integer)
     is_holiday: Mapped[bool] = mapped_column(Boolean, default=False)
-    rain_mm: Mapped[float] = mapped_column(Float, default=0.0)
-    temp_c: Mapped[float] = mapped_column(Float, default=28.0)
-    promo: Mapped[bool] = mapped_column(Boolean, default=False)
-    local_event: Mapped[bool] = mapped_column(Boolean, default=False)
+    festival: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    weather_code: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    temp_max_c: Mapped[float | None] = mapped_column(Float, nullable=True)
+    promo_flag: Mapped[bool] = mapped_column(Boolean, default=False)
+    covers: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    footfall: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+
+# --------------------------------------------------------------------------
+# WASTE
+# --------------------------------------------------------------------------
 
 
 class WasteEvent(Base):
     __tablename__ = "waste_event"
+    __table_args__ = (Index("ix_waste_site_date", "site_id", "business_date"),)
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    date: Mapped[dt.date] = mapped_column(Date, index=True)
-    product_id: Mapped[str] = mapped_column(ForeignKey("product.id"))
-    qty_kg: Mapped[float] = mapped_column(Float)
-    #: overproduction | spoilage | trim | plate_waste | supplier
-    reason: Mapped[str] = mapped_column(String(30), index=True)
-    value_inr: Mapped[float] = mapped_column(Float)
-    co2e_kg: Mapped[float] = mapped_column(Float)
-    zone_id: Mapped[str | None] = mapped_column(ForeignKey("storage_zone.id"), nullable=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    site_id: Mapped[int] = mapped_column(ForeignKey("site.id"))
+    business_date: Mapped[date] = mapped_column(Date)
+    product_id: Mapped[int | None] = mapped_column(
+        ForeignKey("product.id"), nullable=True
+    )
+    batch_id: Mapped[int | None] = mapped_column(ForeignKey("batch.id"), nullable=True)
 
-    product: Mapped[Product] = relationship(lazy="joined")
+    qty: Mapped[float] = mapped_column(Float)
+    uom: Mapped[str] = mapped_column(String(16), default="kg")
+    qty_kg: Mapped[float] = mapped_column(Float, default=0.0)
+    value: Mapped[float] = mapped_column(Float, default=0.0)
 
+    reason: Mapped[WasteReason] = mapped_column(String(32))
+    stage: Mapped[WasteStage] = mapped_column(String(24), default=WasteStage.SERVICE)
+    capture_method: Mapped[str] = mapped_column(String(20), default="manual")
+    note: Mapped[str | None] = mapped_column(String(240), nullable=True)
 
-class ZoneTemperature(Base):
-    """Daily mean service-hours temperature per zone. The evidence for pathology two."""
-
-    __tablename__ = "zone_temperature"
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    date: Mapped[dt.date] = mapped_column(Date, index=True)
-    zone_id: Mapped[str] = mapped_column(ForeignKey("storage_zone.id"), index=True)
-    mean_temp_c: Mapped[float] = mapped_column(Float)
-    service_temp_c: Mapped[float] = mapped_column(Float)
-
-    __table_args__ = (UniqueConstraint("date", "zone_id", name="uq_zone_temp"),)
+    product: Mapped[Product | None] = relationship()
 
 
-# --- model output -----------------------------------------------------------
+# --------------------------------------------------------------------------
+# INTELLIGENCE OUTPUT  (written by A, read by B)
+# --------------------------------------------------------------------------
+
+
+class ModelRun(Base):
+    __tablename__ = "model_run"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    model_name: Mapped[str] = mapped_column(String(64))
+    version: Mapped[str] = mapped_column(String(32), default="0.1.0")
+    trained_at: Mapped[datetime] = mapped_column(DateTime)
+    window_start: Mapped[date | None] = mapped_column(Date, nullable=True)
+    window_end: Mapped[date | None] = mapped_column(Date, nullable=True)
+    metrics_json: Mapped[dict] = mapped_column(JSON, default=dict)
+
 
 class Forecast(Base):
+    """Demand *distribution*, never a point estimate."""
+
     __tablename__ = "forecast"
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    date: Mapped[dt.date] = mapped_column(Date, index=True)
-    dish_id: Mapped[str] = mapped_column(ForeignKey("product.id"), index=True)
-    quantile: Mapped[float] = mapped_column(Float)
-    value: Mapped[float] = mapped_column(Float)
-    model_version: Mapped[str] = mapped_column(String(40), default="lgbm-q1")
-    is_backtest: Mapped[bool] = mapped_column(Boolean, default=False)
-
     __table_args__ = (
-        UniqueConstraint("date", "dish_id", "quantile", "is_backtest", name="uq_forecast"),
+        UniqueConstraint(
+            "site_id", "product_id", "target_date", name="uq_forecast_key"
+        ),
     )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    site_id: Mapped[int] = mapped_column(ForeignKey("site.id"))
+    product_id: Mapped[int] = mapped_column(ForeignKey("product.id"))
+    target_date: Mapped[date] = mapped_column(Date)
+    model_run_id: Mapped[int | None] = mapped_column(
+        ForeignKey("model_run.id"), nullable=True
+    )
+
+    q10: Mapped[float] = mapped_column(Float)
+    q25: Mapped[float] = mapped_column(Float)
+    q50: Mapped[float] = mapped_column(Float)
+    q66: Mapped[float] = mapped_column(Float)
+    q75: Mapped[float] = mapped_column(Float)
+    q90: Mapped[float] = mapped_column(Float)
+    expected: Mapped[float] = mapped_column(Float)
 
 
 class RiskScore(Base):
+    """Derived, not modelled — falls out of the forecast distribution + RSL."""
+
     __tablename__ = "risk_score"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    date: Mapped[dt.date] = mapped_column(Date, index=True)
-    batch_id: Mapped[str] = mapped_column(ForeignKey("batch.id"), index=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    batch_id: Mapped[int] = mapped_column(ForeignKey("batch.id"))
+    as_of: Mapped[date] = mapped_column(Date)
     rsl_days: Mapped[float] = mapped_column(Float)
-    risk_pct: Mapped[float] = mapped_column(Float)
-    value_at_risk_inr: Mapped[float] = mapped_column(Float)
-    co2e_at_risk_kg: Mapped[float] = mapped_column(Float)
-
-    batch: Mapped[Batch] = relationship(lazy="joined")
-
-    __table_args__ = (UniqueConstraint("date", "batch_id", name="uq_risk_date_batch"),)
+    expected_consumption_before_expiry: Mapped[float] = mapped_column(Float)
+    qty_at_risk: Mapped[float] = mapped_column(Float)
+    waste_probability: Mapped[float] = mapped_column(Float)
+    value_at_risk: Mapped[float] = mapped_column(Float)
 
 
-class Recommendation(Base):
-    """One card on a screen. Everything the UI renders comes from here."""
+# --------------------------------------------------------------------------
+# DECISION
+# --------------------------------------------------------------------------
+
+
+class Recommendation(Base, TimestampMixin):
+    """The first-class output object.
+
+    `baseline_value` is stored alongside `recommended_value` because that is
+    the only way the saving can be honestly computed and later verified.
+    """
 
     __tablename__ = "recommendation"
+    __table_args__ = (Index("ix_rec_site_status", "site_id", "status"),)
 
-    id: Mapped[str] = mapped_column(String(40), primary_key=True)
-    date: Mapped[dt.date] = mapped_column(Date, index=True)
-    horizon: Mapped[str] = mapped_column(String(10), index=True)  # PREVENT|PRESERVE|RECOVER
-    action_kind: Mapped[str] = mapped_column(String(30))
-    title: Mapped[str] = mapped_column(String(160))
-    subject_id: Mapped[str] = mapped_column(String(60))  # dish id or batch id
-    subject_name: Mapped[str] = mapped_column(String(120))
+    id: Mapped[int] = mapped_column(primary_key=True)
+    site_id: Mapped[int] = mapped_column(ForeignKey("site.id"))
+    business_date: Mapped[date] = mapped_column(Date)
+    horizon: Mapped[Horizon] = mapped_column(String(12))
 
-    current_qty: Mapped[float | None] = mapped_column(Float, nullable=True)
-    recommended_qty: Mapped[float | None] = mapped_column(Float, nullable=True)
-    qty_unit: Mapped[str] = mapped_column(String(20), default="portions")
+    subject_type: Mapped[str] = mapped_column(String(24))  # dish|batch|sku|run
+    subject_id: Mapped[int] = mapped_column(Integer)
+    subject_label: Mapped[str] = mapped_column(String(120), default="")
 
-    saving_inr: Mapped[float] = mapped_column(Float, default=0.0)
-    saving_kg: Mapped[float] = mapped_column(Float, default=0.0)
-    saving_co2e_kg: Mapped[float] = mapped_column(Float, default=0.0)
+    action_type: Mapped[str] = mapped_column(String(32))
+    action_params: Mapped[dict] = mapped_column(JSON, default=dict)
 
-    confidence: Mapped[float] = mapped_column(Float, default=0.7)
-    why: Mapped[list] = mapped_column(JSON, default=list)
-    lambda_used: Mapped[float] = mapped_column(Float)
-    expires_at: Mapped[dt.datetime] = mapped_column(DateTime)
-    status: Mapped[str] = mapped_column(String(20), default="open")  # open|accepted|overridden
-    channel_id: Mapped[str | None] = mapped_column(ForeignKey("channel.id"), nullable=True)
+    baseline_value: Mapped[float] = mapped_column(Float, default=0.0)
+    recommended_value: Mapped[float] = mapped_column(Float, default=0.0)
 
-    outcomes: Mapped[list["RecommendationOutcome"]] = relationship(
-        back_populates="recommendation", cascade="all, delete-orphan", lazy="selectin"
+    expected_saving_kg: Mapped[float] = mapped_column(Float, default=0.0)
+    expected_saving_money: Mapped[float] = mapped_column(Float, default=0.0)
+    expected_co2e: Mapped[float] = mapped_column(Float, default=0.0)
+
+    confidence: Mapped[Confidence] = mapped_column(String(8), default=Confidence.MEDIUM)
+    rationale_facts: Mapped[dict] = mapped_column(JSON, default=dict)
+    rationale_text: Mapped[str] = mapped_column(String(1000), default="")
+
+    status: Mapped[RecommendationStatus] = mapped_column(
+        String(16), default=RecommendationStatus.PENDING
+    )
+    override_reason: Mapped[str | None] = mapped_column(String(400), nullable=True)
+    override_value: Mapped[float | None] = mapped_column(Float, nullable=True)
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    model_run_id: Mapped[int | None] = mapped_column(
+        ForeignKey("model_run.id"), nullable=True
+    )
+
+    outcome: Mapped["RecommendationOutcome | None"] = relationship(
+        back_populates="recommendation", uselist=False, cascade="all, delete-orphan"
     )
 
 
 class RecommendationOutcome(Base):
-    """Accept or override. An override is information, not a failure."""
-
     __tablename__ = "recommendation_outcome"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    recommendation_id: Mapped[str] = mapped_column(ForeignKey("recommendation.id"))
-    status: Mapped[str] = mapped_column(String(20))  # accepted|overridden
-    reason: Mapped[str | None] = mapped_column(Text, nullable=True)
-    override_qty: Mapped[float | None] = mapped_column(Float, nullable=True)
-    ts: Mapped[dt.datetime] = mapped_column(DateTime)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    recommendation_id: Mapped[int] = mapped_column(
+        ForeignKey("recommendation.id"), unique=True
+    )
+    measured_at: Mapped[datetime] = mapped_column(DateTime)
+    actual_value: Mapped[float] = mapped_column(Float, default=0.0)
+    actual_saving_kg: Mapped[float] = mapped_column(Float, default=0.0)
+    actual_saving_money: Mapped[float] = mapped_column(Float, default=0.0)
 
-    recommendation: Mapped[Recommendation] = relationship(back_populates="outcomes")
+    recommendation: Mapped[Recommendation] = relationship(back_populates="outcome")
 
 
-ALL_TABLES = (
-    ShelfLifeProfile, StorageZone, Product, Recipe, RecipeLine, Channel,
-    Batch, InventoryEvent, SalesRecord, ProductionRecord, DemandContext,
-    WasteEvent, ZoneTemperature, Forecast, RiskScore, Recommendation,
-    RecommendationOutcome,
-)
+# --------------------------------------------------------------------------
+# RECOVER
+# --------------------------------------------------------------------------
+
+
+class Channel(Base):
+    __tablename__ = "channel"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    org_id: Mapped[int] = mapped_column(ForeignKey("organization.id"))
+    type: Mapped[ChannelType] = mapped_column(String(24))
+    name: Mapped[str] = mapped_column(String(120))
+    contact: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    distance_km: Mapped[float] = mapped_column(Float, default=0.0)
+    lead_time_hours: Mapped[float] = mapped_column(Float, default=0.0)
+    min_qty: Mapped[float] = mapped_column(Float, default=0.0)
+    max_qty: Mapped[float | None] = mapped_column(Float, nullable=True)
+    accepted_categories: Mapped[list] = mapped_column(JSON, default=list)
+    # Fraction of unit_price recovered through this channel.
+    price_factor: Mapped[float] = mapped_column(Float, default=0.0)
+    fixed_cost: Mapped[float] = mapped_column(Float, default=0.0)
+    cost_per_km: Mapped[float] = mapped_column(Float, default=0.0)
+    # e.g. {"min_intake_grade": 0.6, "requires_whole": true}
+    eligibility_rules: Mapped[dict] = mapped_column(JSON, default=dict)
+    social_value_per_kg: Mapped[float] = mapped_column(Float, default=0.0)
+    active: Mapped[bool] = mapped_column(Boolean, default=True)
+
+
+class RescueOffer(Base):
+    __tablename__ = "rescue_offer"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    batch_id: Mapped[int] = mapped_column(ForeignKey("batch.id"))
+    channel_id: Mapped[int] = mapped_column(ForeignKey("channel.id"))
+    qty: Mapped[float] = mapped_column(Float)
+    expected_recovery: Mapped[float] = mapped_column(Float, default=0.0)
+    status: Mapped[RescueOfferStatus] = mapped_column(
+        String(16), default=RescueOfferStatus.DRAFT
+    )
+    sent_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    responded_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+
+
+# --------------------------------------------------------------------------
+# EXTERNAL REFERENCE DATA
+# --------------------------------------------------------------------------
+
+
+class MarketPrice(Base):
+    """A wholesale mandi quotation, as published by AGMARKNET / e-NAM.
+
+    Reference data about the outside world, not an observation of this
+    customer's stock, so it hangs off nothing. Prices arrive per quintal and
+    are stored per kilogram — see `ingest/agmarknet.py`.
+    """
+
+    __tablename__ = "market_price"
+    __table_args__ = (
+        Index("ix_market_price_commodity_date", "commodity", "arrival_date"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    commodity: Mapped[str] = mapped_column(String(64))
+    variety: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    grade: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    state: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    district: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    market: Mapped[str] = mapped_column(String(120))
+    arrival_date: Mapped[date] = mapped_column(Date)
+    min_price_per_kg: Mapped[float] = mapped_column(Float, default=0.0)
+    max_price_per_kg: Mapped[float] = mapped_column(Float, default=0.0)
+    modal_price_per_kg: Mapped[float] = mapped_column(Float, default=0.0)
+    source: Mapped[str] = mapped_column(String(32), default="agmarknet")
