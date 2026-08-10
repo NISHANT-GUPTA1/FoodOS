@@ -25,6 +25,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from foodos.schema.base import Base, TimestampMixin
 from foodos.schema.enums import (
+    BatchEventType,
+    BatchLifecycle,
     BatchState,
     ChannelType,
     Confidence,
@@ -32,6 +34,7 @@ from foodos.schema.enums import (
     InventoryEventType,
     MaturityStage,
     PackagingType,
+    PartyRole,
     RecommendationStatus,
     RescueOfferStatus,
     RiskLevel,
@@ -564,7 +567,60 @@ class Consignment(Base, TimestampMixin):
     origin: Mapped[str] = mapped_column(String(120))
     destination: Mapped[str] = mapped_column(String(120))
     harvested_at: Mapped[datetime] = mapped_column(DateTime)
-    status: Mapped[str] = mapped_column(String(24), default="registered")
+    status: Mapped[BatchLifecycle] = mapped_column(
+        String(24), default=BatchLifecycle.CREATED
+    )
+
+    # --- identity: the parts that survive a change of hands -----------------
+    # Added with the passport layer. `status` above now carries a
+    # `BatchLifecycle` value rather than a free string; the four Contract 2b
+    # spellings are still what goes on the wire, via
+    # `BatchLifecycle.contract_status`.
+
+    #: Set on a child produced by a split. The code keeps the parent's stem
+    #: (`TOM-KLR-00124-A`), so traceability survives even if this column is
+    #: ever lost — but the join is what queries use.
+    parent_id: Mapped[int | None] = mapped_column(
+        ForeignKey("consignment.id"), nullable=True
+    )
+
+    #: What is still under this identity. Splitting moves mass to the children
+    #: and drops this; a WASTED event drops it too. `qty_kg` stays as
+    #: registered at the farm gate, because the loss story is the difference
+    #: between the two and overwriting `qty_kg` would erase it.
+    qty_kg_remaining: Mapped[float] = mapped_column(Float, default=0.0)
+
+    #: Current custody. Denormalised from the last `BatchHandoff` on purpose:
+    #: the Command Center filters on it, and walking the handoff chain for
+    #: every row of a list screen is a join per row for a value that only
+    #: changes a handful of times in a batch's life.
+    current_owner: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    current_owner_role: Mapped[PartyRole | None] = mapped_column(
+        String(24), nullable=True
+    )
+    current_location: Mapped[str | None] = mapped_column(String(120), nullable=True)
+
+    children: Mapped[list[Consignment]] = relationship(
+        back_populates="parent", cascade="all, delete-orphan"
+    )
+    parent: Mapped[Consignment | None] = relationship(
+        back_populates="children", remote_side=[id]
+    )
+    events: Mapped[list[BatchEvent]] = relationship(
+        back_populates="consignment",
+        cascade="all, delete-orphan",
+        order_by="BatchEvent.occurred_at, BatchEvent.id",
+    )
+    handoffs: Mapped[list[BatchHandoff]] = relationship(
+        back_populates="consignment",
+        cascade="all, delete-orphan",
+        order_by="BatchHandoff.occurred_at, BatchHandoff.id",
+    )
+    snapshots: Mapped[list[BatchStateSnapshot]] = relationship(
+        back_populates="consignment",
+        cascade="all, delete-orphan",
+        order_by="BatchStateSnapshot.sequence",
+    )
 
     # --- the `state` block of the Batch Profile -----------------------------
     # Written by A's quality_score() and the questionnaire. B ships a
@@ -771,3 +827,182 @@ class CandidatePlan(Base, TimestampMixin):
     risk_score: Mapped[LossRiskScore] = relationship(
         back_populates="plans", foreign_keys=[loss_risk_score_id]
     )
+
+
+# --------------------------------------------------------------------------
+# BATCH IDENTITY — the digital passport.
+#
+# `Consignment` above answers "what is this batch and how bad is it right
+# now?". These three answer "what has happened to it, who has held it, and
+# what did we believe at each of those moments?" — which is what makes it an
+# identity rather than a row that gets overwritten.
+#
+# The rule the three enforce together: **nothing mutates a batch silently.**
+# Every change is an append to `batch_event`; every change of hands is an
+# append to `batch_handoff`; every re-score is an append to
+# `batch_state_snapshot`. The columns on `Consignment` are a cache of the
+# latest of each, and could be rebuilt from these tables if they were lost.
+# --------------------------------------------------------------------------
+
+
+class BatchEvent(Base, TimestampMixin):
+    """One thing that happened to a batch. Append-only. 1:N.
+
+    `occurred_at` is when it happened in the world; `created_at` (from the
+    mixin) is when we were told. They differ whenever a transporter reports a
+    delay two hours after being stuck in it, and a timeline that conflates the
+    two shows the batch reacting before the cause.
+
+    `payload` is JSON because the event alphabet is heterogeneous by nature —
+    a DELAY carries `{"duration_hours": 6}` and a TEMPERATURE_EXPOSURE carries
+    `{"temp_c": 41, "hours": 3}`. Giving each a typed column would be a dozen
+    mostly-null columns, and giving them a shared one would mean
+    `duration_hours` sometimes held degrees.
+    """
+
+    __tablename__ = "batch_event"
+    __table_args__ = (
+        Index("ix_batch_event_consignment_time", "consignment_id", "occurred_at"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    consignment_id: Mapped[int] = mapped_column(ForeignKey("consignment.id"))
+
+    type: Mapped[BatchEventType] = mapped_column(String(28))
+    occurred_at: Mapped[datetime] = mapped_column(DateTime)
+    location: Mapped[str | None] = mapped_column(String(120), nullable=True)
+
+    #: Who reported it. Free text and nullable — an FPO clerk is not a user
+    #: account in this system, and demanding one would mean the events that
+    #: matter most never get recorded.
+    actor: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    actor_role: Mapped[PartyRole | None] = mapped_column(String(24), nullable=True)
+
+    #: Mass this event concerns, when it concerns one — a partial diversion or
+    #: a spoilage write-off. Null for events that touch the whole batch.
+    qty_kg: Mapped[float | None] = mapped_column(Float, nullable=True)
+
+    payload: Mapped[dict] = mapped_column(JSON, default=dict)
+
+    #: The lifecycle move this event caused, recorded on the event so the
+    #: timeline can show the transition without re-deriving it.
+    from_status: Mapped[BatchLifecycle | None] = mapped_column(
+        String(24), nullable=True
+    )
+    to_status: Mapped[BatchLifecycle | None] = mapped_column(String(24), nullable=True)
+
+    #: The snapshot this event produced, when it triggered a re-score. Null for
+    #: events that do not change the physics — see `BatchEventType.rescores`.
+    #:
+    #: `ondelete="SET NULL"` because events and snapshots are siblings, both
+    #: cascaded from the consignment, and nothing orders one before the other.
+    #: Without it, deleting a batch can remove a snapshot while an event still
+    #: points at it and the foreign key fails — which makes a batch
+    #: undeletable, arbitrarily, depending on collection ordering.
+    snapshot_id: Mapped[int | None] = mapped_column(
+        ForeignKey(
+            "batch_state_snapshot.id",
+            use_alter=True,
+            name="fk_event_snapshot",
+            ondelete="SET NULL",
+        ),
+        nullable=True,
+    )
+
+    consignment: Mapped[Consignment] = relationship(back_populates="events")
+
+
+class BatchHandoff(Base, TimestampMixin):
+    """A change of custody. Append-only. 1:N.
+
+    A separate table rather than a HANDOFF event's payload because custody is
+    queried as a chain — "who has held this batch, in order" — and a chain of
+    JSON blobs cannot be joined against parties or filtered on a role.
+    The HANDOFF `BatchEvent` is still written alongside, so the timeline stays
+    complete; this table is the structured view of the same fact.
+
+    Note what is *not* here: a new batch id. The transporter does not create a
+    batch. `TOM-KLR-00124` at the farm gate and `TOM-KLR-00124` at the mandi
+    are the same identity, and that is the entire point of the layer.
+    """
+
+    __tablename__ = "batch_handoff"
+    __table_args__ = (
+        Index("ix_batch_handoff_consignment_time", "consignment_id", "occurred_at"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    consignment_id: Mapped[int] = mapped_column(ForeignKey("consignment.id"))
+
+    from_party: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    from_role: Mapped[PartyRole | None] = mapped_column(String(24), nullable=True)
+    to_party: Mapped[str] = mapped_column(String(120))
+    to_role: Mapped[PartyRole] = mapped_column(String(24))
+
+    occurred_at: Mapped[datetime] = mapped_column(DateTime)
+    location: Mapped[str | None] = mapped_column(String(120), nullable=True)
+
+    #: Mass accepted. Equal to the batch's remaining mass in the ordinary case;
+    #: less when a receiver rejects part of a load, which is a real and common
+    #: event at a mandi gate and one the loss ledger has to be able to express.
+    qty_kg: Mapped[float] = mapped_column(Float)
+
+    note: Mapped[str | None] = mapped_column(String(400), nullable=True)
+
+    consignment: Mapped[Consignment] = relationship(back_populates="handoffs")
+
+
+class BatchStateSnapshot(Base, TimestampMixin):
+    """What we believed about the batch at one moment. Append-only. 1:N.
+
+    `LossRiskScore` is 1:1 and holds the *current* belief; this is the history
+    of it. Both exist because the two questions are different: Screen 3 asks
+    "what is the risk now", and the passport asks "what did the model say at
+    dispatch, and what does it say after the delay" — which is the before/after
+    the whole demo turns on, and which a 1:1 row overwrites.
+
+    Nothing ever updates a row of this table. A correction is a new snapshot.
+
+    `sequence` is a per-batch counter rather than a global one so that
+    "snapshot 1" means "the state it was registered in" for every batch, which
+    is how the passport labels it.
+    """
+
+    __tablename__ = "batch_state_snapshot"
+    __table_args__ = (
+        UniqueConstraint(
+            "consignment_id", "sequence", name="uq_batch_snapshot_sequence"
+        ),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    consignment_id: Mapped[int] = mapped_column(ForeignKey("consignment.id"))
+    sequence: Mapped[int] = mapped_column(Integer)
+
+    #: World-time this belief describes, not wall-clock time it was computed.
+    as_of: Mapped[datetime] = mapped_column(DateTime)
+    reason: Mapped[str] = mapped_column(String(120), default="created")
+    status: Mapped[BatchLifecycle] = mapped_column(String(24))
+    location: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    qty_kg: Mapped[float] = mapped_column(Float)
+
+    quality_score: Mapped[float | None] = mapped_column(Float, nullable=True)
+    loss_pct: Mapped[float | None] = mapped_column(Float, nullable=True)
+    loss_kg: Mapped[float | None] = mapped_column(Float, nullable=True)
+    low: Mapped[float | None] = mapped_column(Float, nullable=True)
+    high: Mapped[float | None] = mapped_column(Float, nullable=True)
+    rul_hours: Mapped[float | None] = mapped_column(Float, nullable=True)
+    level: Mapped[RiskLevel | None] = mapped_column(String(8), nullable=True)
+    confidence: Mapped[Confidence | None] = mapped_column(String(8), nullable=True)
+
+    #: Null when the row came from B's deterministic fallback rather than A's
+    #: model — the same tell as on `LossRiskScore`, kept per snapshot so a
+    #: passport can say which of its own entries were modelled.
+    model_run_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+
+    #: The `base` dict handed to `agri.predict()`. Kept verbatim so any
+    #: snapshot can be replayed and audited rather than taken on trust.
+    inputs: Mapped[dict] = mapped_column(JSON, default=dict)
+    drivers: Mapped[list] = mapped_column(JSON, default=list)
+
+    consignment: Mapped[Consignment] = relationship(back_populates="snapshots")

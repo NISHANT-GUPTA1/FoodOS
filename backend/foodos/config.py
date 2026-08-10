@@ -40,6 +40,16 @@ class Settings:
     data_dir: Path = field(default_factory=lambda: DATA_DIR)
     sample_dir: Path = field(default_factory=lambda: SAMPLE_DIR)
 
+    # --- batch passport ----------------------------------------------------
+    # What a QR code resolves to. It is printed onto a crate label that then
+    # leaves the building, so it has to be an absolute URL the scanning phone
+    # can reach — a relative path or `localhost` scans fine and then resolves
+    # to nothing. Set FOODOS_PUBLIC_BASE_URL to the deployed origin; the
+    # default points at the dev frontend so the demo works out of the box.
+    public_base_url: str = field(
+        default_factory=lambda: _env_str("FOODOS_PUBLIC_BASE_URL", "http://localhost:5173")
+    )
+
     # --- demo clock --------------------------------------------------------
     # The demo runs against a fixed dataset, so "today" is pinned rather than
     # read from the wall clock. Overridable for tests and for the live demo.

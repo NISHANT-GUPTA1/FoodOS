@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   List,
   PackageSearch,
+  QrCode,
   Settings,
   ShieldCheck,
   SlidersHorizontal,
@@ -65,6 +66,12 @@ export const BATCH_NAV: NavGroup = {
       label: 'What-If',
       description: 'Move a lever, watch the loss move',
       icon: SlidersHorizontal,
+    },
+    {
+      to: '/batches/TOM-KLR-00001/passport',
+      label: 'Batch Passport',
+      description: 'Identity, custody chain and full event history',
+      icon: QrCode,
     },
   ],
 }
