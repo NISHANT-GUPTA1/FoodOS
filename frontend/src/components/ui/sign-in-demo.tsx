@@ -2,21 +2,25 @@ import { useNavigate } from 'react-router-dom';
 import { SignInPage } from "@/components/ui/sign-in";
 import type { Testimonial } from "@/components/ui/sign-in";
 
+// Avatars are inline SVG initials, not remote photos. These were Unsplash
+// URLs on the one screen that is guaranteed to be projected first, and the
+// H34 rehearsal runs with the wifi off — three broken image frames above the
+// login form is a bad opening line.
 const foodosTestimonials: Testimonial[] = [
   {
-    avatarSrc: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&q=80",
+    avatarSrc: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIj48cmVjdCB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgcng9Ijc1IiBmaWxsPSIjMDQ3ODU3Ii8+PHRleHQgeD0iNzUiIHk9Ijc1IiBmb250LWZhbWlseT0iSW50ZXIsc3lzdGVtLXVpLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNTgiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIj5TQzwvdGV4dD48L3N2Zz4=",
     name: "Sarah Chen",
     handle: "@sarah_foodos",
     text: "FoodOS reduced our kitchen prep waste by 34% in our first month across 12 locations."
   },
   {
-    avatarSrc: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&q=80",
+    avatarSrc: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIj48cmVjdCB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgcng9Ijc1IiBmaWxsPSIjMGY3NjZlIi8+PHRleHQgeD0iNzUiIHk9Ijc1IiBmb250LWZhbWlseT0iSW50ZXIsc3lzdGVtLXVpLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNTgiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIj5NSjwvdGV4dD48L3N2Zz4=",
     name: "Marcus Johnson",
     handle: "@marcustech",
     text: "The decision intelligence spine and RSL tracking save us thousands of rupees daily."
   },
   {
-    avatarSrc: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&q=80",
+    avatarSrc: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIj48cmVjdCB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgcng9Ijc1IiBmaWxsPSIjMDY1ZjQ2Ii8+PHRleHQgeD0iNzUiIHk9Ijc1IiBmb250LWZhbWlseT0iSW50ZXIsc3lzdGVtLXVpLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNTgiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIj5FUjwvdGV4dD48L3N2Zz4=",
     name: "Elena Rostova",
     handle: "@elena_ops",
     text: "Automated B2B rescue rerouting is intuitive, reliable, and keeps inventory fresh."

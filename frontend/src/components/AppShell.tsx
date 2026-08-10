@@ -104,16 +104,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="border-t border-slate-300/80 px-3 py-4">
           <ul className="flex flex-col gap-1">
             <li>
-              <a className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-700 transition hover:bg-slate-200/60 hover:text-slate-900" href="#">
+              <NavLink
+                to="/settings"
+                className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-700 transition hover:bg-slate-200/60 hover:text-slate-900"
+              >
                 <ShieldCheck className="h-4 w-4 text-slate-500" />
                 <span>Support</span>
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-700 transition hover:bg-slate-200/60 hover:text-slate-900" href="#">
+              <NavLink
+                to="/ledger"
+                className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-700 transition hover:bg-slate-200/60 hover:text-slate-900"
+              >
                 <History className="h-4 w-4 text-slate-500" />
                 <span>Archive</span>
-              </a>
+              </NavLink>
             </li>
           </ul>
         </div>
@@ -163,7 +169,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <Bell className="h-5 w-5" />
             </button>
 
-            <button className="p-2.5 rounded-2xl border border-slate-300 bg-white text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 shadow-sm" aria-label="Security">
+            {/* Was inert. Points at the status modal rather than nowhere — a
+                shield that does nothing reads as a broken permission check. */}
+            <button
+              type="button"
+              onClick={() => setIsSystemStatusModalOpen(true)}
+              className="p-2.5 rounded-2xl border border-slate-300 bg-white text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 shadow-sm"
+              aria-label="Security and data provenance"
+              title="Data provenance and connector status"
+            >
               <ShieldCheck className="h-5 w-5" />
             </button>
 

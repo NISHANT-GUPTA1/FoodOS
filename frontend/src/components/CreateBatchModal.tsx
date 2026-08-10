@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   ChevronLeft,
   ChevronRight,
@@ -22,14 +22,33 @@ export function CreateBatchModal({ isOpen, onClose, onBatchCreated }: CreateBatc
   const [sunlightExposure, setSunlightExposure] = useState('2–5 Hours')
   const [packaging, setPackaging] = useState('Ventilated Plastic Crates')
   const [transportType, setTransportType] = useState('Open Truck')
-  const [uploadedPhotos] = useState<string[]>([
-    'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=300&q=80',
-    'https://images.unsplash.com/photo-1546470427-e26264be0b11?w=300&q=80',
-    'https://images.unsplash.com/photo-1582284540020-8acbe03f4924?w=300&q=80',
-  ])
+  /**
+   * Starts empty, and fills from the file picker below.
+   *
+   * These were three Unsplash URLs. Two problems with that: the button beside
+   * them did nothing, so the step only looked interactive; and Ruling 3's H34
+   * rehearsal runs with wifi off, where remote thumbnails render as broken
+   * images on a projector. Files chosen here become data URLs and never leave
+   * the browser.
+   */
+  const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([])
+  const photoInputRef = useRef<HTMLInputElement>(null)
   const [origin, setOrigin] = useState('Kolar Collection Hub (Karnataka)')
   const [destination, setDestination] = useState('Delhi APMC Mandi')
   const [isGenerating, setIsGenerating] = useState(false)
+
+  /** Read the chosen files into data URLs. Contract 2b takes 3-5, and a batch
+   *  with none still scores — so this never blocks, it only adds. */
+  function onPhotosChosen(event: React.ChangeEvent<HTMLInputElement>) {
+    const chosen = Array.from(event.target.files ?? []).slice(0, 5)
+    chosen.forEach((file) => {
+      const reader = new FileReader()
+      reader.onload = () =>
+        setUploadedPhotos((current) => [...current, String(reader.result)].slice(0, 5))
+      reader.readAsDataURL(file)
+    })
+    event.target.value = ''
+  }
 
   if (!isOpen) return null
 
@@ -291,9 +310,24 @@ export function CreateBatchModal({ isOpen, onClose, onBatchCreated }: CreateBatc
                   </div>
                 ))}
 
-                <button className="flex h-28 w-28 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-400 bg-slate-50 text-slate-500 hover:bg-slate-100 hover:text-slate-800 transition">
+                <input
+                  ref={photoInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={onPhotosChosen}
+                />
+                <button
+                  type="button"
+                  onClick={() => photoInputRef.current?.click()}
+                  disabled={uploadedPhotos.length >= 5}
+                  className="flex h-28 w-28 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-400 bg-slate-50 text-slate-500 hover:bg-slate-100 hover:text-slate-800 transition disabled:cursor-not-allowed disabled:opacity-50"
+                >
                   <Upload className="h-6 w-6 text-emerald-600" />
-                  <span className="mt-1 text-[11px] font-bold">Add Photo</span>
+                  <span className="mt-1 text-[11px] font-bold">
+                    {uploadedPhotos.length >= 5 ? 'Max 5' : 'Add Photo'}
+                  </span>
                 </button>
               </div>
 

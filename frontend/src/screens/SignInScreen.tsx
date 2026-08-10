@@ -58,9 +58,15 @@ export function SignInScreen() {
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
                 Password
               </label>
-              <a href="#" className="text-xs text-emerald-400 hover:underline">
+              {/* This screen is not routed today (sign-in-demo is), but the
+                  link would jump to the top of the page the moment it is. */}
+              <button
+                type="button"
+                onClick={() => alert('Password reset is not part of the demo build.')}
+                className="text-xs text-emerald-400 hover:underline"
+              >
                 Forgot password?
-              </a>
+              </button>
             </div>
             <div className="relative">
               <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />

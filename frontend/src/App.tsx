@@ -14,15 +14,18 @@ import { CommandCenterScreen } from './screens/batch/CommandCenterScreen'
 import { CreateBatchScreen } from './screens/batch/CreateBatchScreen'
 import { WhatIfScreen } from './screens/batch/WhatIfScreen'
 import SignInPageDemo from '@/components/ui/sign-in-demo'
-import DemoOne from '@/components/ui/demo'
 
 export function App() {
   return (
     <Routes>
       <Route path="/" element={<SignInPageDemo />} />
       <Route path="/signin" element={<SignInPageDemo />} />
-      <Route path="/login" element={<DemoOne />} />
-      <Route path="/demo" element={<DemoOne />} />
+      {/* /login and /demo pointed at a copied template that still read
+          "you agree to creating a Vercel account", carried six buttons with no
+          handlers, and pulled three.js from a CDN. They now reach the real
+          sign-in, which is already the root route. */}
+      <Route path="/login" element={<SignInPageDemo />} />
+      <Route path="/demo" element={<SignInPageDemo />} />
       <Route
         path="*"
         element={

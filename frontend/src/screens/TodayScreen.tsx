@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { ArrowRight, Check, ChevronRight, Clock3, Coins, RefreshCw, Scale, ShieldCheck } from 'lucide-react'
-import { fetchTodayDashboard } from '../api/mockApi'
+import { acceptRecommendation, fetchTodayDashboard, overrideRecommendation } from '../api/mockApi'
 import { KpiCard } from '../components/KpiCard'
 import { RecommendationCard } from '../components/RecommendationCard'
 import { EmptyState, ErrorState, LoadingState } from '../components/StatePanel'
@@ -12,6 +12,17 @@ export function TodayScreen() {
     queryKey: ['today-dashboard'],
     queryFn: fetchTodayDashboard,
   })
+
+  // The hero panel restates the top-ranked recommendation, so its two buttons
+  // drive the same lifecycle as the card's. They were inert before, which on
+  // the demo path meant the headline call to action did nothing at all.
+  const hero = data?.recommendations?.[0]
+  const accept = useMutation({ mutationFn: () => acceptRecommendation(hero!.id) })
+  const override = useMutation({
+    mutationFn: () => overrideRecommendation(hero!.id, 'Overridden from the Today hero'),
+  })
+  const heroOutcome = accept.data?.status ?? override.data?.status
+  const heroPending = accept.isPending || override.isPending
 
   if (isLoading) {
     return <LoadingState title="Loading today’s recommendations" description="Pulling the latest mock recommendations into the shell." />
@@ -103,13 +114,30 @@ export function TodayScreen() {
               </div>
 
               <div className="mt-8 flex gap-4">
-                <button className="flex-1 border-2 border-[#c4c7c8] bg-[#fcf8f8] py-4 text-sm font-bold uppercase text-[#1c1b1b] transition hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#ef4444]">
-                  Override
+                <button
+                  type="button"
+                  onClick={() => override.mutate()}
+                  disabled={!hero || heroPending || Boolean(heroOutcome)}
+                  className="flex-1 border-2 border-[#c4c7c8] bg-[#fcf8f8] py-4 text-sm font-bold uppercase text-[#1c1b1b] transition hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#ef4444] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+                >
+                  {override.isPending ? 'Overriding…' : 'Override'}
                 </button>
-                <button className="flex-1 border border-[#1c1b1b] bg-[#f8fafc] py-4 text-sm font-bold uppercase text-[#0f172a] transition hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#10b981]">
-                  Accept Plan
+                <button
+                  type="button"
+                  onClick={() => accept.mutate()}
+                  disabled={!hero || heroPending || Boolean(heroOutcome)}
+                  className="flex-1 border border-[#1c1b1b] bg-[#f8fafc] py-4 text-sm font-bold uppercase text-[#0f172a] transition hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#10b981] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+                >
+                  {accept.isPending ? 'Accepting…' : 'Accept Plan'}
                 </button>
               </div>
+              {(heroOutcome || accept.isError || override.isError) && (
+                <p className="mt-3 text-sm text-[#444748]">
+                  {accept.isError || override.isError
+                    ? 'That did not save. The recommendation is unchanged.'
+                    : `Marked ${heroOutcome}. It stays on the list until the next refresh.`}
+                </p>
+              )}
             </div>
           </div>
         </div>
