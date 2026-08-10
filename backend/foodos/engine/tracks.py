@@ -46,6 +46,12 @@ def retail_view(session: Session, ctx: DecisionContext, limit: int = 12) -> list
         out.append(
             {
                 "batch_id": risk.batch_id,
+                # Additive. A store's queue names the crate the same way the
+                # farm gate did, so "the same engine, a different node" is
+                # something a judge can verify against a code on a box rather
+                # than a claim on a slide.
+                "batch_code": risk.batch_code,
+                "origin": risk.origin,
                 "product": risk.label,
                 "qty_on_hand": risk.qty_on_hand,
                 "uom": risk.uom,

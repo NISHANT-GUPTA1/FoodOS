@@ -8,6 +8,7 @@ import { RecommendationCard } from '../../components/RecommendationCard'
 import { SectionHeader } from '../../components/SectionHeader'
 import { EmptyState, ErrorState, LoadingState } from '../../components/StatePanel'
 import { ConfidenceBand } from '../../components/batch/ConfidenceBand'
+import { DownstreamLots } from '../../components/batch/DownstreamLots'
 import { DriverBars } from '../../components/batch/DriverBars'
 import { PlanMatrixTable } from '../../components/batch/PlanMatrixTable'
 import { RiskBadge } from '../../components/batch/RiskBadge'
@@ -122,6 +123,11 @@ export function BatchIntelligenceScreen() {
           description="The planner returned no alternatives for this consignment — the booked lane is the only feasible one."
         />
       )}
+
+      {/* The batch's life after the destination. Renders nothing when the
+          identity endpoints are unreachable, so Screen 3 degrades rather than
+          failing on a batch that has not been received anywhere yet. */}
+      <DownstreamLots code={profile.id} />
 
       <MarketPanel
         markets={markets.data}

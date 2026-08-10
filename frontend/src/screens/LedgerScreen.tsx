@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { EmptyState, ErrorState, LoadingState } from '../components/StatePanel'
 import { fetchLedgerDashboard } from '../api/mockApi'
+import { ProvenanceChip } from '../components/batch/DownstreamLots'
 import { SectionHeader } from '../components/SectionHeader'
 
 export function LedgerScreen() {
@@ -48,7 +49,14 @@ export function LedgerScreen() {
           <tbody className="divide-y divide-[#c4c7c8] bg-white">
             {data.batches.map((row) => (
               <tr key={row.batch} className="text-[#1c1b1b]">
-                <td className="px-4 py-4 font-medium text-[#1c1b1b]">{row.batch}</td>
+                <td className="px-4 py-4 font-medium text-[#1c1b1b]">
+                  <span className="block">{row.batch}</span>
+                  {/* Renders only for stock that arrived on a tracked
+                      consignment. The kitchen is a different node with a
+                      different action space, and it still names the crate the
+                      way the farm gate did. */}
+                  <ProvenanceChip batchCode={row.batchCode ?? null} origin={row.origin} />
+                </td>
                 <td className="px-4 py-4">{row.sku}</td>
                 <td className="px-4 py-4">{row.qtyKg} kg</td>
                 <td className="px-4 py-4">

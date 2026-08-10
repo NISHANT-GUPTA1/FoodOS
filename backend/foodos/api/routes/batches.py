@@ -29,6 +29,7 @@ from foodos.config import DATA_DIR
 from foodos.engine import agriplan
 from foodos.schema import (
     BatchAssessment,
+    BatchLifecycle,
     CandidatePlan,
     Confidence,
     Consignment,
@@ -96,6 +97,24 @@ def _risk_level(loss_pct: float) -> RiskLevel:
     if loss_pct >= 7.0:
         return RiskLevel.MEDIUM
     return RiskLevel.LOW
+
+
+def _contract_status(row: Consignment) -> str:
+    """`row.status` as one of Contract 2b's four frozen spellings.
+
+    The column is shared with the identity layer, which stores a fuller
+    `BatchLifecycle` ladder in it. `contract_status` is the projection back
+    down; it lives on the enum, so this is a lookup rather than a second
+    opinion about what "delivered" means.
+
+    Unknown values fall through unchanged rather than raising. A status this
+    build does not recognise is a bad row, and a bad row should render oddly on
+    one card, not 500 the entire Command Center.
+    """
+    try:
+        return BatchLifecycle(row.status).contract_status
+    except ValueError:
+        return str(row.status)
 
 
 def _subject_for(row: Consignment) -> agriplan.TransitSubject:
@@ -408,7 +427,11 @@ def create_batch(body: CreateBatchRequest, session: SessionDep, ctx: ContextDep)
 
     _score_batch(session, row, ctx)
     session.commit()
-    return {"id": row.code, "status": row.status, "photos_expected": PHOTOS_EXPECTED}
+    return {
+        "id": row.code,
+        "status": _contract_status(row),
+        "photos_expected": PHOTOS_EXPECTED,
+    }
 
 
 @router.post("/batches/{code}/photos")
@@ -477,7 +500,15 @@ def list_batches(
         score = row.risk
         level = str(score.level) if score else "LOW"
         counts[level] = counts.get(level, 0) + 1
-        if status and row.status != status:
+        # Projected onto Contract 2b's four frozen values before it is either
+        # compared or emitted. The identity layer widened this column to a
+        # fuller lifecycle ladder (`received`, `in_inventory`, `sold`, ...);
+        # C's `BatchStatus` union knows four words and the Command Center's
+        # filter chips send exactly those. Comparing the raw column here would
+        # silently drop every received batch out of a `?status=delivered`
+        # query, which reads on screen as stock that has gone missing.
+        wire_status = _contract_status(row)
+        if status and wire_status != status:
             continue
         if risk and level != risk:
             continue
@@ -496,7 +527,7 @@ def list_batches(
                 "loss_pct": score.loss_pct if score else 0.0,
                 "loss_kg": score.loss_kg if score else 0.0,
                 "level": level,
-                "status": row.status,
+                "status": wire_status,
                 "best_action": best.label if best else "Not yet assessed",
                 "best_plan_id": best.id if best else 0,
                 "delta_vs_baseline": best.delta_vs_baseline if best else 0.0,

@@ -308,6 +308,8 @@ def ledger(session: SessionDep, ctx: ContextDep) -> LedgerOut:
                 value_at_risk=r.value_at_risk,
                 severity=r.severity,
                 storage_zone=r.storage_zone,
+                batch_code=r.batch_code,
+                origin=r.origin,
             )
             for r in rows
         ],

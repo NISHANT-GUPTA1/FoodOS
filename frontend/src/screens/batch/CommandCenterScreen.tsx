@@ -7,6 +7,7 @@ import type { BatchListRow } from '../../api/batchContract'
 import { KpiCard } from '../../components/KpiCard'
 import { SectionHeader } from '../../components/SectionHeader'
 import { EmptyState, ErrorState, LoadingState } from '../../components/StatePanel'
+import { TrackChip } from '../../components/batch/DownstreamLots'
 import { RiskBadge } from '../../components/batch/RiskBadge'
 import { RulCountdown } from '../../components/batch/RulCountdown'
 import { SourceNote } from '../../components/batch/SourceNote'
@@ -217,6 +218,10 @@ function BatchQueueRow({ row }: { row: BatchListRow }) {
               <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
                 {row.status.replace('_', ' ')}
               </span>
+              {/* Shows only once the code has been taken into a node, so the
+                  queue distinguishes "delivered" from "actually in someone's
+                  stock" — two different states that `status` collapses. */}
+              <TrackChip code={row.id} />
             </div>
 
             <div className="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-slate-600">

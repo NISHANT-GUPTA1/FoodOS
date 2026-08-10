@@ -42,6 +42,16 @@ class BatchRisk:
     intake_grade: float
     storage_zone: str | None = None
 
+    #: The upstream batch code this lot came in on, when it came in on one.
+    #: Carried through the risk row rather than looked up per screen so that
+    #: every surface built on `BatchRisk` — the Ledger, the retail track, the
+    #: rescue waterfall — names the same identity without any of them joining
+    #: back to the agri side. `None` for stock with no passport, which is most
+    #: of what a kitchen buys.
+    batch_code: str | None = None
+    #: Where it was grown or aggregated. One line, for the provenance chip.
+    origin: str | None = None
+
     @property
     def severity(self) -> str:
         """Traffic light for the Ledger screen.
@@ -86,6 +96,8 @@ def assess(
     unit_price: float,
     intake_grade: float = 1.0,
     storage_zone: str | None = None,
+    batch_code: str | None = None,
+    origin: str | None = None,
 ) -> BatchRisk:
     """Score one batch. Pure function — no database, no side effects."""
     rsl_days = max(float(rsl_days), 0.0)
@@ -114,4 +126,6 @@ def assess(
         unit_price=unit_price,
         intake_grade=intake_grade,
         storage_zone=storage_zone,
+        batch_code=batch_code,
+        origin=origin,
     )

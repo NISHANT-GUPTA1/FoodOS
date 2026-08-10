@@ -82,6 +82,72 @@ TRANSPORT_MAP: dict[TransportMode, AgriTransport] = {
     TransportMode.REEFER: AgriTransport.REFRIGERATED,
 }
 
+#: Spellings for the same physical thing that are already in the data.
+#:
+#: Three vocabularies exist for packaging and only `ventilated_plastic_crate`
+#: is common to all three: A's simulator says `gunny_bag` and `wooden_crate`,
+#: B's schema enum says `jute_sack` and `cfb_carton`, and C's frozen
+#: `batchContract.ts` offers `gunny_bag`, `wooden_crate` and `corrugated_box`.
+#: The seed writes A's spelling (T1026 ships in a `gunny_bag`) into a column
+#: typed with B's.
+#:
+#: A strict `PackagingType(value)` therefore raised on three of the four values
+#: the UI can send and on a seeded demo batch, turning every event posted
+#: against them into a 500. Resolving through an alias table instead is not
+#: leniency for its own sake: none of the three vocabularies can be changed
+#: without breaking a frozen contract, a calibrated simulator or stored rows,
+#: so the translation has to live somewhere, and this is the module that
+#: already owns translation between A's words and B's.
+PACKAGING_ALIASES: dict[str, PackagingType] = {
+    # A's simulator vocabulary
+    "loose_bulk": PackagingType.LOOSE,
+    "gunny_bag": PackagingType.JUTE_SACK,
+    "wooden_crate": PackagingType.CFB_CARTON,
+    # C's contract vocabulary
+    "corrugated_box": PackagingType.CFB_CARTON,
+    "plastic_crate": PackagingType.VENTILATED_PLASTIC_CRATE,
+}
+
+#: The same hazard on the transport axis. `reefer` and `refrigerated` are the
+#: identical vehicle in B's and A's vocabularies respectively; today only the
+#: former is ever stored, but the mismatch is one careless write away.
+TRANSPORT_ALIASES: dict[str, TransportMode] = {
+    "refrigerated": TransportMode.REEFER,
+    "reefer_truck": TransportMode.REEFER,
+    "tarpaulin_truck": TransportMode.TARPAULIN,
+    "open": TransportMode.OPEN_TRUCK,
+}
+
+
+def _resolve_packaging(value: object) -> Packaging:
+    """A's packaging enum for whatever spelling the row happens to carry.
+
+    Falls back to the declared default rather than raising. An unrecognised
+    packaging string is a data-quality problem worth exactly one slightly wrong
+    crush coefficient — it is not worth refusing to tell a manager how long
+    their tomatoes have left.
+    """
+    text = str(value or "").strip().lower()
+    try:
+        return PACKAGING_MAP[PackagingType(text)]
+    except ValueError:
+        alias = PACKAGING_ALIASES.get(text)
+        if alias is not None:
+            return PACKAGING_MAP[alias]
+        return DEFAULT_BASE["packaging"]  # type: ignore[return-value]
+
+
+def _resolve_transport(value: object) -> AgriTransport:
+    """A's transport enum for whatever spelling the row happens to carry."""
+    text = str(value or "").strip().lower()
+    try:
+        return TRANSPORT_MAP[TransportMode(text)]
+    except ValueError:
+        alias = TRANSPORT_ALIASES.get(text)
+        if alias is not None:
+            return TRANSPORT_MAP[alias]
+        return DEFAULT_BASE["transport_mode"]  # type: ignore[return-value]
+
 #: The three-tap questionnaire cannot resolve the six USDA colour stages, so
 #: the buckets span the stages fruit is actually *picked* at for shipment:
 #: mature-green through turning. The life factors are Handbook 66's, unchanged
@@ -173,8 +239,8 @@ def _declared_base(batch: Consignment) -> dict:
 
     journey = batch.journey
     if journey is not None:
-        base["packaging"] = PACKAGING_MAP[PackagingType(journey.packaging)]
-        base["transport_mode"] = TRANSPORT_MAP[TransportMode(journey.transport)]
+        base["packaging"] = _resolve_packaging(journey.packaging)
+        base["transport_mode"] = _resolve_transport(journey.transport)
         if journey.transit_hours:
             base["transit_hours"] = float(journey.transit_hours)
         if journey.vibration_index is not None:

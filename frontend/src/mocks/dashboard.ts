@@ -71,6 +71,17 @@ export interface LedgerRow {
   valueAtRisk: number
   action: string
   tone: KpiTone
+
+  /**
+   * Provenance for stock that arrived on a tracked consignment — `batch_code`
+   * and `origin` off `/api/ledger`. Optional because most kitchen stock has no
+   * upstream passport, and a row without one must stay unremarkable.
+   *
+   * When present, `rslDays` on that row is the life the batch had *left* when
+   * it was received, not a clock that started at the receiving door.
+   */
+  batchCode?: string | null
+  origin?: string | null
 }
 
 export interface RescueRow {
@@ -328,8 +339,11 @@ export const planRows: PlanRow[] = [
 ]
 
 export const ledgerBatches: LedgerRow[] = [
-  { batch: 'T1024', sku: 'Tomato (Hybrid Red)', qtyKg: 10000, rslDays: 1.3, riskPercent: 84, valueAtRisk: 146560, action: 'Split 6T Delhi / 4T Jaipur (Plan 4)', tone: 'prevent' },
-  { batch: 'G4412', sku: 'Guava (Pink Flesh)', qtyKg: 5000, rslDays: 2.1, riskPercent: 42, valueAtRisk: 75000, action: 'Ship to Cold Storage Hub B', tone: 'preserve' },
+  // The first two arrived on a tracked consignment, so they carry the code the
+  // FPO registered at the farm gate and their RSL is the life that was *left*
+  // on arrival. The rest is untracked stock, which is the ordinary case.
+  { batch: 'T1024', sku: 'Tomato (Hybrid Red)', qtyKg: 10000, rslDays: 1.3, riskPercent: 84, valueAtRisk: 146560, action: 'Split 6T Delhi / 4T Jaipur (Plan 4)', tone: 'prevent', batchCode: 'TOM-KLR-00124', origin: 'Kolar Collection Hub' },
+  { batch: 'G4412', sku: 'Guava (Pink Flesh)', qtyKg: 5000, rslDays: 2.1, riskPercent: 42, valueAtRisk: 75000, action: 'Ship to Cold Storage Hub B', tone: 'preserve', batchCode: 'GUA-KLR-00031', origin: 'Chittoor Collection Hub' },
   { batch: 'P8801', sku: 'Potato (Jyoti)', qtyKg: 15000, rslDays: 8.5, riskPercent: 12, valueAtRisk: 180000, action: 'Standard Mandi Clearance', tone: 'prevent' },
   { batch: 'PN2288', sku: 'Paneer (Fresh)', qtyKg: 600, rslDays: 0.5, riskPercent: 68, valueAtRisk: 165000, action: 'Cascading B2B Kitchen Auction', tone: 'recover' },
   { batch: 'CB8031', sku: 'Cauliflower', qtyKg: 3500, rslDays: 1.8, riskPercent: 48, valueAtRisk: 42000, action: 'Mark down & local processing', tone: 'preserve' },

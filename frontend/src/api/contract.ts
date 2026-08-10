@@ -106,6 +106,19 @@ export interface LedgerRow {
   valueAtRisk: number
   action: string
   tone: 'prevent' | 'preserve' | 'recover'
+
+  /**
+   * Provenance, for stock that arrived on a tracked consignment. `/api/ledger`
+   * returns these as `batch_code` and `origin`; both are null for lots with no
+   * upstream passport, which is most of what a kitchen buys.
+   *
+   * This is what makes the identity span the tracks: the same code the FPO
+   * registered at the farm gate is the code the kitchen's own Ledger prints,
+   * and `rslDays` on such a row is the life the batch had *left* on arrival
+   * rather than a clock that started at the receiving door.
+   */
+  batchCode?: string | null
+  origin?: string | null
 }
 
 export interface LedgerResponse {
