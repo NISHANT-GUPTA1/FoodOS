@@ -108,7 +108,7 @@ class CalibrationParams:
 
 
 #: Fitted by `python -m foodos.agri.calibrate`. Regenerate rather than hand-edit.
-FITTED = CalibrationParams(mechanical_scale=1.1795, spoilage_scale=1.0469)
+FITTED = CalibrationParams(mechanical_scale=0.7328, spoilage_scale=1.1348)
 
 
 @dataclass(frozen=True)
@@ -284,21 +284,37 @@ def stage_losses(
     previous = np.zeros(n)
     out: dict[str, np.ndarray] = {}
 
+    # Cosmetic rejection: measured, commodity-specific, and switched on at the
+    # sorting table. A third independent removal alongside damage and decay,
+    # because a blemished fruit is neither crushed nor rotten — it is simply
+    # refused. No Arrhenius term can produce it, and folding it into one that
+    # tries is what made every non-tomato commodity mispredict.
+    gradeout_at_gate = commodity.cosmetic_gradeout_pct / 100.0
+    gradeout = np.zeros(n)
+
     for stage in STAGES:
         damage = damage + physics.damage[stage]
         stress = stress + params.spoilage_scale * physics.stress[stage]
+        if stage == "farm_gate":
+            gradeout = np.full(n, gradeout_at_gate)
 
         life_median = kinetics.life_budget_median_by_factor(
             commodity, physics.batch.maturity_factor, np.clip(damage, 0.0, 0.6)
         )
-        mechanical = 1.0 - np.exp(-params.mechanical_scale * damage)
+        # Susceptibility scales the damage a given handling insult inflicts, so
+        # a tuber and a leaf no longer bruise identically.
+        mechanical = 1.0 - np.exp(
+            -params.mechanical_scale * commodity.mech_factor * damage
+        )
         spoilage = kinetics.spoilage_fraction(stress, life_median, sigma)
-        total = 1.0 - (1.0 - mechanical) * (1.0 - spoilage)
+        total = 1.0 - (1.0 - mechanical) * (1.0 - spoilage) * (1.0 - gradeout)
 
         out[f"loss_{stage}"] = total - previous
         out[f"cum_loss_{stage}"] = total.copy()
         out[f"cum_stress_{stage}"] = stress.copy()
         previous = total
+
+    out["cosmetic_gradeout"] = gradeout
 
     out["accumulated_damage"] = damage
     out["life_budget_median_days"] = kinetics.life_budget_median_by_factor(

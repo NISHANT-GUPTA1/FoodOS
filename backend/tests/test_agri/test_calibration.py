@@ -15,7 +15,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from foodos.agri.calibrate import fit
+from foodos.agri.calibrate import fit, holdout_report
 from foodos.agri.commodity import NABCONS_TOMATO, TOMATO
 from foodos.agri.scenario import sample_baseline, sample_diverse
 from foodos.agri.simulate import FITTED, CalibrationParams, simulate, summarise
@@ -100,3 +100,44 @@ def test_baseline_and_diverse_samplers_describe_different_populations():
     baseline = summarise(simulate(sample_baseline(TOMATO, 8_000, seed=7)))
     diverse = summarise(simulate(sample_diverse(TOMATO, 8_000, seed=11)))
     assert not np.isclose(baseline["total_pct"], diverse["total_pct"], rtol=0.15)
+
+
+def test_the_model_generalises_to_commodities_it_was_not_fitted_on():
+    """The strongest check available, and for a while it failed outright.
+
+    Calibrate the two global scalars on tomato, then predict guava and potato
+    using only measured constants — activation energy, reference life, chilling
+    behaviour, mechanical susceptibility, cosmetic grade-out. No information
+    from the held-out commodities reaches the fit.
+
+    The bar is the naive predictor: assign every crop the average published
+    loss. A model that cannot beat that has earned nothing. The original
+    two-channel engine scored 6.43 pp against naive 4.52 pp — worse than a
+    constant — because a commodity-blind damage channel pinned farm loss near
+    8.2% whatever the crop was.
+    """
+    report = holdout_report(n=8_000)
+
+    assert report["beats_naive"], (
+        f"held-out error {report['mean_abs_error']} pp is worse than the naive "
+        f"{report['naive_mean_abs_error']} pp -- the model does not generalise"
+    )
+    assert report["mean_abs_error"] < 3.5
+    assert {row["commodity"] for row in report["rows"]} == {"guava", "potato"}
+
+
+def test_cosmetic_gradeout_is_measured_and_not_absorbed_by_the_fit():
+    """Grade-out must come straight from the survey. If a future change lets
+    the calibrator move it, the farm/market split stops being attributable and
+    held-out prediction quietly breaks again."""
+    from foodos.agri.commodity import COMMODITIES
+    from foodos.agri.simulate import precompute, stage_losses
+    from foodos.agri.scenario import sample_baseline
+
+    for commodity in COMMODITIES.values():
+        physics = precompute(sample_baseline(commodity, 400, seed=7))
+        for scalars in (CalibrationParams(0.4, 0.4), CalibrationParams(2.0, 2.0)):
+            computed = stage_losses(physics, scalars)
+            assert float(np.mean(computed["cosmetic_gradeout"])) == pytest.approx(
+                commodity.cosmetic_gradeout_pct / 100.0, abs=1e-9
+            )

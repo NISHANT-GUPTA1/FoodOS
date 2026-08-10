@@ -211,6 +211,82 @@ def _plausibility(
     return verdicts
 
 
+def holdout_report(
+    fit_on: Commodity = TOMATO,
+    predict_for: tuple[Commodity, ...] = (),
+    n: int = 20_000,
+    seed: int = 7,
+) -> dict:
+    """Calibrate on one commodity, predict the others without refitting.
+
+    This is the check point 3 of the module docstring calls the strongest one
+    available, and it is the reason the mechanical-susceptibility and
+    cosmetic-grade-out channels exist. Run against the original two-channel
+    engine it failed outright — 6.43 pp mean error against 4.52 pp for the
+    naive "predict the average for everything", i.e. the model was worse than
+    a constant. The cause was structural: with a commodity-blind damage channel
+    and no grade-out term, farm loss came out near 8.2% for every crop no
+    matter what its biophysics said.
+
+    The two fitted scalars are global. Everything that distinguishes one
+    commodity from another here — activation energy, reference life, chilling
+    sensitivity, susceptibility, grade-out — is measured. So the predictions
+    below use no information from the commodities being predicted, which is
+    what makes the number meaningful.
+    """
+    from foodos.agri.commodity import COMMODITIES
+
+    predict_for = predict_for or tuple(
+        c for c in COMMODITIES.values() if c.key != fit_on.key
+    )
+    params, fit_meta = fit(fit_on, n=n, seed=seed)
+
+    rows = []
+    for commodity in predict_for:
+        target = NABCONS[commodity.key]
+        physics = precompute(sample_baseline(commodity, n, seed=seed))
+        achieved = _measure(physics, params)
+        rows.append(
+            {
+                "commodity": commodity.key,
+                "farm_target": target.farm_operations_pct,
+                "farm_predicted": round(achieved["farm_operations_pct"], 2),
+                "farm_error": round(
+                    achieved["farm_operations_pct"] - target.farm_operations_pct, 2
+                ),
+                "market_target": target.market_level_pct,
+                "market_predicted": round(achieved["market_level_pct"], 2),
+                "market_error": round(
+                    achieved["market_level_pct"] - target.market_level_pct, 2
+                ),
+                "combined_target": target.combined_pct,
+                "combined_predicted": round(achieved["total_pct"], 2),
+            }
+        )
+
+    errors = [abs(r["combined_predicted"] - r["combined_target"]) for r in rows]
+
+    # The bar to clear. Predicting the mean published loss for every commodity
+    # needs no model at all, so a model that cannot beat it is worse than
+    # useless — it is worse than useless *and* expensive to explain.
+    mean_published = float(
+        np.mean([NABCONS[c.key].combined_pct for c in predict_for])
+    )
+    naive = [
+        abs(mean_published - NABCONS[c.key].combined_pct) for c in predict_for
+    ]
+
+    return {
+        "fitted_on": fit_on.key,
+        "fitted_scalars": fit_meta["fitted"],
+        "rows": rows,
+        "mean_abs_error": round(float(np.mean(errors)), 3),
+        "max_abs_error": round(float(np.max(errors)), 3),
+        "naive_mean_abs_error": round(float(np.mean(naive)), 3),
+        "beats_naive": bool(np.mean(errors) < np.mean(naive)),
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Fit the simulator to NABCONS.")
     parser.add_argument("--n", type=int, default=40_000)
