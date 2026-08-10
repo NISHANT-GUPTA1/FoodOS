@@ -162,7 +162,27 @@ def run_backtest(site_id: str = C.SITE["site_id"], test_days: int = 30,
     total_saving = float(df["saving"].sum())
     total_kg = float(df["saving_kg"].sum())
 
+    n_train = len(all_dates) - n_days
+
     return {
+        # --- Contract 1 (A -> B), frozen at H3 in FoodOS-Team-Split.md §4 ------
+        # These seven keys are the frozen surface. Everything below them is this
+        # module's own richer output, kept because verify.py and the engine read
+        # it. Aliases, not duplicates of the work: same numbers, contract names.
+        #
+        # One deliberate deviation: the contract shows `test_days` as the pair
+        # [21, 30], but it is also this function's input parameter and
+        # tests/test_models/test_planted_faults.py asserts `== 30`. It stays an
+        # int; `test_day_range` carries the pair the contract meant.
+        "train_days": [1, n_train],
+        "test_day_range": [n_train + 1, len(all_dates)],
+        "pinball_loss": accuracy["pinball_loss"],
+        "mape": accuracy["mape"],
+        "coverage": accuracy["interval_coverage_pct"],
+        "baseline_mape": accuracy["baseline_mape"],
+        "counterfactual_saving_kg": round(total_kg, 1),
+        "counterfactual_saving_money": round(total_saving, 2),
+        # ----------------------------------------------------------------------
         "site_id": site_id,
         "model_run_id": run_id,
         "train_start": all_dates[0], "train_end": train_end,
