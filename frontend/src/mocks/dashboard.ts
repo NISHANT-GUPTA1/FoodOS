@@ -25,12 +25,30 @@ export interface RecommendationData {
   }
   confidence: number
   expiresIn: string
+  batchId?: string
+  commodity?: string
+  origin?: string
+  destination?: string
+  rulHours?: number
+  lossRiskPercent?: number
 }
 
 export interface AttributionRow {
   label: string
   value: number
   detail: string
+}
+
+export interface ActionPlanCandidate {
+  id: string
+  name: string
+  lossPercent: number
+  massLostKg: number
+  logisticsCostInr: number
+  grossRevenueInr: number
+  netRealizationInr: number
+  isRecommended: boolean
+  description: string
 }
 
 export interface PlanRow {
@@ -72,12 +90,34 @@ export interface TodayDashboardData {
   hero: string
   kpis: KpiCardData[]
   recommendations: RecommendationData[]
+  actionMatrix: ActionPlanCandidate[]
+  batchProfile: {
+    id: string
+    commodity: string
+    quantityKg: number
+    origin: string
+    destination: string
+    qualityScore: number
+    maturity: string
+    mechanicalDamage: string
+    fieldHeatHours: number
+    expectedLossPercent: number
+    expectedLossKg: number
+    rulHours: number
+    riskLevel: 'HIGH' | 'MODERATE' | 'LOW'
+  }
 }
 
 export interface WhyDashboardData {
   attribution: AttributionRow[]
   contributors: Array<{ label: string; value: number; note: string }>
   callout: string
+  nabconsBaseline: {
+    annualLossInr: string
+    fruitsVegLossRange: string
+    tomatoLossPercent: string
+    guavaLossPercent: string
+  }
 }
 
 export interface PlanDashboardData {
@@ -108,117 +148,213 @@ export interface ImpactDashboardData {
 }
 
 export const navItems: Array<{ to: string; label: string; description: string; tone: Horizon }> = [
-  { to: '/today', label: 'Today', description: 'Ranked recommendations', tone: 'PREVENT' },
-  { to: '/why', label: 'Why', description: 'Attribution and causes', tone: 'PRESERVE' },
-  { to: '/plan', label: 'Plan', description: 'Lambda-driven prep table', tone: 'PREVENT' },
-  { to: '/ledger', label: 'Ledger', description: 'Batch life and risk', tone: 'PRESERVE' },
-  { to: '/rescue', label: 'Rescue', description: 'Channel ranking', tone: 'RECOVER' },
-  { to: '/impact', label: 'Impact', description: 'Backtest and accuracy', tone: 'RECOVER' },
-  { to: '/settings', label: 'Settings', description: 'Tokens and demo knobs', tone: 'PREVENT' },
+  { to: '/today', label: 'Today', description: 'Command Center & Batch Profile', tone: 'PREVENT' },
+  { to: '/why', label: 'Why', description: 'Arrhenius Decay & NABCONS Attribution', tone: 'PRESERVE' },
+  { to: '/plan', label: 'Plan', description: 'What-If Scenario Simulator', tone: 'PREVENT' },
+  { to: '/ledger', label: 'Ledger', description: 'Batch RUL & Risk Tracking', tone: 'PRESERVE' },
+  { to: '/rescue', label: 'Rescue', description: 'Cascading Rescue & B2B Secondary', tone: 'RECOVER' },
+  { to: '/impact', label: 'Impact', description: 'Backtest & Accuracy Models', tone: 'RECOVER' },
+  { to: '/settings', label: 'Settings', description: 'Tokens & Demo Knobs', tone: 'PREVENT' },
+]
+
+export const actionMatrixData: ActionPlanCandidate[] = [
+  {
+    id: 'plan-0',
+    name: 'Plan 0: Current Baseline (Delhi Open Truck)',
+    lossPercent: 8.4,
+    massLostKg: 840,
+    logisticsCostInr: 32000,
+    grossRevenueInr: 146560,
+    netRealizationInr: 114560,
+    isRecommended: false,
+    description: 'Baseline open truck transport without departure shift. High thermal risk.',
+  },
+  {
+    id: 'plan-1',
+    name: 'Plan 1: Earlier Departure (-6 Hours)',
+    lossPercent: 6.1,
+    massLostKg: 610,
+    logisticsCostInr: 32000,
+    grossRevenueInr: 150240,
+    netRealizationInr: 118240,
+    isRecommended: false,
+    description: 'Bypasses midday peak heat transit by departing at 04:00 AM.',
+  },
+  {
+    id: 'plan-2',
+    name: 'Plan 2: Covered Truck Upgrade',
+    lossPercent: 5.8,
+    massLostKg: 580,
+    logisticsCostInr: 36000,
+    grossRevenueInr: 150720,
+    netRealizationInr: 114720,
+    isRecommended: false,
+    description: 'Tarpaulin insulated vehicle upgrade reduces solar irradiance exposure.',
+  },
+  {
+    id: 'plan-3',
+    name: 'Plan 3: Reroute Entire Batch to Jaipur',
+    lossPercent: 4.2,
+    massLostKg: 420,
+    logisticsCostInr: 24000,
+    grossRevenueInr: 143700,
+    netRealizationInr: 119700,
+    isRecommended: false,
+    description: 'Shorter 7-hour transit route to Jaipur APMC mandi.',
+  },
+  {
+    id: 'plan-4',
+    name: 'Plan 4: Split Batch (6T Delhi / 4T Jaipur) + Early Departure',
+    lossPercent: 3.9,
+    massLostKg: 390,
+    logisticsCostInr: 31500,
+    grossRevenueInr: 153760,
+    netRealizationInr: 122260,
+    isRecommended: true,
+    description: 'BEST ACTION: Maximizes net price realization while reducing total physical loss by 450 kg.',
+  },
 ]
 
 export const todayDashboard: TodayDashboardData = {
-  hero: '47 kitchens, 12 stores, 1 cluster forecast that replaces guesswork.',
+  hero: 'Batch #T1024 • 10,000 kg Tomatoes | Kolar Collection Hub → Delhi & Jaipur APMC Mandis',
   kpis: [
-    { label: 'kg at risk', value: '1,248', delta: '+14% week over week', tone: 'recover', note: 'Stock with the shortest remaining life.' },
-    { label: '₹ at risk', value: '₹94,800', delta: '18 batches within 6 hours', tone: 'preserve', note: 'Value that can still be saved or rerouted.' },
-    { label: '% preventable', value: '63%', delta: 'Based on the current forecast band', tone: 'prevent', note: 'Loss that disappears when the plan is followed.' },
+    { label: 'kg at risk', value: '840 kg', delta: '8.4% baseline loss', tone: 'recover', note: 'Batch #T1024 high thermal exposure at 34°C.' },
+    { label: '₹ at risk', value: '₹1,53,760', delta: 'Potential loss of ₹32,000', tone: 'preserve', note: 'Value preserved under Plan 4 multi-mandi split.' },
+    { label: '% preventable', value: '53.5%', delta: 'Loss drops to 3.9% under Plan 4', tone: 'prevent', note: 'Preventable physical loss with 6h early departure.' },
   ],
+  batchProfile: {
+    id: 'Batch #T1024',
+    commodity: 'Tomato (Hybrid Red)',
+    quantityKg: 10000,
+    origin: 'Kolar Collection Hub',
+    destination: 'Delhi APMC Mandi',
+    qualityScore: 72,
+    maturity: 'High (Turning Pink / Light Red)',
+    mechanicalDamage: 'Moderate (Surface Abrasion ≤ 3%)',
+    fieldHeatHours: 4.2,
+    expectedLossPercent: 8.4,
+    expectedLossKg: 840,
+    rulHours: 31,
+    riskLevel: 'HIGH',
+  },
+  actionMatrix: actionMatrixData,
   recommendations: [
     {
       id: 'rec-1',
       horizon: 'PREVENT',
-      title: 'Cut biryani prep at Spice Garden',
-      subtitle: 'The weekday peak clears at 63 portions, not 80.',
-      beforeQty: 80,
-      afterQty: 63,
-      why: 'Forecast confidence is tight, and the stockout penalty is already captured in the objective.',
-      saves: { kg: 17, inr: 1500, co2e: 29 },
-      confidence: 0.86,
-      expiresIn: '84 min',
+      title: 'Split Batch (6T Delhi / 4T Jaipur) + Early Departure (-6h)',
+      subtitle: 'Multi-Agent Optimizer Plan 4: Reduces expected loss from 8.4% to 3.9% and saves 450 kg of edible tomatoes.',
+      beforeQty: 10000,
+      afterQty: 9610,
+      why: 'Multi-agent optimization maximizes net price realization (₹1,22,260) by balancing RUL (31h) against transit thermal heat.',
+      saves: { kg: 450, inr: 7700, co2e: 765 },
+      confidence: 0.94,
+      expiresIn: '42 min',
+      batchId: 'Batch #T1024',
+      commodity: 'Tomato',
+      origin: 'Kolar Hub',
+      destination: 'Delhi & Jaipur APMC',
+      rulHours: 31,
+      lossRiskPercent: 3.9,
     },
     {
       id: 'rec-2',
       horizon: 'PRESERVE',
-      title: 'Move the tomato crate to Store 12',
-      subtitle: 'High velocity store, 2 km away, before the dock heat consumes another day of life.',
-      beforeQty: 20,
-      afterQty: 20,
-      why: 'The same crate has 4.4 days of remaining life here and 3.1 days in the warehouse.',
-      saves: { kg: 8, inr: 940, co2e: 14 },
+      title: 'Tarpaulin Thermal Insulation & Route Bypass',
+      subtitle: 'Move 4,000 kg Grade B+ tomatoes to Jaipur APMC before dock heat consumes another day of RUL.',
+      beforeQty: 4000,
+      afterQty: 3832,
+      why: 'Jaipur mandi velocity yields ₹14.8/kg with 4.4 days remaining life vs 3.1 days in open transit.',
+      saves: { kg: 168, inr: 2480, co2e: 285 },
       confidence: 0.91,
-      expiresIn: '38 min',
+      expiresIn: '28 min',
+      batchId: 'Batch #T1024-B',
+      commodity: 'Tomato',
+      origin: 'Kolar Hub',
+      destination: 'Jaipur APMC',
+      rulHours: 44,
+      lossRiskPercent: 4.2,
     },
     {
       id: 'rec-3',
       horizon: 'RECOVER',
-      title: 'Route leftover paneer to a nearby kitchen',
-      subtitle: 'B2B transfer still beats donation and compost when the safety gate is open.',
-      beforeQty: 6,
-      afterQty: 6,
-      why: 'RSL is below 12 hours, but transit plus handling is still safe for a close buyer.',
-      saves: { kg: 6, inr: 1650, co2e: 11 },
-      confidence: 0.78,
-      expiresIn: '22 min',
+      title: 'Route 390 kg Grade C Surplus to Secondary Food Processor',
+      subtitle: 'B2B Salvage Auction for puree & paste lines at ₹8.5/kg before RUL safety gate closes.',
+      beforeQty: 390,
+      afterQty: 390,
+      why: 'RSL is below 12 hours, but high Brix count makes batch optimal for industrial puree lines.',
+      saves: { kg: 390, inr: 3315, co2e: 520 },
+      confidence: 0.88,
+      expiresIn: '15 min',
+      batchId: 'Batch #T1024-C',
+      commodity: 'Tomato Puree Grade',
+      origin: 'Kolar Hub',
+      destination: 'Kolar Agro Processing Unit',
+      rulHours: 12,
+      lossRiskPercent: 0.0,
     },
   ],
 }
 
 export const whyDashboard: WhyDashboardData = {
+  nabconsBaseline: {
+    annualLossInr: '₹1.53 Lakh Crore ($18.4 Billion USD)',
+    fruitsVegLossRange: '4.58% – 15.05%',
+    tomatoLossPercent: '11.62%',
+    guavaLossPercent: '15.05%',
+  },
   attribution: [
-    { label: 'Over-prep', value: 42, detail: 'Friday demand spikes push the kitchen past the optimal percentile.' },
-    { label: 'Dock heat', value: 27, detail: 'Four hours on the receiving dock removes more life than the label admits.' },
-    { label: 'Trim loss', value: 16, detail: 'Yield is lower than the standard on cauliflower and leafy greens.' },
-    { label: 'FEFO miss', value: 9, detail: 'The nearest crate is not always the crate with the most value left.' },
-    { label: 'Spoilage lag', value: 6, detail: 'Old stock stays visible long after it should have been recovered.' },
+    { label: 'Accumulated Field Heat', value: 38, detail: '4.2 hours exposure at >30°C post-harvest accelerates ethylene respiration rates by 3.2x.' },
+    { label: 'Open Transit Exposure', value: 29, detail: '14-hour open truck transit in ambient 34–38°C heat depletes batch RUL by 19 hours.' },
+    { label: 'Mechanical Abrasion', value: 18, detail: 'Rough unpaved rural road vibration causes surface micro-punctures (3% severity).' },
+    { label: 'Sub-Optimal Mandi Choice', value: 15, detail: 'Over-concentrating 100% volume in Delhi APMC risks dock dwell time and panic discounting.' },
   ],
   contributors: [
-    { label: 'Biryani over-prep', value: 42, note: 'The main preventable driver in the cluster.' },
-    { label: 'Tomato dock excursion', value: 27, note: 'A preserve problem that becomes a recover problem later.' },
-    { label: 'Cauliflower trim', value: 16, note: 'Edible florets leaving as peel and stem.' },
+    { label: 'Field Heat Excursion', value: 38, note: 'Primary driver of rapid softening in turning tomatoes.' },
+    { label: 'Transit Thermal Risk', value: 29, note: 'Mitigated by Plan 4 earlier 04:00 AM departure.' },
+    { label: 'Road Vibration Damage', value: 18, note: 'Reduced by using ventilated plastic crates instead of gunny bags.' },
   ],
-  callout: 'One forecast band, one ledger, one action engine. The cause changes by horizon, but the decision spine stays the same.',
+  callout: 'Arrhenius kinetic model: k = A · exp(-Ea / RT). Biophysical loss predictions combine field telemetry, computer vision maturity scoring, and e-NAM mandi prices.',
 }
 
 export const planRows: PlanRow[] = [
-  { dish: 'Biryani', oldQty: 80, profitQty: 68, planetQty: 58, unitSaving: 118 },
-  { dish: 'Tomato curry', oldQty: 52, profitQty: 46, planetQty: 40, unitSaving: 92 },
-  { dish: 'Paneer wrap', oldQty: 34, profitQty: 30, planetQty: 26, unitSaving: 74 },
-  { dish: 'Cauliflower special', oldQty: 29, profitQty: 24, planetQty: 20, unitSaving: 81 },
+  { dish: 'Tomato (Batch #T1024)', oldQty: 10000, profitQty: 9610, planetQty: 9390, unitSaving: 15 },
+  { dish: 'Guava (Batch #G4412)', oldQty: 5000, profitQty: 4720, planetQty: 4500, unitSaving: 22 },
+  { dish: 'Potato (Batch #P8801)', oldQty: 15000, profitQty: 14550, planetQty: 14200, unitSaving: 8 },
+  { dish: 'Cauliflower (Batch #C3091)', oldQty: 3500, profitQty: 3290, planetQty: 3100, unitSaving: 18 },
 ]
 
 export const ledgerBatches: LedgerRow[] = [
-  { batch: 'TM-4471', sku: 'Tomato', qtyKg: 20, rslDays: 4.4, riskPercent: 31, valueAtRisk: 640, action: 'Route to Store 12', tone: 'preserve' },
-  { batch: 'PN-2288', sku: 'Paneer', qtyKg: 6, rslDays: 0.8, riskPercent: 64, valueAtRisk: 1650, action: 'Transfer to nearby kitchen', tone: 'recover' },
-  { batch: 'CB-8031', sku: 'Cauliflower', qtyKg: 14, rslDays: 2.1, riskPercent: 48, valueAtRisk: 910, action: 'Mark down and rotate', tone: 'prevent' },
-  { batch: 'CH-1190', sku: 'Chicken', qtyKg: 18, rslDays: 1.4, riskPercent: 56, valueAtRisk: 1420, action: 'Prep in next service', tone: 'preserve' },
-  { batch: 'SP-5012', sku: 'Spinach', qtyKg: 9, rslDays: 0.6, riskPercent: 72, valueAtRisk: 530, action: 'Deep markdown', tone: 'recover' },
+  { batch: 'T1024', sku: 'Tomato (Hybrid Red)', qtyKg: 10000, rslDays: 1.3, riskPercent: 84, valueAtRisk: 146560, action: 'Split 6T Delhi / 4T Jaipur (Plan 4)', tone: 'prevent' },
+  { batch: 'G4412', sku: 'Guava (Pink Flesh)', qtyKg: 5000, rslDays: 2.1, riskPercent: 42, valueAtRisk: 75000, action: 'Ship to Cold Storage Hub B', tone: 'preserve' },
+  { batch: 'P8801', sku: 'Potato (Jyoti)', qtyKg: 15000, rslDays: 8.5, riskPercent: 12, valueAtRisk: 180000, action: 'Standard Mandi Clearance', tone: 'prevent' },
+  { batch: 'PN2288', sku: 'Paneer (Fresh)', qtyKg: 600, rslDays: 0.5, riskPercent: 68, valueAtRisk: 165000, action: 'Cascading B2B Kitchen Auction', tone: 'recover' },
+  { batch: 'CB8031', sku: 'Cauliflower', qtyKg: 3500, rslDays: 1.8, riskPercent: 48, valueAtRisk: 42000, action: 'Mark down & local processing', tone: 'preserve' },
 ]
 
 export const rescueRows: RescueRow[] = [
-  { channel: 'Nearby kitchen', recovery: '₹1,650', amount: '400 m', reason: 'Highest salvage value with the transit gate still open.', eligible: true },
-  { channel: 'Deep markdown', recovery: '₹1,120', amount: 'Today only', reason: 'Short dwell remains, but the item can still sell on-site.', eligible: true },
-  { channel: 'Donation', recovery: '₹0 cash', amount: 'NGO pickup', reason: 'Eligibility stays open because the item is not spoiled.', eligible: true },
-  { channel: 'Processing', recovery: '₹420', amount: 'Batching window', reason: 'Quality is above the threshold for puree or pickle.', eligible: true },
-  { channel: 'Animal feed', recovery: '₹90', amount: 'Rejected now', reason: 'Excluded because the crate is already past the safety gate.', eligible: false },
-  { channel: 'Compost', recovery: '₹0', amount: 'Last resort', reason: 'Always available, but never the best value exit.', eligible: false },
+  { channel: 'Jaipur Secondary Mandi', recovery: '₹59,200', amount: '4,000 kg', reason: 'Highest fresh sale price realization for Grade B+ tomatoes.', eligible: true },
+  { channel: 'Kolar Agro Processing Unit', recovery: '₹3,315', amount: '390 kg', reason: 'High Brix count batch ideal for tomato puree & paste lines.', eligible: true },
+  { channel: 'B2B Cloud Kitchen Network', recovery: '₹14,200', amount: '1,200 kg', reason: '24-hour culinary usability verified for curry bases.', eligible: true },
+  { channel: 'NGO Food Rescue Network', recovery: '₹0 cash', amount: '300 kg', reason: 'Tax benefit & zero waste exit for near-expiry surplus.', eligible: true },
+  { channel: 'Animal Feed / Compost', recovery: '₹350', amount: 'Last resort', reason: 'Excluded while higher salvage value channels remain open.', eligible: false },
 ]
 
 export const impactRows: ImpactRow[] = [
-  { day: 'Day 1', actual: 48, forecast: 46, baseline: 55, heldOut: false },
-  { day: 'Day 2', actual: 49, forecast: 50, baseline: 55, heldOut: false },
-  { day: 'Day 3', actual: 50, forecast: 49, baseline: 56, heldOut: false },
-  { day: 'Day 4', actual: 53, forecast: 52, baseline: 58, heldOut: false },
-  { day: 'Day 5', actual: 54, forecast: 55, baseline: 59, heldOut: false },
-  { day: 'Day 6', actual: 56, forecast: 57, baseline: 61, heldOut: false },
-  { day: 'Day 7', actual: 58, forecast: 59, baseline: 62, heldOut: false },
-  { day: 'Day 8', actual: 60, forecast: 61, baseline: 64, heldOut: false },
-  { day: 'Day 9', actual: 57, forecast: 58, baseline: 63, heldOut: false },
-  { day: 'Day 10', actual: 59, forecast: 60, baseline: 65, heldOut: false },
-  { day: 'Day 11', actual: 61, forecast: 60, baseline: 66, heldOut: true },
-  { day: 'Day 12', actual: 63, forecast: 62, baseline: 67, heldOut: true },
-  { day: 'Day 13', actual: 62, forecast: 63, baseline: 68, heldOut: true },
-  { day: 'Day 14', actual: 64, forecast: 65, baseline: 70, heldOut: true },
+  { day: 'Day 1', actual: 8.4, forecast: 8.2, baseline: 11.6, heldOut: false },
+  { day: 'Day 2', actual: 7.9, forecast: 7.8, baseline: 11.6, heldOut: false },
+  { day: 'Day 3', actual: 6.5, forecast: 6.4, baseline: 11.6, heldOut: false },
+  { day: 'Day 4', actual: 5.8, forecast: 5.9, baseline: 11.6, heldOut: false },
+  { day: 'Day 5', actual: 4.9, forecast: 5.0, baseline: 11.6, heldOut: false },
+  { day: 'Day 6', actual: 4.3, forecast: 4.2, baseline: 11.6, heldOut: false },
+  { day: 'Day 7', actual: 3.9, forecast: 3.9, baseline: 11.6, heldOut: false },
+  { day: 'Day 8', actual: 3.8, forecast: 3.7, baseline: 11.6, heldOut: false },
+  { day: 'Day 9', actual: 3.9, forecast: 3.8, baseline: 11.6, heldOut: false },
+  { day: 'Day 10', actual: 3.7, forecast: 3.8, baseline: 11.6, heldOut: false },
+  { day: 'Day 11', actual: 3.9, forecast: 4.0, baseline: 11.6, heldOut: true },
+  { day: 'Day 12', actual: 3.8, forecast: 3.9, baseline: 11.6, heldOut: true },
+  { day: 'Day 13', actual: 3.9, forecast: 3.8, baseline: 11.6, heldOut: true },
+  { day: 'Day 14', actual: 3.9, forecast: 3.9, baseline: 11.6, heldOut: true },
 ]
 
 export function buildPlanDashboard(lambda: number): PlanDashboardData {
@@ -250,9 +386,9 @@ export function getImpactDashboard(): ImpactDashboardData {
   return {
     rows: impactRows,
     accuracy: {
-      mape: '11.8%',
-      rmse: '7.2 kg',
-      acceptance: '78%',
+      mape: '3.9%',
+      rmse: '0.4 kg',
+      acceptance: '94%',
     },
   }
 }

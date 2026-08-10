@@ -1,3 +1,5 @@
+import type { ActionPlanCandidate } from '../mocks/dashboard'
+
 export interface ApiResponse<T> {
   data: T
 }
@@ -53,10 +55,28 @@ export interface RecommendationData {
   expiresIn: string
 }
 
+export interface BatchProfileData {
+  id: string
+  commodity: string
+  quantityKg: number
+  origin: string
+  destination: string
+  qualityScore: number
+  maturity: string
+  mechanicalDamage: string
+  fieldHeatHours: number
+  expectedLossPercent: number
+  expectedLossKg: number
+  rulHours: number
+  riskLevel: 'HIGH' | 'MODERATE' | 'LOW'
+}
+
 export interface TodayResponse {
   hero: string
   kpis: KpiCardData[]
   recommendations: RecommendationData[]
+  actionMatrix?: ActionPlanCandidate[]
+  batchProfile?: BatchProfileData
 }
 
 export interface AttributionRow {
@@ -69,6 +89,12 @@ export interface WhyResponse {
   attribution: AttributionRow[]
   contributors: Array<{ label: string; value: number; note: string }>
   callout: string
+  nabconsBaseline?: {
+    annualLossInr: string
+    fruitsVegLossRange: string
+    tomatoLossPercent: string
+    guavaLossPercent: string
+  }
 }
 
 export interface LedgerRow {
