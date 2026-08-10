@@ -20,7 +20,7 @@ import numpy as np
 import pytest
 
 from foodos.agri import kinetics
-from foodos.agri.commodity import TOMATO, MaturityStage
+from foodos.agri.commodity import COMMODITIES, TOMATO, MaturityStage
 from foodos.agri.scenario import (
     FieldHolding,
     HarvestWindow,
@@ -87,15 +87,40 @@ def test_ten_degrees_warmer_multiplies_the_rate_by_q10():
         assert ratio == pytest.approx(kinetics.q10_at(base, TOMATO), rel=1e-9)
 
 
-def test_chilling_injury_makes_sub_zero_worse_than_cold_storage():
-    """Tomato chill-injures below 12.5 C. Without this the optimiser eventually
-    recommends freezing the load, which is confidently, expensively wrong."""
-    best_rate, best_temp = min(
-        (float(kinetics.arrhenius_rate_multiplier(t, TOMATO)), t)
-        for t in np.arange(-2.0, 20.0, 0.5)
+@pytest.mark.parametrize("commodity", list(COMMODITIES.values()), ids=lambda c: c.key)
+def test_the_rate_minimum_sits_on_the_declared_threshold(commodity):
+    """The optimal storage temperature must be the one the data declares.
+
+    This assertion is deliberately strict, because the loose version shipped a
+    bug. It used to check only that the minimum was above 0 C — and tomato's
+    minimum sat at 3.6 C while the field beside it declared 12.5 C, so the
+    engine would have advised storing tomatoes at 4 C. Nine degrees of silent
+    disagreement, and a green test.
+
+    `chilling_penalty_per_deg` is now derived rather than hand-set, which makes
+    the two structurally incapable of drifting apart. This is what proves it.
+    """
+    temps = np.arange(commodity.chilling_threshold_c - 6.0,
+                      commodity.chilling_threshold_c + 14.0, 0.05)
+    rates = kinetics.arrhenius_rate_multiplier(temps, commodity)
+    minimum_at = float(temps[int(np.argmin(rates))])
+
+    assert minimum_at == pytest.approx(commodity.chilling_threshold_c, abs=0.1), (
+        f"{commodity.name} declares an optimum of "
+        f"{commodity.chilling_threshold_c} C but the model prefers {minimum_at:.2f} C"
     )
-    assert float(kinetics.arrhenius_rate_multiplier(-2.0, TOMATO)) > best_rate
-    assert best_temp > 0.0, "the rate minimum must not sit at or below freezing"
+
+
+@pytest.mark.parametrize("commodity", list(COMMODITIES.values()), ids=lambda c: c.key)
+def test_going_below_the_threshold_is_never_free(commodity):
+    """Chilling injury for tomato, freezing for potato — different mechanisms,
+    same consequence: overshooting the cold must cost something, or the
+    optimiser will happily recommend it."""
+    below = float(
+        kinetics.arrhenius_rate_multiplier(commodity.chilling_threshold_c - 5.0, commodity)
+    )
+    at = float(kinetics.arrhenius_rate_multiplier(commodity.chilling_threshold_c, commodity))
+    assert below > at
 
 
 def test_riper_fruit_has_less_life():

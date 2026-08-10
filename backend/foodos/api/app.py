@@ -12,7 +12,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from foodos import __version__
-from foodos.api.routes import decisions, screens, system, tracks
+from foodos.api.routes import batches, decisions, screens, system, tracks
 
 DESCRIPTION = """
 **FoodOS** — predict which food will become waste, explain why, and recommend
@@ -41,6 +41,7 @@ app.add_middleware(
 )
 
 app.include_router(system.router)
+app.include_router(batches.router)
 app.include_router(screens.router)
 app.include_router(decisions.router)
 app.include_router(tracks.router)

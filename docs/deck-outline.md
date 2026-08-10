@@ -1,136 +1,130 @@
-# Deck outline
+# FoodOS — deck outline
 
-**Owner:** Person D. **Tool:** Google Slides. **Slides:** 9, plus 4 in the appendix.
-**Rule:** the deck runs behind a live demo, not instead of it. Slides 1 and 8 are the only
-ones on screen for more than five seconds.
+**Owner: D.** Eleven slides. The deck is scaffolding for the demo, not a parallel
+presentation — if a slide competes with the product for attention it comes out.
 
----
+> The kitchen node's deck is kept at
+> [`deck-outline-kitchen-node.md`](deck-outline-kitchen-node.md). Its design rules still
+> apply here and are not restated: 16:9, dark, C's exact colour tokens so the deck and
+> the app do not look like two products, no stock photography of vegetables in a wooden
+> crate, no logo wall, no team photo.
 
-## Design
+Build rules:
 
-- 16:9. Dark background, one accent colour per horizon, matching Person C's tokens exactly —
-  the deck and the app must not look like two products.
-  - PREVENT `#3B82F6` · PRESERVE `#F59E0B` · RECOVER `#10B981`
-- One idea per slide. If a slide needs a second sentence to be understood, it is two slides.
-- No stock photography of vegetables in a wooden crate.
-- No logo wall, no team photo, no "our journey" slide.
-- Every number on a slide is traceable to `backend/foodos/content/` or to a cited source, and
-  the citation is on the slide, small, not in a footnote nobody reads.
-
----
-
-## Slide 1 — The problem
-**On screen for 35 seconds. The only slide that gets to be slow.**
-
-> A kitchen throws away 8–15% of what it buys.
-> Every tool reports it afterwards.
-
-Sub-line: *The decision that caused it was made three days earlier.*
-
-Source line: FAO food wastage footprint; industry benchmarks for Indian foodservice.
+- **One idea per slide.** If it needs a second sentence to be understood, it is two slides.
+- **No slide is read aloud.** The script in `demo-script.md` is what is said; the slide is
+  what is looked at while it is said.
+- **Every number on a slide has its source on the same slide**, in small type. A judge who
+  photographs a slide should be able to check it later.
+- Slides 3 through 8 are **the live product**, not slides. The deck is a wrapper.
 
 ---
 
-## Slide 2 — Three losses, three interventions
-**5 seconds. A table, no animation.**
+| # | When | Title | The one thing on it |
+| --- | --- | --- | --- |
+| 1 | 0:00 | **8.37%** | The NABCONS figure, huge. Source line underneath. |
+| 2 | 0:20 | The gap | 31 hours of life. 36.5 hours of road. Two bars. |
+| 3–8 | 0:35 | *(live product)* | Screens 2, 3, 4 |
+| 9 | 3:50 | The agent that was blocked | A's Verifier screenshot |
+| 10 | 4:10 | One engine, many nodes | Four node icons around one `V(a)` |
+| 11 | 4:35 | FoodOS | Name, one line, contact |
 
-| Loss | Cause | FoodOS |
-|---|---|---|
-| Over-production | Forecast error, no cost asymmetry | **PREVENT** |
-| Spoilage in storage | Shelf life ignored until zero | **PRESERVE** |
-| Unsold saleable stock | No route in time | **RECOVER** |
-
-*This is the slide that earns the word "platform" later. Do not skip it.*
+Backup slides sit after 11 and are never shown unless asked for.
 
 ---
 
-## Slide 3 — One objective function
-**8 seconds. Then go to the app and do not come back to the deck until slide 8.**
+## Slide 1 — 8.37%
+
+**Visual:** the number at 200pt. Below it, in 14pt: *NABCONS 2022 for MoFPI — tomato,
+farm operations. Market stage is a further 3.25%. Separate stages, not additive.*
+
+That last clause is on the slide deliberately. It pre-empts the sector-literate judge who
+is about to point out that everyone inflates this figure by adding the stages together,
+and it is worth more than the bigger number would be.
+
+---
+
+## Slide 2 — The gap
+
+**Visual:** two horizontal bars.
 
 ```
-V(a) = margin(a) − holding(a) − disposal(a) − λ · sustainability(a)
-
-q* = Cu / (Cu + Co + λ · sustainability_per_unit)
+remaining life   ███████████████████████████████            31 h
+road to Delhi    ████████████████████████████████████████   36.5 h
 ```
 
-Sub-line: *One function. Three action spaces. λ is the slider you are about to see.*
+No other content. Do not label it "the problem". The bars are the problem.
 
 ---
 
-## Slides 4–7 — Live demo placeholders
+## Slides 3–8 — the product
 
-Black slides with a single word, so a wrong click never shows the audience the next screen:
-`TODAY` · `WHY` · `PLAN` · `RESCUE`
-
-*They exist only so the deck is the same length as the demo and the clicker stays in sync.*
-
----
-
-## Slide 8 — The LLM never computes a number
-**The most important slide in the deck. 25 seconds.**
-
-Left half — **what the model returns**, monospace, verbatim:
-
-```
-Run {{special_dish_name}} tonight — {{batch_qty_kg}} on hand
-covers {{special_portions}} and brings back {{special_value_inr}}.
-```
-
-Right half — **the Verifier blocking**. The screenshot from
-`python -m foodos.agents.demo`, scenario 3, cropped to the block:
-
-```
-[BLOCK] untraceable_number: '₹31,900' appears in the output
-but matches no computed fact.
-Computed: special_value_inr=₹6,680 …
-```
-
-Bottom line, small: *157 tests. One of them is this sentence.*
-
-> **Screenshot instructions (H16–22):** run `python -m foodos.agents.demo` in a terminal at
-> 16pt on a dark theme, capture scenarios 1 and 3, crop tight, no window chrome, no
-> timestamp, no username in the prompt.
+Live. See `demo-script.md`. The deck holds a **static screenshot of each of the three
+screens** in the same positions, so that if the app dies the deck advances through the
+same beats and the story still lands. Those screenshots are captured at H33, after the
+calibration is locked, and re-captured if any figure changes.
 
 ---
 
-## Slide 9 — Three tracks, one optimiser
-**15 seconds.**
+## Slide 9 — The agent that was blocked
 
-Three columns, one per track, same card silhouette:
+**Visual:** A's screenshot of the Verifier refusing an agent output, with the offending
+number circled and the blocked reason legible.
 
-| Kitchen | Retail | Production |
-|---|---|---|
-| How much to cook | When to mark down | How big a batch |
-| Which special to run | Which store to transfer to | What sequence to run |
-| Where surplus goes | Where surplus goes | Where surplus goes |
+Caption, 14pt: *`tests/test_agents/test_no_number_contract.py` — the guarantee is a test,
+not a policy.*
 
-Bottom line: *Same `V(a)`. Different action set. ~80 lines each.*
+This is the credibility slide. It is the one thing in the deck that a technical judge
+cannot get from any other team's presentation, and it takes twenty seconds.
 
 ---
 
-## Appendix — only if asked
+## Slide 10 — One engine, many nodes
 
-**A1 · The RSL model.** The Q10 equation, the paneer worked example from
-`docs/pathologies.md`, and the punchline: *moving a tray between fridges buys a day and costs
-nothing.*
+**Visual:** one box in the centre reading `V(a)` — the objective function, written out.
+Four boxes around it: **Farm gate · Kitchen · Cold store · Retail back room**. Farm gate
+and Kitchen are solid; the other two are outlined.
 
-**A2 · The feasibility gate.** The three excluded channels for B-1057 and their reasons.
-*Excluded options are shown, never hidden.*
+Solid means built and demonstrated. Outlined means the same shape of problem, not yet
+built. **Do not fill in the outlines.** A judge who discovers that two of four claimed
+nodes are aspirational has stopped listening to the two that are real.
 
-**A3 · Where the numbers come from.** Cauliflower 0.58 yield, dairy Q10 3.0, aggregator
-commission 22%, carbon at the low end of the CCTS range, wastage externality at a quarter of
-the FAO full-cost figure. *We argued from the conservative number.*
-
-**A4 · Backtest.** Held-out days, mean absolute error, comparison to the naive
-same-day-last-week baseline, acceptance rate.
+Caption: *Different inputs. Different action space. One objective function.*
 
 ---
 
-## Build checklist
+## Slide 11 — FoodOS
 
-- [ ] H0–3 · Skeleton, slides 1–3 and 9 blocked out with placeholder numbers
-- [ ] H10 · Real numbers from `content/`, every source line filled in
-- [ ] H16–22 · Verifier screenshot captured and placed on slide 8
-- [ ] H22–28 · Full pass with the demo, timings marked against `demo-script.md`
-- [ ] H28 · Exported to PDF, PDF copied to the presenting laptop, opened once to confirm
-- [ ] H33 · Backup video embedded on a hidden slide 10, in case the app will not start
+Name. One line: *The decision layer for perishable supply chains.* Contact.
+
+Leave it up during questions.
+
+---
+
+## Backup slides — shown only if asked
+
+| # | Trigger | Content |
+| --- | --- | --- |
+| B1 | "How does the model work?" | The Q10 equation, the three multipliers, one worked line for T1024 |
+| B2 | "How accurate is it?" | A's MAE, interval coverage, and the naive-constant baseline beside it |
+| B3 | "What data do you need?" | The four ingestion layers, and which are optional |
+| B4 | "What about cold chain / IoT?" | The out-of-scope list and why each item is out |
+| B5 | "Business model?" | Per-consignment fee to the FPO aggregator; open API for buyers |
+| B6 | "Why only tomato?" | Adding a commodity is one YAML file plus a calibration pass — show `commodities.yaml` |
+| B7 | "Who else is doing this?" | Cold-chain hardware and mandi price apps. Neither makes a decision. |
+
+B6 is worth building well. "Show me the code that adds a second commodity" is the
+question that separates a demo from a product, and the answer is a content file with a
+citation beside every constant.
+
+---
+
+## What is deliberately not in this deck
+
+- **A market-size slide.** A TAM number invented in an afternoon is the least defensible
+  thing anyone puts on a screen, and it invites the one question with no good answer.
+- **A team slide.** Nobody scores it and it costs fifteen seconds of a 4:40 budget.
+- **An architecture diagram.** The product demonstrates the architecture. A boxes-and-
+  arrows slide about a system that is running on the same screen is a step backwards.
+- **The word "AI" on any slide.** Slide 9 says something specific about what the language
+  models are forbidden from doing. That is worth more than the word.

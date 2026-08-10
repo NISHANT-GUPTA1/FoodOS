@@ -1,0 +1,355 @@
+# FoodOS — adaptive intake questionnaire: TOMATO
+# Owner: Person D
+#
+# Layer 1 of the four ingestion layers. This is the only layer that costs a human being
+# time, so it is budgeted like it: UNDER 12 QUESTIONS, UNDER 30 SECONDS, on a phone, at a
+# collection hub, by someone whose hands are dirty and whose truck is waiting.
+#
+# THE TWO RULES THIS FILE EXISTS TO ENFORCE
+#
+#   1. The tree is DATA. C renders whatever `GET /api/questionnaire?commodity=tomato`
+#      returns and hardcodes nothing in TSX. Adding a second commodity must be a content
+#      commit, not a frontend release — the moment a question lives in a component, the
+#      platform claim becomes a rewrite.
+#
+#   2. Every question carries the `feature_key` it writes into A's `fuse()`. A question
+#      with no feature_key is a question that costs a farmer eight seconds and changes no
+#      number on any screen. There are none in this file, and there must never be.
+#
+# ANSWER SHAPES
+#   type: choice   -> `value` of the selected option is written to feature_key
+#   type: number   -> the entered number is written to feature_key
+#   Every question has a `default` used when it is skipped, hidden by a branch rule, or
+#   left blank. A batch that answers NOTHING still scores — degraded, flagged MEDIUM or
+#   LOW confidence by A, never crashed. That is the same rule `fuse()` runs on.
+#
+# BRANCHING
+#   `show_if` — an all-must-match list of {question, in: [...]} conditions. Absent means
+#   always shown. Hidden questions are not asked and never blank the screen; their
+#   `default` is written instead, and `defaulted: true` is reported so A can drop
+#   confidence rather than pretend the answer was given.
+#
+# WORDING
+#   No jargon. Not "maturity stage" — "how ripe is most of the fruit". Not "field heat
+#   exposure" — "how long did it sit in the sun". The option labels are the descriptions a
+#   grader would actually use, and each carries the physical value the model needs. The
+#   translation from human language to physics happens HERE, in content, which is exactly
+#   where a judge can audit it.
+#
+# Out of scope for this build: Kannada / Hindi strings. The `prompt_key` on each question
+# is the hook for them, so localisation is a content commit later and not a refactor.
+
+version: 1
+commodity: tomato
+display_name: Tomato
+estimated_seconds: 28
+max_questions_shown: 10
+
+# The five wizard steps C renders. Steps 1, 2 and 4 are fixed fields and file upload, not
+# questions — they are listed so C has one source for the whole flow.
+steps:
+  - id: commodity
+    index: 1
+    title: What are you shipping?
+    kind: fixed
+    fields: [commodity]
+  - id: consignment
+    index: 2
+    title: How much, and where to?
+    kind: fixed
+    fields: [qty_kg, origin, destination, harvested_at]
+  - id: condition
+    index: 3
+    title: Condition of the lot
+    kind: questions
+    group: condition
+  - id: photos
+    index: 4
+    title: Add 3 to 5 photos
+    kind: photos
+    min_photos: 0 # zero is allowed. A batch with no photos still scores.
+    max_photos: 5
+    recommended_photos: 3
+  - id: logistics
+    index: 5
+    title: Vehicle and packing
+    kind: questions
+    group: logistics
+
+questions:
+  # ------------------------------------------------------------------ condition
+  - id: harvest_window
+    group: condition
+    prompt: When was this lot picked?
+    prompt_key: q.harvest_window
+    help: The time of day matters more than the date.
+    type: choice
+    feature_key: harvest_window
+    default: early_morning
+    options:
+      - value: pre_dawn
+        label: Before sunrise
+        hint: Coolest fruit. Best case.
+      - value: early_morning
+        label: Early morning, before 9
+      - value: midday
+        label: Late morning to mid-afternoon
+        hint: The fruit carries the day's heat.
+      - value: evening
+        label: After 4 in the afternoon
+    notes: >
+      The single most predictive question in the tree. A midday-picked lot enters the
+      truck already several hours into its shelf life, and no amount of downstream cold
+      chain gets those hours back. It is asked first because it is the one an operator
+      can change tomorrow at zero cost.
+
+  - id: field_heat_hours
+    group: condition
+    prompt: How long did the picked fruit sit in open sun before it was shaded?
+    prompt_key: q.field_heat_hours
+    help: From the crate being filled to it reaching shade or the truck.
+    type: choice
+    feature_key: field_heat_hours_over_30c
+    default: 1.0
+    unit: hours
+    # Branch rule: only asked when the answer above means the sun was actually up and hot.
+    show_if:
+      - question: harvest_window
+        in: [midday, evening]
+    options:
+      - value: 0.5
+        label: Straight into shade
+      - value: 2.0
+        label: About an hour or two
+      - value: 4.2
+        label: Half the afternoon
+      - value: 7.0
+        label: Most of the day
+    notes: >
+      Written directly into the feature the Q10 accumulation integrates. The values are
+      hours above 30 degC, not hours elapsed — the option labels are the human version and
+      the numbers are what commodities.yaml consumes. T1024's 4.2 comes from here.
+
+  - id: post_harvest_shade
+    group: condition
+    prompt: Was the lot kept covered or shaded after picking?
+    prompt_key: q.post_harvest_shade
+    type: choice
+    feature_key: post_harvest_shade
+    default: partial
+    options:
+      - value: immediate
+        label: Yes, straight away
+      - value: partial
+        label: Partly, some of it stood out
+      - value: none
+        label: No, it stood in the open
+
+  - id: maturity_stage
+    group: condition
+    prompt: How ripe is most of the fruit?
+    prompt_key: q.maturity_stage
+    help: Judge the lot, not the best crate.
+    type: choice
+    feature_key: maturity_stage
+    default: turning
+    # Values are `agri/commodity.py::MaturityStage` — A's vocabulary, written straight
+    # through into fuse(). Mirrored in commodities.yaml::maturity_stages and asserted
+    # equal to A's enum in tests/test_external/. A value A does not recognise falls
+    # back silently, and the most predictive answer in the form stops moving anything.
+    options:
+      - value: mature_green
+        label: Still green, full size
+      - value: breaker
+        label: First blush of colour at the tip
+      - value: turning
+        label: Colour on a third of the fruit
+      - value: pink
+        label: Mostly pink
+      - value: light_red
+        label: Red but firm
+      - value: red
+        label: Fully red and softening
+        hint: Travels badly. Expect a local or processing recommendation.
+
+  - id: damage_level
+    group: condition
+    prompt: How much bruising, cracking or split fruit can you see?
+    prompt_key: q.damage_level
+    type: choice
+    feature_key: damage_level
+    default: light
+    # Values index commodities.yaml::damage_level_index, which is a 0-1 magnitude and
+    # NOT a life multiplier — A owns what damage does to shelf life.
+    options:
+      - value: none
+        label: Clean lot
+      - value: light
+        label: A few marked fruit
+      - value: moderate
+        label: Bruising in most crates
+      - value: heavy
+        label: Crushing or rot starting
+    notes: >
+      A's photo pipeline produces a probabilistic damage_share from the same lot. The two
+      do not overwrite each other — `fuse()` takes both, and disagreement between the
+      human answer and the photographs is itself a signal worth carrying.
+
+  - id: surface_moisture
+    group: condition
+    prompt: Was it picked wet, or rained on before packing?
+    prompt_key: q.surface_moisture
+    help: Monsoon question. Surface water on fruit in a closed pack is how rot starts.
+    type: choice
+    feature_key: surface_moisture
+    default: dry
+    options:
+      - value: dry
+        label: Dry
+      - value: wet_dried
+        label: Wet, but dried before packing
+      - value: wet_packed
+        label: Packed damp
+        hint: The highest rot risk answer in this form.
+
+  - id: yard_hold_hours
+    group: condition
+    prompt: How long between packing and the truck leaving?
+    prompt_key: q.yard_hold_hours
+    type: choice
+    feature_key: yard_hold_hours
+    default: 2.0
+    unit: hours
+    options:
+      - value: 0.5
+        label: Loaded and gone
+      - value: 2.0
+        label: An hour or two
+      - value: 5.0
+        label: Half a day
+      - value: 12.0
+        label: Overnight
+    notes: >
+      Cheap hours to lose and cheap hours to win back. This is the number the
+      depart-earlier action moves, so it has to be asked rather than assumed.
+
+  # ------------------------------------------------------------------ logistics
+  - id: transport_mode
+    group: logistics
+    prompt: What is it travelling in?
+    prompt_key: q.transport_mode
+    type: choice
+    feature_key: transport_mode
+    default: open_truck
+    # Values match modes in transport_modes.yaml.
+    options:
+      - value: open_truck
+        label: Open truck
+      - value: tarpaulin
+        label: Open truck under a tarpaulin
+      - value: reefer
+        label: Refrigerated container
+        hint: Needs about 14 hours' notice at Kolar.
+
+  - id: packaging_type
+    group: logistics
+    prompt: What is it packed in?
+    prompt_key: q.packaging_type
+    type: choice
+    feature_key: packaging_type
+    default: ventilated_plastic_crate
+    # Values match `packaging:` in packaging.yaml AND `PackagingType` in schema/enums.py.
+    # Wooden crates are common on this corridor and deliberately absent: the enum has no
+    # member for them, so offering one would produce a batch that cannot be saved. See
+    # `pending_enum` in packaging.yaml.
+    options:
+      - value: ventilated_plastic_crate
+        label: Ventilated plastic crates
+      - value: cfb_carton
+        label: Cardboard boxes
+      - value: jute_sack
+        label: Jute sacks
+      - value: loose
+        label: Loose in the truck bed
+
+  - id: load_cover
+    group: logistics
+    prompt: Will the top of the load be covered on the road?
+    prompt_key: q.load_cover
+    type: choice
+    feature_key: load_cover
+    default: none
+    # Branch rule: a reefer is a sealed insulated box, so every question about covering
+    # the load and about the pack's thermal behaviour is meaningless. Asking it anyway is
+    # how a form loses the eight seconds it does not have.
+    show_if:
+      - question: transport_mode
+        in: [open_truck, tarpaulin]
+    options:
+      - value: none
+        label: No cover
+      - value: net
+        label: Net or cloth
+      - value: tarpaulin
+        label: Full tarpaulin
+
+  - id: crate_fill
+    group: logistics
+    prompt: How full are the crates or sacks?
+    prompt_key: q.crate_fill
+    type: choice
+    feature_key: crate_fill
+    default: level
+    show_if:
+      - question: packaging_type
+        in: [ventilated_plastic_crate, wooden_crate, cfb_carton, jute_sack]
+    options:
+      - value: under
+        label: Below the rim
+      - value: level
+        label: Level with the rim
+      - value: heaped
+        label: Heaped above the rim
+        hint: The tier above rests on the fruit, not on the crate.
+    notes: >
+      Overfilling defeats the crate's crush_protection entirely — the stack load transfers
+      to the fruit instead of the rigid walls. It is the cheapest fault in the whole chain
+      to fix and almost nobody measures it.
+
+# --- what a silent form still produces --------------------------------------
+# Every default above, gathered so A can assert the degraded path in one place and B can
+# build a feature vector for a batch created by CSV import with no questionnaire at all.
+# Answering nothing gives a defensible, pessimistic-neutral lot: early-morning pick,
+# partial shade, turning, lightly marked, dry, two hours in the yard, open truck,
+# ventilated crates, uncovered, level fill. A should report confidence MEDIUM or LOW for
+# such a batch and say so on Screen 3 rather than showing a confident band.
+defaults:
+  harvest_window: early_morning
+  field_heat_hours_over_30c: 1.0
+  post_harvest_shade: partial
+  maturity_stage: turning
+  damage_level: light
+  surface_moisture: dry
+  yard_hold_hours: 2.0
+  transport_mode: open_truck
+  packaging_type: ventilated_plastic_crate
+  load_cover: none
+  crate_fill: level
+
+# --- the demo batch's answers ------------------------------------------------
+# T1024, so the calibration in commodities.yaml can be reproduced from the form rather
+# than from a fixture. If the wizard is driven with exactly these answers it must produce
+# 8.4% / 31 h / HIGH. This block is the bridge between the demo script and the model.
+demo_answers:
+  T1024:
+    harvest_window: midday
+    field_heat_hours_over_30c: 4.2
+    post_harvest_shade: partial
+    maturity_stage: light_red
+    damage_level: moderate
+    surface_moisture: dry
+    yard_hold_hours: 2.0
+    transport_mode: open_truck
+    packaging_type: ventilated_plastic_crate
+    load_cover: none
+    crate_fill: heaped

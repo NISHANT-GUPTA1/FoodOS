@@ -1,0 +1,59 @@
+{
+  "basis": "NH-44 / NH-48 commercial FTL routings; content/mandis.yaml",
+  "lanes": {
+    "kolar_hub__delhi_apmc": {
+      "origin": "kolar_hub",
+      "destination": "delhi_apmc",
+      "distance_km": 2150,
+      "transit_hours": 36.5,
+      "road_quality": "mixed",
+      "toll_inr": 6850,
+      "rest_stops": 3
+    },
+    "kolar_hub__jaipur_apmc": {
+      "origin": "kolar_hub",
+      "destination": "jaipur_apmc",
+      "distance_km": 1930,
+      "transit_hours": 33.0,
+      "road_quality": "mixed",
+      "toll_inr": 6200,
+      "rest_stops": 3
+    },
+    "kolar_hub__hyderabad_bowenpally": {
+      "origin": "kolar_hub",
+      "destination": "hyderabad_bowenpally",
+      "distance_km": 490,
+      "transit_hours": 9.5,
+      "road_quality": "good",
+      "toll_inr": 1450,
+      "rest_stops": 1
+    },
+    "kolar_hub__chennai_koyambedu": {
+      "origin": "kolar_hub",
+      "destination": "chennai_koyambedu",
+      "distance_km": 215,
+      "transit_hours": 5.0,
+      "road_quality": "good",
+      "toll_inr": 640,
+      "rest_stops": 0
+    },
+    "kolar_hub__bengaluru_apmc": {
+      "origin": "kolar_hub",
+      "destination": "bengaluru_apmc",
+      "distance_km": 68,
+      "transit_hours": 2.5,
+      "road_quality": "good",
+      "toll_inr": 180,
+      "rest_stops": 0
+    },
+    "kolar_hub__kolar_apmc": {
+      "origin": "kolar_hub",
+      "destination": "kolar_apmc",
+      "distance_km": 8,
+      "transit_hours": 0.5,
+      "road_quality": "good",
+      "toll_inr": 0,
+      "rest_stops": 0
+    }
+  }
+}

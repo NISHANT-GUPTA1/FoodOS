@@ -1,4 +1,9 @@
-"""AGMARKNET / e-NAM wholesale price ingest.
+"""AGMARKNET / e-NAM wholesale prices.
+
+Moved here from `foodos/ingest/` by B at H2 — this describes the mandi, not our
+inventory, which makes it external data rather than an ingest path. D owns it
+from that commit onward. Every call site imports `from foodos.external import
+agmarknet`; there is no shim, because B updated them all in the same commit.
 
 **A file connector, not a network client.** AGMARKNET publishes daily mandi
 arrivals and prices as a downloadable CSV, and that is what this module reads.
@@ -6,6 +11,16 @@ Nothing here opens a socket: the demo runs in aeroplane mode, and a live
 scheduled pull is the sort of integration that eats a day and adds nothing the
 judge can see. Drop `agmarknet.csv` next to the rest of the dataset and it
 loads; leave it out and every screen behaves exactly as it did before.
+
+Two surfaces, for the two nodes:
+
+    load() / latest_for()   the kitchen node — CSV into `MarketPrice`, then the
+                            most recent quotation for a product, as a reference
+                            beside a rescue figure. Unchanged.
+    mandi_prices()          the agri node, Contract 3 — destination price
+                            context for the Market agent and the optimiser's
+                            revenue term. Reads a committed snapshot, needs no
+                            database, and is the one the batch screens call.
 
 The published shape, which is what `ALIASES` accepts:
 
@@ -35,9 +50,15 @@ from pathlib import Path
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from foodos.content import ContentError
+from foodos.content import commodity as commodity_constants
+from foodos.content import mandis as mandi_content
+from foodos.external import snapshot
 from foodos.schema.tables import MarketPrice
 
 FILENAME = "agmarknet.csv"
+
+SNAPSHOT_NAME = "mandi_prices.json"
 
 KG_PER_QUINTAL = 100.0
 
@@ -220,3 +241,96 @@ def latest_for(session: Session, product_name: str, as_of: date) -> dict | None:
         "max_price_per_kg": row.max_price_per_kg,
         "source": row.source,
     }
+
+
+# ------------------------------------------------------------- Contract 3 · agri
+# Destination price context for the batch product. Deliberately database-free:
+# it is called while a batch is being scored, before anything is persisted, and
+# from `tests/test_external/` where there is no session at all.
+
+
+def _mandi_ids(requested: list[str] | None) -> list[str]:
+    known = mandi_content()
+    if not requested:
+        return list(known)
+    return [str(m) for m in requested]
+
+
+def _reference_price(commodity: str) -> float:
+    """The fallback rate when no snapshot covers a mandi.
+
+    From `commodities.yaml`, so even the degraded path quotes a number with a
+    source rather than a literal invented at the call site.
+    """
+    try:
+        return float(commodity_constants(commodity)["reference_price_per_kg"])
+    except (ContentError, KeyError, TypeError, ValueError):
+        return 15.0
+
+
+def mandi_prices(commodity: str, mandis: list[str], on: str) -> dict:
+    """Per-kilogram wholesale prices at the given mandis on a date.
+
+    **Per kilogram, never per quintal.** AGMARKNET quotes per quintal and the
+    /100 lives in this module and nowhere else — applying it twice at a call
+    site is how a demo ends up quoting tomato at 19 paise a kilo, and applying
+    it zero times is how it quotes Rs 1,950.
+
+    Returns a row per requested mandi, always. A mandi with no quotation gets
+    the commodity's reference price with `estimated: true` and a stale-days
+    count, because a missing destination silently vanishing from the comparison
+    is worse than a disclosed estimate — the optimiser would then rank a subset
+    and present it as the whole field.
+    """
+    wanted = _mandi_ids(mandis)
+    known = mandi_content()
+    reference = _reference_price(commodity)
+
+    doc = snapshot.read(SNAPSHOT_NAME)
+    source = snapshot.SOURCE_SNAPSHOT if doc else snapshot.SOURCE_MODEL
+    quotes = (doc or {}).get("prices") or {}
+    captured_on = (doc or {}).get("on")
+
+    prices: dict[str, dict] = {}
+    for mandi_id in wanted:
+        meta = known.get(mandi_id) or {}
+        row = quotes.get(mandi_id) or {}
+        modal = row.get("modal_price_per_kg")
+        estimated = modal is None
+        if estimated:
+            modal = reference
+        modal = float(modal)
+        prices[mandi_id] = {
+            "mandi": mandi_id,
+            "display_name": meta.get("display_name", mandi_id),
+            "agmarknet_key": meta.get("agmarknet_key"),
+            "commodity": commodity,
+            "modal_price_per_kg": round(modal, 2),
+            "min_price_per_kg": round(float(row.get("min_price_per_kg", modal * 0.82)), 2),
+            "max_price_per_kg": round(float(row.get("max_price_per_kg", modal * 1.18)), 2),
+            "arrival_kg": row.get("arrival_kg"),
+            "daily_absorption_kg": meta.get("daily_absorption_kg"),
+            "arrival_date": row.get("arrival_date", captured_on),
+            "estimated": estimated,
+        }
+
+    stale_days = None
+    if captured_on:
+        try:
+            stale_days = (date.fromisoformat(str(on)) - date.fromisoformat(str(captured_on))).days
+        except ValueError:
+            stale_days = None
+
+    return snapshot.stamp(
+        {
+            "commodity": commodity,
+            "on": str(on),
+            "unit": "INR_per_kg",
+            "prices": prices,
+            "days_stale": stale_days,
+            "estimated_count": sum(1 for p in prices.values() if p["estimated"]),
+        },
+        source,
+        captured_on=captured_on,
+        basis=(doc or {}).get("basis"),
+    )

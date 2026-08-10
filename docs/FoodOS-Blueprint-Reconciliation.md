@@ -157,7 +157,13 @@ crates in transit; this engine works in days because it models stock at a node.
 Three slices, all additive. No existing API field moved, was renamed, or changed value —
 `contracts/mock/*.json` is byte-identical after the new keys are stripped.
 
-### AGMARKNET / e-NAM mandi prices — [ingest/agmarknet.py](../backend/foodos/ingest/agmarknet.py)
+### AGMARKNET / e-NAM mandi prices — [external/agmarknet.py](../backend/foodos/external/agmarknet.py)
+
+> Moved from `ingest/` to `external/` for the agri build: it describes the mandi, not our
+> inventory. `foodos.ingest.agmarknet` still resolves through a shim, so everything below
+> is unchanged and every existing test still passes. It gained one function —
+> `mandi_prices()`, Contract 3 — which serves destination price context to the batch
+> screens from a committed snapshot and needs no database.
 
 A **file connector, not a network client**: AGMARKNET publishes daily arrivals and prices
 as a CSV, and that is what is read. No socket is opened, so the aeroplane-mode rehearsal

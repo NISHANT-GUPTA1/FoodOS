@@ -1,25 +1,51 @@
-"""External data connectors — Person D.
+"""External data connectors — weather, road route, mandi prices. Person D.
 
-Weather, route and mandi price data. Everything in this package is a
-**snapshot-first connector**: it reads a cached file from `backend/data/external/`
-and only attempts a network call when explicitly asked. Ruling 3 of
-FoodOS-Team-Split-v2.md — nothing opens a socket during the demo, and the
-aeroplane-mode rehearsal at H34 has to pass.
+**The one rule this package exists to enforce: nothing here needs a socket.**
 
-Every connector stamps `source` as `"snapshot"` or `"live"` on what it returns,
-and that field is never hidden from the UI.
+`docs/FoodOS-Blueprint-Reconciliation.md` ruled out live telemetry and the
+blueprint puts hardware on its own out-of-scope list, so every connector in
+here is *snapshot-first*: it reads a committed file under
+`backend/data/external/`, and only attempts a network call when the caller
+explicitly asks for one and the environment allows it. Ruling 3 of
+`FoodOS-Team-Split-v2.md` — the aeroplane-mode rehearsal at H34 is the
+acceptance test. A connector that only works online is a connector that will
+fail on stage.
 
-`agmarknet` was moved here from `foodos.ingest` by B at H2 per §1. It is D's
-from that commit onward. The re-export below is the import surface the rest of
-the backend uses:
+Every return value carries a `source` field — `"snapshot"`, `"live"` or
+`"model"` — and the UI renders it. **`source` is never hidden.** A judge who
+spots stale data we disclosed asks a different question from one who spots
+stale data we hid.
 
-    from foodos.external import agmarknet
+Contract 3 (D -> A + B), frozen at H3::
 
-Contract 3 (§2) adds `weather.route_weather()` and `routes.route_profile()`
-alongside it. They are D's to write; this file imports agmarknet only, so the
-package stays importable before those modules land.
+    route_weather(origin, destination, depart_at) -> dict
+    route_profile(origin, destination, depart_at) -> dict
+    mandi_prices(commodity, mandis, on)           -> dict
+
+`agmarknet` was moved here from `foodos.ingest` by B at H2 per §1, and is D's
+from that commit onward. Two import surfaces coexist deliberately:
+
+    from foodos.external import agmarknet      # the module — B's kitchen-node
+                                               # call sites (seed, screens) use
+                                               # agmarknet.load / .latest_for
+    from foodos.external import mandi_prices   # the Contract 3 function — the
+                                               # agri batch screens use this
+
+Both are re-exported below. Dropping the module export would break
+`ingest/seed.py` and `api/routes/screens.py`, which is the sort of breakage
+that shows up as a failed reseed twenty minutes before a rehearsal.
 """
 
-from foodos.external import agmarknet
+from __future__ import annotations
 
-__all__ = ["agmarknet"]
+from foodos.external import agmarknet
+from foodos.external.agmarknet import mandi_prices
+from foodos.external.routes import route_profile
+from foodos.external.weather import route_weather
+
+__all__ = [
+    "agmarknet",
+    "mandi_prices",
+    "route_profile",
+    "route_weather",
+]

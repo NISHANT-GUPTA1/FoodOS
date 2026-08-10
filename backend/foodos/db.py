@@ -37,7 +37,21 @@ def create_all() -> None:
 
 
 def drop_all() -> None:
-    Base.metadata.drop_all(engine)
+    """Drop every table, cycles included.
+
+    `loss_risk_score.best_plan_id` and `candidate_plan.loss_risk_score_id`
+    reference each other, so there is no ordering that satisfies both. Postgres
+    would take a DROP CONSTRAINT; SQLite has no ALTER for that, so the only way
+    through is to stop enforcing keys for the duration of the drop. Re-enabled
+    immediately after, and scoped to one connection — nothing else sees it.
+    """
+    with engine.begin() as connection:
+        is_sqlite = connection.dialect.name == "sqlite"
+        if is_sqlite:
+            connection.exec_driver_sql("PRAGMA foreign_keys=OFF")
+        Base.metadata.drop_all(connection)
+        if is_sqlite:
+            connection.exec_driver_sql("PRAGMA foreign_keys=ON")
 
 
 @contextmanager
