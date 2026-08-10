@@ -10,6 +10,22 @@ ever disagree, the code wins and this document is stale.
 > and `market_reference` per item. Existing fields are byte-identical — see
 > `docs/FoodOS-Blueprint-Reconciliation.md` for why they exist. Ignoring all of them
 > leaves every screen exactly as it was.
+>
+> `2026-08-10` · **the receiving gate.** Two new paths,
+> `POST /api/batches/{code}/receive` and `GET /api/batches/{code}/lots`, plus
+> `batch_code` and `origin` on `/api/ledger` rows and on `/api/tracks/retail`
+> rows. Both new fields are `null` for stock that never came in on a tracked
+> consignment, which is most of what a kitchen buys. See **The receiving
+> gate** below.
+>
+> **One correction, not an addition.** `status` on `GET /api/batches` and
+> `POST /api/batches` is now projected through `BatchLifecycle.contract_status`
+> before it goes on the wire. The identity layer widened the underlying column
+> to a fuller ladder (`ready_for_dispatch`, `arrived`, `received`,
+> `in_inventory`, `sold`, …), and those values were leaking onto a field frozen
+> to four. C's `BatchStatus` union does not contain them and the Command
+> Center's `?status=` filter silently stopped matching received batches. The
+> wire is now back to exactly the four frozen values.
 
 - Base URL: `http://localhost:8000`
 - Interactive docs: `/docs` (generated from the same Pydantic models)
@@ -333,6 +349,66 @@ Destination price context from D's `external/agmarknet.py`, per kilogram.
 Carries `source: "snapshot" | "live"`. **Render it.** Ruling 3 — the demo runs
 offline, prices come from a committed snapshot, and a stale price shown as
 live is the one number a judge could catch us on.
+
+## The receiving gate
+
+`batch_identity` keeps one code alive while produce changes hands *inside* the
+agri node. These two paths carry it out of that node and into a track, so the
+identity does not die at the receiving door.
+
+```
+POST /api/batches/{code}/receive     take it into stock at a site
+GET  /api/batches/{code}/lots        where did this code end up?
+```
+
+`receive` takes who is accepting it and which site:
+
+```jsonc
+{ "to_party": "Azadpur Wholesale", "to_role": "wholesaler",
+  "site_type": "store",            // or an explicit site_id
+  "qty_kg": 9000 }                 // omit for "all of it"
+```
+
+and returns the lot the receiving track now holds:
+
+```jsonc
+{ "batch_id": "TOM-KLR-00124",
+  "status": "delivered",           // the frozen four-value spelling
+  "lifecycle": "received",         // the fuller ladder, for clients that want it
+  "accepted_kg": 9000, "rejected_kg": 1000,
+  "lot": {
+    "lot_code": "TOM-KLR-00124",   // NOT a new identifier — the same code
+    "track": "retail", "site": "Indiranagar Store",
+    "rsl_days": 0.75,              // from the inherited RUL, not a shelf-life table
+    "life_used": 0.83,
+    "inherited": { "rul_at_dispatch": 36.5, "rul_hours": 18.0,
+                   "age_hours": 53.3, "hops": 2,
+                   "custody": ["Kolar FPO", "Azadpur Wholesale"],
+                   "basis": "model" } } }
+```
+
+Rules this endpoint guarantees:
+
+- **No identifier is minted at the gate.** `lot_code` is the consignment's own
+  code. A picker reading a crate and a manager reading the Command Center are
+  saying the same string.
+- **The lot does not start a fresh clock.** `rsl_days` and `life_used` come from
+  a re-score as of the moment of receipt, so a batch that spent forty hours on
+  an open truck arrives in the Ledger knowing it. This is the whole point: every
+  number the receiving track computes downstream begins from what actually
+  happened on the road.
+- **A partial acceptance balances.** Accepting less than was shipped books the
+  shortfall as a `wasted` event against the batch. Mass does not evaporate
+  between two ledgers.
+- **`inherited.basis`** is `"model"` or `"fallback"`, and it travels with the
+  numbers. An inherited figure from a degraded score must never arrive at the
+  next track looking like a modelled one.
+- Receiving twice is a **409**, as is receiving a batch that was never
+  dispatched. Accepting more than remains is a **422**.
+
+`rsl_explanation` on the lot is one sentence, already written, naming the code
+and the journey — so the Ledger, the retail track and any export say it
+identically.
 
 ## Degradation contract
 

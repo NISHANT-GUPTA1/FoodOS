@@ -106,6 +106,12 @@ def _batch_risk(session: Session, ctx: DecisionContext, batch: Batch) -> BatchRi
         unit_price=product.unit_price,
         intake_grade=batch.intake_grade,
         storage_zone=zone.name if zone else None,
+        # Provenance, when the lot has any. Read off the denormalised column
+        # and the stored `inherited` block rather than through the
+        # consignment relationship: the Ledger scores every open batch on the
+        # site, and a join per row for a chip is a join per row too many.
+        batch_code=batch.batch_code,
+        origin=(batch.inherited or {}).get("origin"),
     )
 
 

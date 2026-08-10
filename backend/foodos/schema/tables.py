@@ -184,7 +184,12 @@ class StorageZone(Base):
 
 class Batch(Base):
     __tablename__ = "batch"
-    __table_args__ = (Index("ix_batch_site_product", "site_id", "product_id"),)
+    __table_args__ = (
+        Index("ix_batch_site_product", "site_id", "product_id"),
+        # "Where did TOM-KLR-00124 end up?" is asked by code, from a passport
+        # screen that has the string and not the surrogate key.
+        Index("ix_batch_code", "batch_code"),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     site_id: Mapped[int] = mapped_column(ForeignKey("site.id"))
@@ -212,8 +217,37 @@ class Batch(Base):
     life_used: Mapped[float | None] = mapped_column(Float, nullable=True)
     rsl_explanation: Mapped[str | None] = mapped_column(String(400), nullable=True)
 
+    # --- upstream identity: the bridge between the tracks -------------------
+    # A `Consignment` is a farm-gate shipment; a `Batch` is a lot sitting in a
+    # storage zone at a site. They are different subjects and stay different
+    # tables — but they are frequently the *same tomatoes*, and until these two
+    # columns existed the identity ended at the receiving gate. A retailer
+    # scanned TOM-KLR-00124 into stock and the lot that appeared in the Ledger
+    # had no way back to the forty hours it had already spent on a truck.
+    #
+    # `batch_code` is denormalised beside the foreign key on purpose. The
+    # Ledger, the retail track and the rescue waterfall all print the code, and
+    # a list screen should not join to the agri side to render an identifier.
+    # It also means the provenance survives a consignment being purged: the
+    # link degrades to a string a human can still trace, rather than to null.
+    consignment_id: Mapped[int | None] = mapped_column(
+        ForeignKey("consignment.id"), nullable=True
+    )
+    batch_code: Mapped[str | None] = mapped_column(String(40), nullable=True)
+
+    #: What this lot arrived carrying — the carried state computed by
+    #: `engine/intake.py`. Kept verbatim so the Ledger can show "arrived with 18
+    #: of its 46 hours left" without re-deriving it from the agri side, and so
+    #: the figure a receiving clerk saw is still on disk after the kitchen's own
+    #: Q10 model has moved `rsl_days` on. Empty for stock with no upstream
+    #: passport, which is most of what a kitchen buys.
+    inherited: Mapped[dict] = mapped_column(JSON, default=dict)
+
     product: Mapped[Product] = relationship()
     storage_zone: Mapped[StorageZone | None] = relationship()
+    consignment: Mapped["Consignment | None"] = relationship(
+        back_populates="received_lots"
+    )
 
 
 class InventoryEvent(Base):
@@ -621,6 +655,15 @@ class Consignment(Base, TimestampMixin):
         cascade="all, delete-orphan",
         order_by="BatchStateSnapshot.sequence",
     )
+
+    #: Lots this consignment became once it was received into a kitchen, store
+    #: or plant. This is where the identity crosses out of the agri node and
+    #: into tracks 1-3 — see `engine/intake.py`.
+    #:
+    #: **No cascade.** Deleting a consignment must not delete the stock a store
+    #: is holding; `Batch.consignment_id` is nullable precisely so the lot
+    #: outlives the passport and keeps trading on `batch_code`.
+    received_lots: Mapped[list[Batch]] = relationship(back_populates="consignment")
 
     # --- the `state` block of the Batch Profile -----------------------------
     # Written by A's quality_score() and the questionnaire. B ships a

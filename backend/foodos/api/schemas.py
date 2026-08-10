@@ -180,6 +180,13 @@ class LedgerRowOut(BaseModel):
     severity: str
     storage_zone: str | None = None
 
+    # Additive, post-freeze. Provenance for lots that arrived on a tracked
+    # consignment: the upstream code and where it was grown. Both null for
+    # stock with no passport, and a client that ignores them renders exactly
+    # the Ledger it rendered before.
+    batch_code: str | None = None
+    origin: str | None = None
+
 
 class LedgerOut(BaseModel):
     site_id: int

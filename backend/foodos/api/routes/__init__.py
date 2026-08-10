@@ -1,6 +1,21 @@
 """API route modules."""
 
-from foodos.api.routes import batches, decisions, screens, system, tracks
+from foodos.api.routes import (
+    batches,
+    decisions,
+    intake,
+    passport,
+    screens,
+    system,
+    tracks,
+)
 
 __all__ = [
-    "batches","decisions", "screens", "system", "tracks"]
+    "batches",
+    "decisions",
+    "intake",
+    "passport",
+    "screens",
+    "system",
+    "tracks",
+]
