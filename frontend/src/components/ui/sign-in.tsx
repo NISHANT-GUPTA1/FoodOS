@@ -57,10 +57,10 @@ export const SignInPage: React.FC<SignInPageProps> = ({
   title = <span className="font-light text-slate-900 tracking-tighter">Welcome</span>,
   description = "Access your account and continue your journey with us",
   heroImageSrc = [
-    "/hero_kitchen.jpg",
-    "/hero_fresh.jpg",
-    "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=2160&q=80",
-    "https://images.unsplash.com/photo-1642615835477-d303d7dc9ee9?w=2160&q=80"
+    "/farm-field-sunrise.jpg",
+    "/market-produce-crates.jpg",
+    "/market-vegetables.jpg",
+    "/crop-seedlings.jpg"
   ],
   testimonials = [],
   onSignIn,
@@ -74,7 +74,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({
   // Normalize image list
   const imageList = Array.isArray(heroImageSrc)
     ? heroImageSrc
-    : [heroImageSrc, "/hero_fresh.jpg", "/hero_kitchen.jpg"];
+    : [heroImageSrc, "/farm-field-sunrise.jpg", "/market-produce-crates.jpg"];
 
   // Continuously rotate background hero images every 4 seconds
   useEffect(() => {
