@@ -24,7 +24,7 @@ That is the same rule the eleven kitchen endpoints follow, and it is what makes
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, Query, Response
@@ -185,6 +185,35 @@ def _ensure_identity(session: Session, batch: Consignment) -> None:
         batch.status = BatchLifecycle.READY_FOR_DISPATCH
 
     session.commit()
+
+
+def _elapsed_default(
+    batch: Consignment, event_type: BatchEventType, payload: dict | None
+) -> datetime:
+    """When an event happened, if the caller did not say.
+
+    Usually just "now". The exception is an event that *is* a span of time: a
+    six-hour hold-up is reported by someone who has sat through it, so the six
+    hours are already spent and the batch's clock has to move with them.
+
+    Without this the demo reads as broken and the model is wrong in the same
+    breath. Both the dispatch and the delay default to the same instant, so no
+    time passes between them, the elapsed-life subtraction finds nothing to
+    subtract, and the screen shows "35 h -> 35 h" after a six-hour delay. The
+    loss figure still rises, which makes it worse: the two numbers disagree
+    about whether anything happened.
+
+    A caller that knows the real timestamps passes `occurred_at` and none of
+    this applies.
+    """
+    now = _now_for(batch)
+    if event_type is BatchEventType.DELAY:
+        hours = float((payload or {}).get("duration_hours", 0.0) or 0.0)
+        return now + timedelta(hours=max(hours, 0.0))
+    if event_type is BatchEventType.TEMPERATURE_EXPOSURE:
+        hours = float((payload or {}).get("hours", 0.0) or 0.0)
+        return now + timedelta(hours=max(hours, 0.0))
+    return now
 
 
 def _passport_url(code: str) -> str:
@@ -374,13 +403,14 @@ def post_event(code: str, body: EventIn, session: SessionDep) -> EventOutcome:
     batch = _get(session, code)
     event_type = _enum_or_400(BatchEventType, body.type, "type")
     previous = _risk_out(batch)
+    occurred_at = body.occurred_at or _elapsed_default(batch, event_type, body.payload)
 
     try:
         event = identity.apply_event(
             session,
             batch,
             event_type,
-            occurred_at=body.occurred_at or _now_for(batch),
+            occurred_at=occurred_at,
             location=body.location,
             actor=body.actor,
             actor_role=_enum_or_400(PartyRole, body.actor_role, "actor_role")
