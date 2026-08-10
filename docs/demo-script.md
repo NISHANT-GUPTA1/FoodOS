@@ -1,247 +1,272 @@
-# Demo script — 4:40
+# FoodOS — demo script
 
-**Owner:** Person D. **Presenter:** Person D.
-**Target:** 4 minutes 40 seconds, leaving 20 seconds of slack in a 5-minute slot.
+**4:40. Owner: D. D presents.**
 
-Read this as beats, not as a monologue. The words are a floor, not a ceiling — but the
-**timings and the transitions are fixed**, because those are what fall apart under pressure.
+> **This replaces the kitchen demo as the pitch.** Ruling 2 of `FoodOS-Team-Split-v2.md`
+> makes the farm-gate batch story the demo and the seven kitchen screens the platform
+> proof, shown for about twenty seconds at 4:10. The kitchen script is kept intact at
+> [`demo-script-kitchen-node.md`](demo-script-kitchen-node.md); its Verifier terminal
+> walkthrough and its anticipated-questions list are still the best version of those
+> beats and are drawn on below.
+>
+> Rehearsals, the contingency ladder and the freeze rules live in
+> [`rehearsal-checklist.md`](rehearsal-checklist.md).
 
-Person C drives the laptop. Person D talks. Person B sits with a terminal open and does not
-touch anything unless something is on fire.
+D presents because D did not write the engine. Somebody who built the optimiser explains
+it in the vocabulary of the optimiser; somebody who did not has to explain it in the
+judge's vocabulary, and that is the only vocabulary that scores.
+
+**One batch, one story, no tour of the software.** Every beat below either sets up the
+number or pays it off. Nothing on this page exists to show that a feature exists.
+
+The beats follow §8 of the blueprint: register 10 t Kolar → Delhi → questionnaire →
+photos → 8.4% / 31 h / high risk → agents propose → optimiser picks → simulator drops it
+to 3.9% → close on the platform.
 
 ---
 
-## Setup, before the slot
+## The timing
 
-- [ ] `python -m foodos.ingest.seed` run and finished, database fresh
-- [ ] Backend up on `:8000`, frontend on `:5173`
-- [ ] Browser on the Today screen, zoomed to 125%, one tab, no bookmarks bar
-- [ ] λ slider at 0.5
-- [ ] `python -m foodos.agents.demo` output already open in a second terminal, scrolled to
-      the block
-- [ ] Backup video queued at 0:00 in a third window
-- [ ] Phone on silent, in a bag, not in a pocket
+| From | To | Len | Beat |
+| --- | --- | --- | --- |
+| 0:00 | 0:35 | 35 s | The problem, in one number |
+| 0:35 | 1:05 | 30 s | Register the batch |
+| 1:05 | 1:20 | 15 s | Three photos |
+| 1:20 | 2:05 | 45 s | The assessment — 8.4%, 31 hours, high risk |
+| 2:05 | 2:35 | 30 s | Every plan we considered, including the ones we ruled out |
+| 2:35 | 3:05 | 30 s | The recommended plan |
+| 3:05 | 3:50 | 45 s | **What if — hand this to a judge** |
+| 3:50 | 4:10 | 20 s | The agent that was not allowed to speak |
+| 4:10 | 4:40 | 30 s | One engine, many nodes |
 
----
-
-## 0:00 — 0:35 · The problem, in one number
-
-**Slide 1.**
-
-> A restaurant kitchen throws away between eight and fifteen per cent of everything it buys.
-> Every tool in this space tells them that number *after* the week is over. It reports the
-> weight of what went into the bin.
->
-> Nobody throws away food on purpose. They throw it away because of a decision made three
-> days earlier — how much to buy, how much to prep, what to cook this morning. By the time
-> waste appears in a report, every decision that caused it is already gone.
->
-> FoodOS acts on the decision instead.
-
-**Do not** say "we built a dashboard". Say it acts.
+Two spare beats, each ~10 s, are marked **[CUT FIRST]** and **[CUT SECOND]**. If you are
+behind at 2:35, drop them without changing anything else.
 
 ---
 
-## 0:35 — 1:05 · Today
+## 0:00 — The problem, in one number · 35 s
 
-**Switch to the app. Today screen.**
+**Screen:** slide 1. Nothing running.
 
-> This is a kitchen manager's morning. Three numbers: kilograms at risk today, what that is
-> worth, and — the one that matters — how much of it was preventable.
+> India loses more tomato between the field and the mandi than most countries grow.
+> The NABCONS study for the Ministry of Food Processing puts it at eight point three
+> seven percent at farm operations alone, before it ever reaches a market.
 >
-> Not "you wasted this". *This is what is about to happen, and this much of it is still in
-> your hands.*
+> Here is what that actually looks like. A farmer producer organisation in Kolar packs
+> ten tonnes at eleven in the morning and puts it on an open truck to Delhi. Thirty-six
+> hours on the road. Nobody in that chain knows, at the moment it matters, whether that
+> fruit will survive the journey.
+>
+> They are not short of a sensor. They are short of a decision.
 
-Point at the ranked list.
+**[CUT FIRST]** — the sentence about the sensor.
 
-> Underneath, the actions, ranked by what each one is worth. Every card is the same shape,
-> whether it is telling you to cook less, move a tray between fridges, or send stock to
-> another outlet.
-
-**Transition:** click the top card's **Why**.
+**If the projector fails here:** keep talking. This beat has no screen dependency.
 
 ---
 
-## 1:05 — 1:45 · Why
+## 0:35 — Register the batch · 30 s
 
-**Why screen.**
+**Screen:** Screen 2, step 1. Start on a phone-width window if the projector allows it —
+the user is standing next to a truck.
 
-> Every recommendation in FoodOS can be opened up. This is the attribution.
->
-> Plan drift is carrying the largest share. Not spoilage, not a bad forecast — the forecast
-> was right. Weekday demand for this dish fell three weeks ago, and the forecast followed
-> it. The prep sheet did not. It is a laminated card on a wall, and nothing in that kitchen's
-> day forces anyone to reprint it.
+> This is what the FPO operator does. Tomato, ten thousand kilos, Kolar to Delhi APMC.
 
-Point at the root-cause sentence.
+*Tap through steps 1 and 2. Do not narrate the form fields.*
 
-> That sentence is written by a language model. Every number in it was computed before the
-> model was called, and the model is structurally incapable of writing a number — I will
-> show you exactly how in a moment.
+> Then eight questions. Not a form — a form is what an app asks. These are the eight
+> things that actually move the physics, and the tree adapts: I said the lot was picked
+> at midday, so it now asks how long it sat in the sun. If I had said reefer, it would
+> have stopped asking about covering the load.
 
-**Transition:** click through to Plan.
+*Answer: midday · half the afternoon · partly shaded · red but firm · bruising in most
+crates · dry · an hour or two · open truck · ventilated crates · no cover · heaped.*
 
----
+> Twenty-eight seconds. That is the entire data-entry burden.
 
-## 1:45 — 2:35 · Plan and the λ slider ← **the interaction moment**
-
-**Plan screen.**
-
-> Here is tomorrow's production. Eighty portions planned, sixty-three recommended.
->
-> That is a newsvendor calculation: the cost of running out, against the cost of making too
-> much. Standard operations research, on the kitchen's real costs and a quantile forecast.
-
-**Now take hold of the slider.** Say this while dragging, slowly, left to right:
-
-> And this is the part I would like you to watch. This slider is the weight on
-> sustainability. At the far left, the plan is pure profit — carbon costs nothing, waste
-> costs only what it costs to bin it.
-
-Drag to 1.0. Let the table and the totals redraw. **Pause for a full second.**
-
-> At the far right, the full cost of wasted food is priced in — carbon, land, water,
-> disposal. The plan changes. Every quantity, every total.
->
-> This is one objective function with one parameter, not two products with a toggle. And I
-> will be straight with you about the size of it: at any defensible carbon price, carbon
-> alone would move a single dish by about one portion. It is the full wastage cost that
-> moves the plan, and we priced that at a quarter of the FAO's figure, not at the flattering
-> end.
-
-> **If asked "why does the whole plan move?"** — because it is the same calculation on all
-> fourteen dishes at once, and the totals are where it shows.
-
-**Transition:** click through to Rescue.
+**Watch for:** do not read the options aloud. Tap them. The speed is the point.
 
 ---
 
-## 2:35 — 3:15 · Rescue and the feasibility gate
+## 1:05 — Three photos · 15 s
 
-**Rescue screen, batch B-1057.**
+**Screen:** Screen 2, step 4. Three pre-loaded photos of open crates.
 
-> Prevention failed here — this was ordered on Sunday for a match that moved. Nine point six
-> kilograms of chicken, a day and a half of life, and it is Tuesday.
->
-> Ranked channels, by what actually comes back after commission and transport. Transfer to
-> our other outlet wins, at two thousand four hundred rupees.
+> Three photos of the open crates. A vision model reads maturity, damage and uniformity
+> out of these — as probabilities that go into the same feature vector, never as a
+> verdict on screen. And they are optional. A batch with no photos still scores; the
+> range just gets wider, and we say so.
 
-**Point at the greyed-out rows. Slow down here.**
-
-> And these are the ones it *cannot* use. The delivery app, because this stock is raw and
-> that channel takes cooked. The food bank, because their collection runs Monday, Wednesday
-> and Friday, and today is Tuesday. Animal feed, because poultry cannot enter a
-> no-meat-contact stream.
->
-> They are greyed out, not hidden. If a system makes an option vanish without telling you
-> why, you stop trusting it within a week. That is a product decision, and it is the one I
-> would defend hardest.
+**If the photo upload hangs:** tap Skip. It is a supported path and the demo continues
+identically. Say "and I will skip them, because it works either way" — the recovery is
+the feature.
 
 ---
 
-## 3:15 — 4:00 · The agents, and the Verifier blocking
+## 1:20 — The assessment · 45 s
 
-**Second terminal. `python -m foodos.agents.demo` output.**
+**Screen:** Screen 3, hero block.
 
-> Four language-model agents run in this system. One diagnoses, one drafts the special, one
-> writes the transfer message, and one checks the other three.
+> **Thirty-one hours of remaining life. The road to Delhi is thirty-six and a half.**
 >
-> The rule we set ourselves is that the model never computes a number. Not "we told it not
-> to" — it cannot.
-
-Point at the model output, still full of `{{tokens}}`.
-
-> This is what the model actually returns. Tokens, no digits. It is never shown a value; it
-> is shown the *names* of the facts. Python substitutes the numbers afterwards, from what the
-> engine computed. If the model writes so much as a digit, the guard rejects the whole
-> response.
-
-Scroll to the block.
-
-> And here is the Verifier doing its job. We tampered with one figure after rendering —
-> changed six thousand six hundred and eighty to thirty-one thousand nine hundred. Every
-> number in an output has to trace back to a computed fact. This one does not, so it is
-> blocked, logged, and the operator sees a fallback instead of a confident lie.
+> That gap is the whole product. Not an expiry date printed at packing — a remaining
+> life computed from the Arrhenius kinetics of this commodity, at the temperatures this
+> load will actually meet, on this route, leaving at this hour.
 >
-> A hundred and fifty-seven tests. One of them is that sentence, written as an assertion.
+> Predicted loss eight point four percent, and note that it is a **band** — six point
+> seven to ten point nine. A single number would be a claim we cannot support.
+>
+> And here is why. These drivers come out of the model, not off a checklist. Picked in
+> the afternoon and left in the sun. Fruit already red when packed. Crates heaped above
+> the rim, so the stack is resting on the fruit instead of the crate.
+
+*Point at the drivers bars. Do not read all of them — read the top two.*
+
+> Every one of those is a sentence a farmer can act on tomorrow, at no cost.
+
+**[CUT SECOND]** — the "expiry date printed at packing" sentence.
+
+**Watch for:** the numbers on screen are model output. If any of them differs from 8.4 /
+31 / HIGH, **read what is on screen** and carry on. Never say a number the screen does not
+show.
 
 ---
 
-## 4:00 — 4:25 · The platform claim
+## 2:05 — Every plan we considered · 30 s
 
-**Slide: three tracks.**
+**Screen:** Screen 3, plan matrix.
+
+> Four specialist agents look at this batch — risk, logistics, market, rescue. They
+> propose actions. **They do not rank them and they are not allowed to produce a
+> number.** Every candidate goes through one objective function, and this is the result.
+>
+> Loss, logistics cost, revenue, net value, for every plan.
+>
+> And these greyed rows are the ones we ruled out, with the reason still visible. The
+> reefer is excluded — not on cost, on availability. Fourteen hours' notice at a district
+> hub, and this truck leaves in two.
+
+*Point at one excluded row.*
+
+> A system that shows you only its winning option is a system that is hiding its
+> reasoning. Anyone who has run an operation knows the difference.
+
+---
+
+## 2:35 — The recommended plan · 30 s
+
+**Screen:** Screen 3, recommended plan card.
+
+> Split the load — six tonnes to Delhi, four to Jaipur — and leave six hours earlier.
+>
+> Jaipur is three and a half hours closer at a slightly lower price. That trade, a little
+> less per kilogram against materially less decay, is worth more than the price gap. And
+> leaving at two in the morning puts the hot part of the corridor in the dark.
+>
+> **Loss goes from eight point four percent to three point nine.**
+
+*Pause. This is the number the room remembers.*
+
+> Accept, and it goes on the batch. Override, and we record why — which is how the model
+> finds out where it is wrong.
+
+**Watch for:** if the engine's recommended plan is not the split, **present the plan the
+engine picked** and say what it is. A plan the engine chose beats a plan the deck chose,
+and the story survives either way — the claim is the delta, not the split.
+
+---
+
+## 3:05 — What if · 45 s · **the interaction moment**
+
+**Screen:** Screen 4.
+
+> But you should not have to trust my plan. Here — you drive.
+
+*Hand the laptop or the trackpad to a judge. Actually hand it over. If nobody takes it,
+drag the departure slider yourself and keep talking.*
+
+> Drag departure. Change the vehicle. Move the split.
+
+*Let them play for a beat before narrating.*
+
+> Every one of those goes through the same scoring function the recommendation came out
+> of. Not a lookup, not a second model for the sliders. If the simulator and the
+> optimiser disagreed, one of them would be lying, and you would find it in about four
+> seconds.
+>
+> The current plan stays on screen the whole time, so the comparison is never rhetorical.
+
+**If the simulate endpoint is slow or fails:** the previous figure stays on screen by
+design. Say "and it holds the last result rather than blanking — a blank number in an
+operations tool is how people stop believing the tool." Then move on.
+
+**Hard stop at 3:50** even if the judge is still dragging. "I want to show you one more
+thing" is the exit line.
+
+---
+
+## 3:50 — The agent that was not allowed to speak · 20 s
+
+**Screen:** the Verifier screenshot (slide). A's blocked agent output.
+
+> One thing about how this is built, because it is the question I would ask.
+>
+> There are four language-model agents in here and **not one of them is permitted to
+> produce a number.** They receive computed facts and they write sentences. Anything they
+> emit that is not traceable to a model run is blocked before it reaches a screen.
+>
+> This is that happening. Not a policy on a slide — a test in the repository that fails
+> the build.
+
+---
+
+## 4:10 — One engine, many nodes · 30 s
+
+**Screen:** Screen 1 briefly, then the Kitchen node group, then the platform slide.
 
 > Last thing. Everything you have seen runs on one objective function.
 >
-> A retail shelf and a production line have the same problem — a perishable asset, a
-> decision window, a cost of being wrong in either direction. Same optimiser, different
-> action set. Markdown timing instead of batch size. About eighty lines each, not three
-> products.
-
-Click to the Retail stub, then the Production stub. Two seconds each. Do not linger.
-
----
-
-## 4:25 — 4:40 · Close
-
-> Kitchens do not need to be told what they wasted. They need to be told what to do this
-> morning, what it is worth, and why — in language they will act on, with numbers a machine
-> can prove.
+> *(open the Kitchen node group — about eight seconds, do not tour it)*
 >
-> That is FoodOS. Thank you.
+> That is the same engine running a restaurant kitchen. Different inputs, different
+> action space, same scoring function, same agents, same guarantee. A cold store, a
+> retail back room and a processing plant are the same shape of problem.
+>
+> Perishability is a decision problem, not a storage problem. We built the decision layer.
+>
+> Thank you.
 
-**Stop talking. Do not add a summary. Do not offer more slides.**
-
----
-
-## Timing checkpoints
-
-Miss one of these by more than ten seconds and cut, do not speed up.
-
-| Time | You should be |
-|---|---|
-| 0:35 | Leaving slide 1 |
-| 1:05 | On the Why screen |
-| 1:45 | Hand on the λ slider |
-| 2:35 | Leaving Plan |
-| 3:15 | In the terminal |
-| 4:00 | On the tracks slide |
-
-## What to cut if you are behind
-
-1. The second track stub click (saves 5s)
-2. The FAO honesty aside on the Plan screen (saves 12s)
-3. The trim-loss callout on Why, if you added it (saves 10s)
-
-**Never cut:** the λ drag, or the Verifier block. Those two are the demo.
+**Do not** end on "any questions". End on the sentence. Let the silence sit.
 
 ---
 
-## Anticipated questions
+## The four questions you will be asked, and the answers
 
-**"Is the data real?"**
-> Synthetic, generated against real culinary yields, real Indian wholesale prices, and
-> published carbon factors. The three failure modes in it are planted deliberately, and they
-> are documented — we can show you the file. What is real is every constant: the 0.58 yield
-> on cauliflower, the Q10 of 3.0 on fresh dairy, the aggregator commission.
+**"Where does 8.37% come from?"**
+> NABCONS 2022, commissioned by the Ministry of Food Processing Industries. It is in the
+> repository with the citation next to the constant. Farm operations and market stages
+> are separate numbers — 8.37 and 3.25 — and we deliberately do not add them, which is
+> where the "thirty to forty percent" figure you have heard comes from.
 
-**"What stops the model hallucinating a number?"**
-> It never has one to hallucinate with. Show the terminal again.
+**"Is the loss model better than a rule of thumb?"**
+> We test it against a naive constant-rate baseline and report both. A model that cannot
+> beat a constant should not be allowed to reroute a truck. *(Quote the actual MAE and
+> coverage from A's H13 report. Do not improvise a figure.)*
 
-**"How is this different from an inventory system?"**
-> An inventory system tells you what you have. This tells you what to do with it, prices the
-> alternatives against each other, and shows its working.
+**"What happens when the internet is down?"**
+> This is running with the wifi off right now. Weather, route and price data are captured
+> snapshots committed to the repository, and the screen tells you which. There is no live
+> call anywhere in the demo path.
 
-**"Would a kitchen actually use this?"**
-> The highest-value recommendation in the whole demo is "move that tray to the other
-> fridge". It costs nothing and buys a day. That is the kind of thing that gets a system
-> kept.
+**"Do farmers actually have smartphones and will they fill this in?"**
+> The operator at the collection hub does, and it is one form per consignment, not per
+> farmer. Twenty-eight seconds against a ten-tonne decision. And the honest answer is
+> that we do not know yet — that is what a pilot with one FPO in Kolar is for.
 
-**"What is the accuracy?"**
-> On the Impact screen — measured on held-out days only, against a naive same-day-last-week
-> baseline. We will show you the days the model never saw.
+## The one question to refuse to bluff
 
-**"Why not just use a bigger model / an agent that does the maths?"**
-> Because a kitchen manager cannot audit a number a model produced, and neither can you. The
-> arithmetic is in code that has tests. The model does the part that is genuinely hard for
-> code: saying it in a sentence someone will act on.
+**"What's your accuracy?"**
+> Give the number A measured on the held-out slice, with the interval coverage, and say
+> it is validated against synthetic physics rather than field-measured outcomes. Then say
+> what would change that: a season of actual arrival weights against predictions. An
+> invented accuracy figure is the only thing on this list that cannot be recovered from.

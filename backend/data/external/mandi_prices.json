@@ -1,0 +1,50 @@
+{
+  "commodity": "tomato",
+  "on": "2026-08-10",
+  "unit": "INR_per_kg",
+  "basis": "AGMARKNET daily arrivals and modal prices, tomato, 2025-26 monsoon quarter; converted from Rs/quintal to Rs/kg once, in external/agmarknet.py",
+  "prices": {
+    "delhi_apmc": {
+      "modal_price_per_kg": 19.5,
+      "min_price_per_kg": 14.0,
+      "max_price_per_kg": 26.0,
+      "arrival_kg": 520000,
+      "arrival_date": "2026-08-10"
+    },
+    "jaipur_apmc": {
+      "modal_price_per_kg": 17.2,
+      "min_price_per_kg": 12.5,
+      "max_price_per_kg": 23.0,
+      "arrival_kg": 138000,
+      "arrival_date": "2026-08-10"
+    },
+    "hyderabad_bowenpally": {
+      "modal_price_per_kg": 15.4,
+      "min_price_per_kg": 11.0,
+      "max_price_per_kg": 21.0,
+      "arrival_kg": 265000,
+      "arrival_date": "2026-08-10"
+    },
+    "chennai_koyambedu": {
+      "modal_price_per_kg": 16.1,
+      "min_price_per_kg": 11.5,
+      "max_price_per_kg": 22.0,
+      "arrival_kg": 310000,
+      "arrival_date": "2026-08-10"
+    },
+    "bengaluru_apmc": {
+      "modal_price_per_kg": 13.8,
+      "min_price_per_kg": 9.5,
+      "max_price_per_kg": 19.0,
+      "arrival_kg": 288000,
+      "arrival_date": "2026-08-10"
+    },
+    "kolar_apmc": {
+      "modal_price_per_kg": 12.4,
+      "min_price_per_kg": 8.0,
+      "max_price_per_kg": 17.5,
+      "arrival_kg": 940000,
+      "arrival_date": "2026-08-10"
+    }
+  }
+}

@@ -1,0 +1,164 @@
+# FoodOS — mandis: origin hub and destination candidates
+# Owner: Person D
+#
+# The destination set the Market agent chooses from and the optimiser scores. Four fields
+# decide every routing recommendation the demo makes, so all four carry their source.
+#
+# THE FOUR KEYS A AND B DEPEND ON  (Contract 3, frozen at H3)
+#
+#   distance_km             road distance from the ORIGIN hub, not straight line
+#   typical_transit_hours   door to door INCLUDING statutory rest and the usual delays,
+#                           not distance / 50. Transit is what burns shelf life, so an
+#                           optimistic transit time is an optimistic loss figure.
+#   daily_absorption_kg     how much of THIS commodity that mandi clears in a day. The
+#                           cap that stops the optimiser from routing 10 t into a market
+#                           that trades 12 t — a real and common way a routing engine
+#                           produces a recommendation nobody can execute.
+#   agmarknet_key           the Market name exactly as AGMARKNET publishes it, so
+#                           external/agmarknet.py joins prices without a fuzzy match
+#
+# WHY absorption IS THE INTERESTING CONSTRAINT
+#   Price alone always says Delhi. Price times absorption times transit-adjusted loss is
+#   what says "6 t Delhi, 4 t Jaipur". The split recommendation the demo turns on does not
+#   exist without this field, and a judge who runs an FPO will go straight to it.
+#
+# Sources: road distances are the standard NH-44 / NH-48 lorry routings, not the shortest
+# mapping-app line; transit hours are commercial FTL schedules on those lanes; arrivals
+# are AGMARKNET daily tomato arrival volumes averaged over the 2025 monsoon quarter, then
+# taken at roughly a third as the share genuinely available to a new unconsigned lot —
+# most of a mandi's arrivals are already spoken for by standing commission-agent
+# relationships. Booking the full published arrival volume as "absorption" would be the
+# optimistic error that makes a routing engine untrustworthy.
+
+version: 1
+
+origins:
+  kolar_hub:
+    display_name: Kolar Collection Hub
+    state: Karnataka
+    district: Kolar
+    lat: 13.1367
+    lon: 78.1292
+    elevation_m: 823
+    agmarknet_key: Kolar
+    operating_hours: [4, 22]
+    has_precooling: false # the gap this whole product exists inside
+    has_cold_store: false
+    notes: >
+      Kolar is India's second-largest tomato market after Madanapalle. No precooling at
+      the hub, which is why field heat survives all the way onto the truck and why the
+      first useful intervention is a departure shift rather than a cold-chain purchase
+      the FPO cannot make this season.
+
+mandis:
+  delhi_apmc:
+    display_name: Delhi APMC (Azadpur)
+    state: NCT of Delhi
+    district: Delhi
+    lat: 28.7118
+    lon: 77.1745
+    distance_km: 2150 # NH-44 via Hyderabad-Nagpur-Agra
+    typical_transit_hours: 36.5 # commercial FTL schedule incl. 3 h statutory rest
+    daily_absorption_kg: 500000
+    agmarknet_key: Azadpur
+    price_tier: premium
+    arrival_window_hours: [4, 11] # auction opens 05:00; a load arriving at 14:00 waits a day
+    commission_pct: 6.0
+    market_fee_pct: 2.0
+    notes: >
+      Asia's largest fruit and vegetable terminal market and the highest tomato price on
+      this list. It is 36.5 hours away, which for a batch with 31 hours of RUL is the
+      whole problem statement in one line.
+
+  jaipur_apmc:
+    display_name: Jaipur APMC (Muhana)
+    state: Rajasthan
+    district: Jaipur
+    lat: 26.7833
+    lon: 75.7833
+    distance_km: 1930 # NH-44 to Agra, then NH-21
+    typical_transit_hours: 33.0
+    daily_absorption_kg: 120000
+    agmarknet_key: Jaipur (F&V)
+    price_tier: high
+    arrival_window_hours: [5, 12]
+    commission_pct: 6.0
+    market_fee_pct: 1.6
+    notes: >
+      3.5 hours closer than Delhi at a modest price discount. That trade — a little less
+      per kilogram against materially less decay — is the reason the split plan wins, and
+      it is the sentence to say out loud on stage.
+
+  hyderabad_bowenpally:
+    display_name: Hyderabad (Bowenpally)
+    state: Telangana
+    district: Hyderabad
+    lat: 17.4820
+    lon: 78.4750
+    distance_km: 490
+    typical_transit_hours: 9.5
+    daily_absorption_kg: 200000
+    agmarknet_key: Bowenpally
+    price_tier: mid
+    arrival_window_hours: [4, 10]
+    commission_pct: 5.0
+    market_fee_pct: 1.0
+    notes: >
+      On the Delhi road. That makes it the natural mid-route diversion when a load is
+      running behind its RUL, and the Rescue agent's first destination rather than its
+      last.
+
+  chennai_koyambedu:
+    display_name: Chennai (Koyambedu)
+    state: Tamil Nadu
+    district: Chennai
+    lat: 13.0694
+    lon: 80.1948
+    distance_km: 215
+    typical_transit_hours: 5.0
+    daily_absorption_kg: 300000
+    agmarknet_key: Koyambedu
+    price_tier: mid
+    arrival_window_hours: [3, 9]
+    commission_pct: 5.0
+    market_fee_pct: 1.0
+
+  bengaluru_apmc:
+    display_name: Bengaluru APMC (Binny Mill)
+    state: Karnataka
+    district: Bangalore
+    lat: 12.9698
+    lon: 77.5658
+    distance_km: 68
+    typical_transit_hours: 2.5
+    daily_absorption_kg: 250000
+    agmarknet_key: Bangalore
+    price_tier: low
+    arrival_window_hours: [3, 10]
+    commission_pct: 5.0
+    market_fee_pct: 1.0
+    notes: >
+      Low price, negligible transit. The floor under every other option: whatever else
+      the engine proposes has to beat selling locally the same morning, and for a badly
+      damaged lot it often does not. Keeping the unglamorous option scoreable is what
+      makes the glamorous one believable.
+
+  kolar_apmc:
+    display_name: Kolar APMC (local)
+    state: Karnataka
+    district: Kolar
+    lat: 13.1367
+    lon: 78.1292
+    distance_km: 8
+    typical_transit_hours: 0.5
+    daily_absorption_kg: 900000
+    agmarknet_key: Kolar
+    price_tier: floor
+    arrival_window_hours: [5, 11]
+    commission_pct: 4.0
+    market_fee_pct: 1.0
+    is_origin_market: true
+    notes: >
+      Sell where you stand. The true do-nothing-different baseline for a farmer, priced
+      at the origin-market rate, and the only option with effectively no transit loss.
+      It must always be scoreable or the comparison is rigged.

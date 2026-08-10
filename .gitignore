@@ -23,6 +23,19 @@ backend/data/*
 !backend/data/sample/**
 backend/data/sample/*.db
 
+# The external snapshots ARE a source of truth and ARE committed — §8 of
+# FoodOS-Team-Split-v2.md says so explicitly. They are what the weather, route and mandi
+# connectors read when the network is off, which during the demo is always. A snapshot
+# that lives only on the laptop that captured it is not a snapshot, and the H34
+# aeroplane-mode rehearsal would pass on that machine and fail on every other one.
+# Regenerate with `python -m foodos.external.capture`, then commit the diff.
+!backend/data/external/
+!backend/data/external/*.json
+
+# Uploaded batch photos are not. They are user data, they are large, and the demo works
+# with zero photos by design.
+backend/data/photos/
+
 # --- Secrets --------------------------------------------------------------
 .env
 .env.*
