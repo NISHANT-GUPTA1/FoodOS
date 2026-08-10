@@ -30,7 +30,7 @@ from foodos.db import create_all, drop_all, session_scope
 from foodos.engine.context import default_context
 from foodos.engine.recommendation import generate
 from foodos.external import agmarknet
-from foodos.ingest import channels, loader, sample_data
+from foodos.ingest import channels, consignments, loader, sample_data
 from foodos.schema.tables import Organization, Site
 
 
@@ -68,6 +68,10 @@ def run(source: str = "auto", quiet: bool = False) -> dict:
         org = session.scalars(select(Organization).limit(1)).first()
         count, channel_source = channels.load(session, org.id)
         summary["channels"] = {"count": count, "source": channel_source}
+
+        # Agri consignments (v2 §4, H3-8). One command builds both the
+        # kitchen demo and the batch demo; this line is why.
+        summary["consignments"] = consignments.load(session, org.id)
 
         # Mandi prices describe the market, not this customer, so they load
         # from whichever directory has the file regardless of --source.

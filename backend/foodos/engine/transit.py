@@ -289,7 +289,9 @@ def divert_to_channel(subject: TransitSubject, channel: dict) -> Action:
         subject,
         ActionType.DIVERT_TO_CHANNEL,
         Horizon.RECOVER,
-        f"Divert to {channel.get('name', channel.get('id', 'channel'))}",
+        # D's channel names already read as actions ("Divert to the nearest
+        # terminal market"), so prefixing another verb doubles it on screen.
+        str(channel.get("name") or channel.get("id") or "channel"),
         {"kind": "divert_to_channel", "channel": channel.get("id")},
         subject.baseline_loss_pct,
         float(channel.get("fixed_cost", 0.0)),
