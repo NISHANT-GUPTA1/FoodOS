@@ -24,6 +24,9 @@ export interface RecommendationData {
     co2e: number
   }
   confidence: number
+  /** The run that produced these figures. Absent when a deterministic
+   *  fallback scored the row — never invented to look traceable. */
+  modelRunId?: string | null
   expiresIn: string
   batchId?: string
   commodity?: string

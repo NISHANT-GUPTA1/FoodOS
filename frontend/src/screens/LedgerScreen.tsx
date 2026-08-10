@@ -14,7 +14,7 @@ export function LedgerScreen() {
   }
 
   if (isError || !data) {
-    return <ErrorState title="Ledger failed to load" description="Batch rows are unavailable until the mock ledger responds." />
+    return <ErrorState title="Ledger failed to load" description="The batch rows did not return. Nothing was lost. Retry, or check the API is up on port 8000." />
   }
 
   return (

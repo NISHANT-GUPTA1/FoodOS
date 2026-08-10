@@ -15,7 +15,7 @@ export function WhyScreen() {
   }
 
   if (isError || !data) {
-    return <ErrorState title="Attribution data failed to load" description="The chart cannot render until the mock response returns." />
+    return <ErrorState title="Attribution data failed to load" description="The attribution breakdown did not return. Nothing was lost. Retry, or check the API is up on port 8000." />
   }
 
   return (

@@ -134,15 +134,28 @@ export async function getBatches(filters: BatchListFilters = {}): Promise<BatchL
   return { ...BATCH_LIST, batches }
 }
 
+/** Thrown when an id is not in the set, so the screen can say so rather than
+ *  render a different batch under the requested id. */
+export class BatchNotFoundError extends Error {
+  constructor(public readonly id: string) {
+    super(`No batch ${id}`)
+    this.name = 'BatchNotFoundError'
+  }
+}
+
 export async function getBatch(id: string): Promise<BatchProfile> {
   if (isLive('batch')) {
     return fetchJson<BatchProfile>(batchPaths.batch(id))
   }
   await delay(160)
-  // Only T1024 is fully assessed in the mock set; every other id renders the same
-  // profile with its own header, which is enough to keep the list rows clickable.
+  // An id that is not in the set is NOT T1024. Returning T1024 for anything
+  // unknown put a different batch on screen from the one in the URL — type
+  // /batches/T1042 and the header still read T1024. A judge changing the URL,
+  // or a wrong click mid-demo, would have caught that. A "batch not found" is a
+  // thousand times better than a confident wrong number.
   const row = BATCH_LIST.batches.find((b) => b.id === id)
-  if (!row || id === T1024_PROFILE.id) return T1024_PROFILE
+  if (!row) throw new BatchNotFoundError(id)
+  if (id === T1024_PROFILE.id) return T1024_PROFILE
   return {
     ...T1024_PROFILE,
     id: row.id,

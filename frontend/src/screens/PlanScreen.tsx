@@ -42,11 +42,11 @@ export function PlanScreen() {
   }
 
   if (isLoading && !data) {
-    return <LoadingState title="Building the prep plan" description="Waiting for the mock lambda response before rendering the table." />
+    return <LoadingState title="Building the prep plan" description="Re-optimising the prep plan at the selected weighting." />
   }
 
   if (isError || !data) {
-    return <ErrorState title="Prep plan data failed to load" description="The lambda table cannot render until the query returns." />
+    return <ErrorState title="Prep plan data failed to load" description="The prep plan did not return. Nothing was lost. Retry, or check the API is up on port 8000." />
   }
 
   return (

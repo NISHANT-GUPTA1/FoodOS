@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Check, MoveRight, SlidersHorizontal, ThermometerSun } from 'lucide-react'
-import { acceptPlan, getBatch, getMarkets, getPlans, overridePlan } from '../../api/batchApi'
+import { BatchNotFoundError, acceptPlan, getBatch, getMarkets, getPlans, overridePlan } from '../../api/batchApi'
 import type { BatchProfile, CandidatePlan } from '../../api/batchContract'
 import { RecommendationCard } from '../../components/RecommendationCard'
 import { SectionHeader } from '../../components/SectionHeader'
@@ -27,7 +27,11 @@ export function BatchIntelligenceScreen() {
   const { id = 'T1024' } = useParams()
   const navigate = useNavigate()
 
-  const batch = useQuery({ queryKey: ['batch', id], queryFn: () => getBatch(id) })
+  const batch = useQuery({
+    queryKey: ['batch', id],
+    queryFn: () => getBatch(id),
+    retry: (count, error) => !(error instanceof BatchNotFoundError) && count < 2,
+  })
   const plans = useQuery({ queryKey: ['plans', id], queryFn: () => getPlans(id) })
   const markets = useQuery({ queryKey: ['markets', 'tomato'], queryFn: () => getMarkets() })
 
@@ -35,11 +39,18 @@ export function BatchIntelligenceScreen() {
     return <LoadingState title="Loading batch intelligence" description="Fetching state, risk, drivers and the candidate plans." />
   }
 
+  // An unknown id used to render T1024 under the requested code, so the URL and
+  // the header disagreed. Now it says which batch is missing.
+  const notFound = batch.error instanceof BatchNotFoundError
   if (batch.isError || !batch.data) {
     return (
       <ErrorState
-        title="Batch not available"
-        description="This consignment could not be loaded. It may not have been assessed yet, or the batch endpoint is down."
+        title={notFound ? `No batch ${id}` : 'Batch not available'}
+        description={
+          notFound
+            ? 'That consignment is not in the system. Check the id — the Command Center lists every batch currently tracked.'
+            : 'This consignment could not be loaded. It may not have been assessed yet, or the batch endpoint is down.'
+        }
         action={
           <button type="button" className="button-primary" onClick={() => navigate('/command')}>
             Back to Command Center

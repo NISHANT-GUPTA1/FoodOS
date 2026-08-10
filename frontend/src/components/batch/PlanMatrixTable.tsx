@@ -59,8 +59,12 @@ export function PlanMatrixTable({ plans, wPreserve, modelRunId, onSimulate }: Pl
         </div>
       </header>
 
-      <div className="-mx-6 mt-4 overflow-x-auto px-6">
-        <table className="w-full min-w-[880px] border-collapse text-left text-xs">
+      {/* The negative margin pulled the scroll box wider than its padded
+          parent, so the last column (STATUS) sat under the panel edge and read
+          as "STATU". Scrolls within its own bounds now, and the min-width is
+          the narrowest the nine columns actually need. */}
+      <div className="mt-4 w-full overflow-x-auto">
+        <table className="w-full min-w-[760px] border-collapse text-left text-xs">
           <thead>
             <tr className="border-b border-slate-300 bg-slate-100/90 text-[11px] font-extrabold uppercase tracking-wider text-slate-700">
               <th className="rounded-l-xl p-3">Candidate action</th>

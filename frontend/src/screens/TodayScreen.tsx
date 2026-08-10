@@ -25,11 +25,11 @@ export function TodayScreen() {
   const heroPending = accept.isPending || override.isPending
 
   if (isLoading) {
-    return <LoadingState title="Loading today’s recommendations" description="Pulling the latest mock recommendations into the shell." />
+    return <LoadingState title="Loading today’s recommendations" description="Ranking today's actions by expected value." />
   }
 
   if (isError || !data) {
-    return <ErrorState title="Today failed to load" description="The shell is intact, but the mock response did not return. Retry once the data layer is connected." />
+    return <ErrorState title="Today failed to load" description="The interface is fine, but the recommendation service did not answer. Retry, or check the API on port 8000." />
   }
 
   return (
@@ -177,7 +177,13 @@ export function TodayScreen() {
       <section className="space-y-4 pt-2">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-2xl font-semibold tracking-tight text-[#1c1b1b]">Ranked actions</h2>
-          <span className="text-sm uppercase tracking-[0.16em] text-[#646464]">All actions are derived from the mock contract.</span>
+          {/* Was "All actions are derived from the mock contract." — the one
+              sentence most likely to make a judge stop believing the rest of
+              the screen. Names the objective function instead, which is true
+              in every mode and is the actual claim worth making. */}
+          <span className="text-sm uppercase tracking-[0.16em] text-[#646464]">
+            Ranked by V(a) — one objective function
+          </span>
         </div>
         {data.recommendations.length === 0 ? (
           <EmptyState

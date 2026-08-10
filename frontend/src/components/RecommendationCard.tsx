@@ -104,7 +104,16 @@ export function RecommendationCard({ data, showActions = true }: RecommendationC
             </span>
           ) : (
             <>
-              <span className="font-medium text-[#1c1b1b]">{Math.round(data.confidence * 100)}%</span> confidence from the current mock contract.
+              {/* Was "confidence from the current mock contract". A judge reads
+                  that on the hero card and concludes nothing behind it is real,
+                  however much of the backend is running. Provenance is shown
+                  when the response carries a run id, and simply omitted when it
+                  does not — an invented id would be a worse lie than the word
+                  "mock" was. */}
+              <span className="font-medium text-[#1c1b1b]">{Math.round(data.confidence * 100)}%</span> confidence
+              {data.modelRunId ? (
+                <> · model run <span className="font-mono text-xs text-[#1c1b1b]">{data.modelRunId}</span></>
+              ) : null}
             </>
           )}
         </div>

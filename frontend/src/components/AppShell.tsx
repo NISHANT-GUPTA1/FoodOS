@@ -9,7 +9,6 @@ import {
   Eye,
   History,
   Leaf,
-  LogIn,
   LogOut,
   Palette,
   Settings,
@@ -144,13 +143,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </span>
             </button>
 
-            {/* SIGN IN BUTTON RIGHT BESIDE SYSTEM STATUS */}
+            {/* Reads "Sign out", not "Sign in".
+
+                This shell only renders once you are past the sign-in screen, so
+                a SIGN IN button here was offering the thing you had already
+                done — and on a projector that reads as a broken session. Same
+                destination, honest label. */}
             <button
+              type="button"
               onClick={() => navigate('/signin')}
               className="flex items-center gap-2 rounded-2xl border border-slate-900 bg-slate-900 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-md transition hover:bg-slate-800 hover:-translate-y-0.5 active:scale-95"
             >
-              <LogIn className="h-4 w-4 text-emerald-400" />
-              <span>Sign In</span>
+              <LogOut className="h-4 w-4 text-emerald-400" />
+              <span>Sign out</span>
             </button>
 
             <div className="h-6 w-px bg-slate-300" />

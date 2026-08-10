@@ -14,7 +14,7 @@ export function RescueScreen() {
   }
 
   if (isError || !data) {
-    return <ErrorState title="Rescue data failed to load" description="The recovery ranking cannot render until the mock response arrives." />
+    return <ErrorState title="Rescue data failed to load" description="The channel ranking did not return. Nothing was lost. Retry, or check the API is up on port 8000." />
   }
 
   return (
