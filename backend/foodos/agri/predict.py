@@ -31,7 +31,9 @@ from dataclasses import asdict, dataclass, field
 
 import numpy as np
 
+from foodos.agri import i18n
 from foodos.agri.commodity import TOMATO, Commodity
+from foodos.agri.i18n import Locale
 from foodos.agri.scenario import (
     FieldHolding,
     HarvestMethod,
@@ -81,20 +83,16 @@ UNCONTROLLABLE: dict[str, object] = {
     "transit_hours": None,       # filled per shipment: halve it
 }
 
-_LABELS = {
-    "harvest_window": "harvest window",
-    "harvest_method": "harvest method",
-    "field_holding": "field holding",
-    "field_hours": "hours held in the field",
-    "packaging": "packaging",
-    "transport_mode": "transport mode",
-    "mandi_holding_hours": "hours held at the mandi",
-    "ambient_mean_c": "ambient temperature",
-    "maturity_factor": "harvest maturity",
-    "visual_damage_fraction": "damage at intake",
-    "road_roughness": "road quality",
-    "transit_hours": "transit duration",
-}
+#: Fields whose values are questionnaire answers rather than numbers, so their
+#: values localise through `i18n.option()` rather than being formatted.
+_CATEGORICAL_FIELDS = frozenset(CONTROLLABLE_CHOICES)
+
+
+def _value_label(field_name: str, value: object, locale: Locale) -> str:
+    """A field value as a user would read it, in their language."""
+    if field_name in _CATEGORICAL_FIELDS:
+        return i18n.option(str(value), locale)
+    return i18n.format_indian(float(value), decimals=1)
 
 
 @dataclass
@@ -106,6 +104,10 @@ class Driver:
     loss_reduction_pp: float
     mass_saved_kg: float
     controllable: bool
+    #: Localised, ready to render. Kept alongside the raw values rather than
+    #: replacing them so the optimiser still sees machine-readable answers.
+    current_label: str = ""
+    counterfactual_label: str = ""
 
 
 @dataclass
@@ -129,6 +131,17 @@ class BatchIntelligence:
     drivers: list[Driver] = field(default_factory=list)
     actions: list[Driver] = field(default_factory=list)
     biggest_unknown: str | None = None
+
+    #: Everything below is display-ready in the requested language. The numeric
+    #: fields above stay machine-readable — the optimiser and the API must never
+    #: have to parse a localised string back into a number.
+    locale: str = str(i18n.DEFAULT_LOCALE)
+    commodity_label: str = ""
+    risk_label: str = ""
+    biggest_unknown_label: str | None = None
+    #: Set when the requested language was too sparsely translated to render
+    #: readably, so this profile is in `locale` instead. The UI should say so.
+    requested_locale_unavailable: str | None = None
 
     def as_dict(self) -> dict:
         out = asdict(self)
@@ -172,6 +185,7 @@ def ablate(
     base: dict,
     commodity: Commodity = TOMATO,
     include_uncontrollable: bool = True,
+    locale: Locale = i18n.DEFAULT_LOCALE,
 ) -> tuple[list[Driver], list[Driver]]:
     """Change one input at a time; measure what the change is worth.
 
@@ -189,12 +203,14 @@ def ablate(
         reduction = current_loss - float(run(trial, commodity)["total_loss"])
         return Driver(
             field=field_name,
-            label=_LABELS.get(field_name, field_name),
+            label=i18n.field_label(field_name, locale),
             current=base[field_name],
             counterfactual=value,
             loss_reduction_pp=round(reduction * 100.0, 3),
             mass_saved_kg=round(reduction * quantity, 1),
             controllable=controllable,
+            current_label=_value_label(field_name, base[field_name], locale),
+            counterfactual_label=_value_label(field_name, value, locale),
         )
 
     actions: list[Driver] = []
@@ -237,11 +253,20 @@ def predict(
     commodity: Commodity = TOMATO,
     mc_draws: int = 2_000,
     with_sensitivity: bool = True,
+    locale: Locale = i18n.DEFAULT_LOCALE,
 ) -> BatchIntelligence:
-    """The full Batch Intelligence profile for one shipment."""
+    """The full Batch Intelligence profile for one shipment.
+
+    `locale` defaults to Hindi, because the primary user reads Hindi and a
+    default of English would make the shipped behaviour the wrong one.
+    """
+    # Resolve before rendering anything: a locale too sparsely translated to be
+    # readable substitutes wholesale rather than mixing scripts mid-sentence.
+    locale, unavailable = i18n.resolve_locale(locale)
+
     row = run(base, commodity)
     band = intervals(base, n=mc_draws, commodity=commodity)
-    actions, drivers = ablate(base, commodity)
+    actions, drivers = ablate(base, commodity, locale=locale)
 
     biggest_unknown = None
     if with_sensitivity:
@@ -251,6 +276,13 @@ def predict(
 
     loss = float(row["total_loss"])
     return BatchIntelligence(
+        locale=str(locale),
+        requested_locale_unavailable=str(unavailable) if unavailable else None,
+        commodity_label=i18n.commodity_name(commodity.key, locale),
+        risk_label=i18n.t(f"out.risk.{risk_level(loss)}", locale),
+        biggest_unknown_label=(
+            i18n.field_label(biggest_unknown, locale) if biggest_unknown else None
+        ),
         commodity=commodity.name,
         quantity_kg=float(base["quantity_kg"]),
         loss_pct=round(loss * 100.0, 2),
@@ -269,6 +301,52 @@ def predict(
         drivers=drivers,
         biggest_unknown=biggest_unknown,
     )
+
+
+def render_advisory(
+    profile: BatchIntelligence, locale: Locale | None = None
+) -> str:
+    """The one message an FPO manager receives, in their language.
+
+    This is the actual deliverable of the whole engine. Everything upstream —
+    Arrhenius, the lognormal, the Monte Carlo, the ablation — exists so that
+    these four lines are true. The product's own design rule is one number per
+    person, so this is deliberately short and leads with the decision rather
+    than with the diagnosis.
+
+    Reads only fields already computed on the profile. It formats; it never
+    calculates, so no figure here can disagree with the API response.
+    """
+    loc = Locale(locale or profile.locale)
+
+    headline = i18n.t("msg.headline", loc).format(
+        qty=i18n.format_kg(profile.quantity_kg, loc),
+        commodity=profile.commodity_label or profile.commodity,
+        loss=i18n.format_pct(profile.loss_pct, loc),
+        mass=i18n.format_kg(profile.mass_at_risk_kg, loc),
+    )
+    lines = [
+        headline,
+        i18n.t("msg.rul", loc).format(hours=i18n.format_hours(profile.rul_hours, loc)),
+        f"{i18n.t('out.risk.' + profile.risk_level, loc)}",
+    ]
+
+    if profile.actions:
+        best = profile.actions[0]
+        lines.append(
+            i18n.t("msg.action", loc).format(
+                label=best.label,
+                change=f"{best.current_label} → {best.counterfactual_label}",
+                mass=i18n.format_kg(best.mass_saved_kg, loc),
+            )
+        )
+
+    if profile.biggest_unknown_label:
+        lines.append(
+            f"{i18n.t('out.biggest_unknown', loc)}: {profile.biggest_unknown_label}"
+        )
+
+    return "\n".join(lines)
 
 
 def what_if(base: dict, commodity: Commodity = TOMATO, **changes) -> dict:
