@@ -122,7 +122,7 @@ def _score_batch(session, row: Consignment, ctx) -> tuple[LossRiskScore, list[di
     how the UI tells a prediction from a placeholder.
     """
     subject = _subject_for(row)
-    ranked = agriplan.plan(subject, ctx)
+    ranked = agriplan.plan(subject, ctx, proposals=_proposals(subject))
     rows = agriplan.as_rows(ranked, subject)
 
     loss_pct = subject.baseline_loss_pct
@@ -187,6 +187,20 @@ def _score_batch(session, row: Consignment, ctx) -> tuple[LossRiskScore, list[di
     row.status = "assessed"
     session.flush()
     return score, rows
+
+
+def _proposals(subject) -> list[dict]:
+    """A's orchestrator, behind the usual fallback.
+
+    Contract 1: it returns action PARAMETERS only. B scores them through the
+    one `score()`, so an agent can suggest a bad idea but cannot promote it.
+    """
+    try:
+        from foodos.agents.orchestrator import propose_actions  # noqa: PLC0415
+
+        return propose_actions({"features": dict(subject.base or {})})
+    except Exception:
+        return []
 
 
 def _rul_hours(subject) -> float:
