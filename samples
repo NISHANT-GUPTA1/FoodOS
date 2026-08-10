@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+
+<html class="" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FoodOS - Enterprise Intelligence</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500;700;800&amp;family=Inter:wght@400;500;700&amp;family=Jetbrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"primary-fixed-dim": "#c6c6c7", error: "#ba1a1a", "inverse-surface": "#313030", "on-tertiary": "#ffffff", "on-tertiary-fixed-variant": "#454747", "on-error": "#ffffff", "on-primary-fixed-variant": "#454747", "secondary-container": "#e4e2e2", "on-secondary-container": "#646464", "tertiary-fixed-dim": "#c6c6c7", "surface-container-lowest": "#ffffff", "on-surface": "#1c1b1b", "outline-variant": "#c4c7c8", "inverse-primary": "#c6c6c7", "surface-dim": "#ddd9d9", outline: "#747878", "tertiary-container": "#ffffff", "surface-container-highest": "#e5e2e1", background: "#fcf8f8", "inverse-on-surface": "#f4f0ef", "on-primary-fixed": "#1a1c1c", "on-secondary-fixed-variant": "#474747", "secondary-fixed": "#e4e2e2", "primary-container": "#ffffff", "primary-fixed": "#e2e2e2", "on-secondary": "#ffffff", surface: "#fcf8f8", "on-surface-variant": "#444748", "surface-variant": "#e5e2e1", "on-error-container": "#93000a", "surface-tint": "#5d5f5f", secondary: "#5e5e5e", "on-tertiary-container": "#747676", "surface-bright": "#fcf8f8", "surface-container-low": "#f6f3f2", primary: "#5d5f5f", "surface-container": "#f1edec", "on-background": "#1c1b1b", "surface-container-high": "#ebe7e7", "on-primary-container": "#747676", tertiary: "#5d5f5f", "secondary-fixed-dim": "#c8c6c6", "on-tertiary-fixed": "#1a1c1c", "tertiary-fixed": "#e2e2e2", "on-primary": "#ffffff", "on-secondary-fixed": "#1b1c1c", "error-container": "#ffdad6"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"container-max": "1440px", gutter: "24px", "stack-lg": "32px", "grid-cols-tablet": "8", "stack-md": "16px", "grid-cols-desktop": "12", "stack-sm": "8px", "grid-cols-mobile": "4", unit: "4px", "margin-page": "48px"}, fontFamily: {"label-sm": ["JetBrains Mono"], "headline-lg-mobile": ["Roboto Slab"], "headline-lg": ["Roboto Slab"], "display-lg": ["Roboto Slab"], "headline-md": ["Roboto Slab"], "label-bold": ["JetBrains Mono"], "display-xl": ["Roboto Slab"], "body-lg": ["Inter"], "body-md": ["Inter"], headline: ["Roboto Slab"], display: ["Roboto Slab"], body: ["Inter"], label: ["Jetbrains Mono"]}, fontSize: {"label-sm": ["11px", {lineHeight: "1", fontWeight: "500"}], "headline-lg-mobile": ["24px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700"}], "headline-lg": ["32px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700"}], "display-lg": ["48px", {lineHeight: "1.1", letterSpacing: "-0.03em", fontWeight: "800"}], "headline-md": ["24px", {lineHeight: "1.3", fontWeight: "700"}], "label-bold": ["12px", {lineHeight: "1", letterSpacing: "0.05em", fontWeight: "700"}], "display-xl": ["72px", {lineHeight: "1.1", letterSpacing: "-0.04em", fontWeight: "800"}], "body-lg": ["18px", {lineHeight: "1.6", fontWeight: "400"}], "body-md": ["16px", {lineHeight: "1.5", fontWeight: "400"}]}}}};</script>
+<style>
+        /* Base Styles & Utility Classes for Editorial Look */
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        
+        .editorial-border {
+            border: 1px solid theme('colors.outline-variant');
+        }
+        
+        .editorial-border-heavy {
+            border: 2px solid theme('colors.outline-variant');
+        }
+
+        .brutalist-shadow-emerald {
+            box-shadow: 4px 4px 0px 0px #10b981; /* Fallback emerald */
+        }
+        
+        .brutalist-shadow-blue {
+            box-shadow: 4px 4px 0px 0px #0ea5e9; /* Electric Blue */
+        }
+
+        .brutalist-shadow-red {
+            box-shadow: 4px 4px 0px 0px #ef4444;
+        }
+
+        .card-asymmetric-padding {
+            padding-top: 24px;
+            padding-left: 24px;
+            padding-bottom: 40px;
+            padding-right: 40px;
+        }
+        
+        /* Custom Scrollbar for sleekness */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: theme('colors.surface-container-lowest'); 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: theme('colors.outline-variant'); 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: theme('colors.outline'); 
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden antialiased selection:bg-primary selection:text-on-primary">
+<!-- SIDE NAV BAR (Desktop) -->
+<nav class="hidden md:flex flex-col h-screen w-80 left-0 bg-surface-container-lowest text-primary font-label-bold text-label-bold border-r-2 border-outline-variant shrink-0 z-40">
+<!-- Header -->
+<div class="px-6 py-8 border-b border-outline-variant">
+<div class="flex items-center gap-4 mb-6">
+<img class="w-10 h-10 rounded bg-surface-variant object-cover" data-alt="A highly technical, geometric abstract logo icon representing enterprise intelligence and supply chain data, styled with deep blues and sharp, crisp edges on a dark background. High contrast, vector art style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBk_-TK7273vDDyliMJMQFePmh7xrUsztd7RvJL_Ubla4WTZRnj-icaiHGa5cwNb04-2aSWQV1P2sFwvJajq_7qAD0pmEinIr48KEl1YFdCWQhg8fBtebK8Okw-GGKswSz9PN-12axxsCF80ZcEFh2-yQ_h-f7sGy2Lhdsh_5i9xhCMQG5YciIYMeiWRYccUBuW_KBvdLiHH276E_Z1bRfeTujYOspCZdxcEAOxFwh3Hewdq_33-75SlA"/>
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface uppercase tracking-tighter">FoodOS</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Enterprise Intelligence</p>
+</div>
+</div>
+<button class="w-full bg-[#F8FAFC] text-[#0F172A] font-bold py-3 px-4 rounded flex items-center justify-center gap-2 hover:brutalist-shadow-blue hover:-translate-y-1 hover:-translate-x-1 transition-all duration-200 border border-[#0F172A]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+                New Analysis
+            </button>
+</div>
+<!-- Main Navigation Links -->
+<div class="flex-1 py-6 overflow-y-auto">
+<ul class="flex flex-col gap-2">
+<!-- Active Item: Kitchen Terminal (assuming this is the dashboard view context based on contents) -->
+<li>
+<a class="flex items-center gap-4 text-on-primary-fixed bg-primary-fixed px-6 py-4 border-l-4 border-primary-fixed-dim hover:bg-surface-container-high transition-all duration-150" href="#">
+<span class="material-symbols-outlined">terminal</span>
+<span class="font-label-bold text-label-bold uppercase">Kitchen Terminal</span>
+</a>
+</li>
+<!-- Inactive Items -->
+<li>
+<a class="flex items-center gap-4 text-on-surface-variant hover:text-on-surface px-6 py-4 border-l-4 border-transparent hover:bg-surface-container-high transition-all duration-150" href="#">
+<span class="material-symbols-outlined">currency_exchange</span>
+<span class="font-label-bold text-label-bold uppercase">Mandi Exchange</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 text-on-surface-variant hover:text-on-surface px-6 py-4 border-l-4 border-transparent hover:bg-surface-container-high transition-all duration-150" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-label-bold text-label-bold uppercase">FPO Insights</span>
+</a>
+</li>
+</ul>
+</div>
+<!-- Footer Navigation -->
+<div class="border-t border-outline-variant py-4 px-2">
+<ul class="flex flex-col gap-1">
+<li>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 border-l-4 border-transparent hover:bg-surface-container-high transition-all duration-150 rounded" href="#">
+<span class="material-symbols-outlined text-sm">help</span>
+<span class="font-label-sm text-label-sm uppercase">Support</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 border-l-4 border-transparent hover:bg-surface-container-high transition-all duration-150 rounded" href="#">
+<span class="material-symbols-outlined text-sm">history</span>
+<span class="font-label-sm text-label-sm uppercase">Archive</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- MAIN CONTENT AREA -->
+<div class="flex-1 flex flex-col h-screen overflow-hidden bg-background">
+<!-- TOP NAV BAR -->
+<header class="w-full h-20 bg-surface/80 backdrop-blur-md border-b-2 border-outline-variant flex justify-between items-center px-margin-page sticky top-0 z-30 shrink-0">
+<!-- Mobile Brand (Hidden on desktop due to sidenav) -->
+<div class="md:hidden">
+<h1 class="font-display-lg text-display-lg tracking-tighter text-on-surface">FoodOS</h1>
+</div>
+<!-- Empty div for desktop alignment since sidenav handles brand -->
+<div class="hidden md:block flex-1">
+<!-- Search could go here if needed, keeping it minimal as per 'editorial' -->
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-6">
+<!-- Trailing Primary Action -->
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">System Status</span>
+</div>
+<div class="w-px h-6 bg-outline-variant"></div>
+<!-- Icon Actions -->
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-200 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-200 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-xl">settings</span>
+</button>
+<!-- Profile -->
+<button class="ml-2 w-10 h-10 rounded-full border border-outline-variant overflow-hidden hover:border-primary transition-colors">
+<img alt="User Executive Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a corporate executive, high contrast cinematic lighting, dark background, serious expression, 8k resolution, photorealistic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD46-9jZimZMlUEzk1lJVdgDhUSwHVR0lLT4nQHvr2sGfRJFlvKBW-rAfOh8Q0XM50mdokC6hjDj5zuKWKmwR4mJLN6CdumiuEOjZdn7-wOO8MI9xMawQosVy4oqduHK6NHZ0YRV3Gu4vO7kHPInYCHiPcW3UsB56ynE49Ff3KEAH_7nVZR7fjJ_c6ZXC6Y2vtKyD5orLaKKAi_PogRd910KJBDqHlgEz8MVg14loZVKRp_T_XhMalIKg"/>
+</button>
+</div>
+</header>
+<!-- SCROLLABLE CANVAS -->
+<main class="flex-1 overflow-y-auto p-margin-page pb-32">
+<!-- PAGE GRID (12 Columns) -->
+<div class="max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- SECTION 1: TOP HERO SECTION (Spans 12 cols total, broken into 8 and 4) -->
+<div class="col-span-1 md:col-span-12 grid grid-cols-1 md:grid-cols-12 gap-gutter mb-16">
+<!-- Left: Massive Featured Card (Cols 1-8) -->
+<div class="md:col-span-8 bg-surface-container-low editorial-border card-asymmetric-padding relative overflow-hidden group">
+<!-- Background Image Edit -->
+<div class="absolute inset-0 pointer-events-none z-0">
+<img alt="Culinary craft" class="w-full h-full object-cover opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvBjqGiRZpP-OOpAO-MPwti4iwe_mfDUbfdTZMscv7jsL1ohZBD2-SEHefCuSNX6FO59v80CatLC8a4lVN6Lu-5SmQGKfrqACZnhyVco5MiuOn7AofHfuzHZxyiv1jz4XI93nCgmVNrgvmydUnUhG5YW4IVXBLq6O_W2dVfPExc96BrKbICRcd8CfOTZWyi5mHBR6tudi4DujrAzZQQ2WRAVL2qAok_BJGmOwWv-r6cPw-Dz1pGkvCKw"/>
+<div class="absolute inset-0 bg-gradient-to-r from-surface-container-low via-surface-container-low/95 to-surface-container-low/40"></div>
+</div>
+<!-- Category Pill -->
+<div class="absolute top-0 left-0 bg-error text-on-error font-label-bold text-label-bold px-3 py-1 uppercase tracking-widest z-10 flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+                            Critical Action • Prevent
+                        </div>
+<!-- Content Grid inside the card -->
+<div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8 relative z-10">
+<!-- Text Side -->
+<div class="flex flex-col justify-between">
+<div>
+<h2 class="font-display-lg text-display-lg text-on-surface tracking-tighter leading-tight mb-4">Waste Less, Feed More: Biryani Prep Tuning</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Forecast indicates 20% drop in expected demand due to severe weather alerts across Zone B delivery hubs.</p>
+</div>
+<div class="mt-8 flex items-end gap-4">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Current Plan</span>
+<span class="font-display-xl text-display-xl text-on-surface line-through opacity-50">80</span>
+</div>
+<div class="mb-4 text-outline-variant">
+<span class="material-symbols-outlined text-3xl">arrow_right_alt</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-primary uppercase mb-1">Optimized</span>
+<span class="font-display-xl text-display-xl text-error">63<span class="font-headline-md text-headline-md ml-1 opacity-70">ptns</span></span>
+</div>
+</div>
+</div>
+<!-- Visual & Action Side -->
+<div class="flex flex-col justify-between items-end border-l border-outline-variant pl-8">
+<!-- Impact Metrics -->
+<div class="w-full bg-surface-container/90 backdrop-blur-sm p-6 editorial-border">
+<h3 class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-widest mb-4">Respecting the Ingredient</h3>
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center border-b border-outline-variant pb-2">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-[#10b981]">scale</span>
+<span class="font-body-md text-body-md">Waste Avoided</span>
+</div>
+<span class="font-label-bold text-label-bold">8.4 kg</span>
+</div>
+<div class="flex justify-between items-center border-b border-outline-variant pb-2">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-[#10b981]">payments</span>
+<span class="font-body-md text-body-md">Value Preserved</span>
+</div>
+<span class="font-label-bold text-label-bold">₹1,500</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-[#10b981]">co2</span>
+<span class="font-body-md text-body-md">CO2e Saved</span>
+</div>
+<span class="font-label-bold text-label-bold">21 kg</span>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex gap-4 w-full mt-8">
+<button class="flex-1 bg-surface border-2 border-outline-variant text-on-surface font-label-bold text-label-bold py-4 uppercase hover:bg-surface-variant transition-colors">
+                                        Override
+                                    </button>
+<button class="flex-1 bg-[#F8FAFC] text-[#0F172A] font-bold py-4 uppercase hover:brutalist-shadow-emerald hover:-translate-y-1 hover:-translate-x-1 transition-all duration-200 border border-[#0F172A]">
+                                        Accept Plan
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Right: Stacked Secondary Cards (Cols 9-12) -->
+<div class="md:col-span-4 flex flex-col gap-gutter">
+<!-- Secondary Card 1 -->
+<div class="flex-1 bg-surface-container editorial-border p-6 relative flex flex-col justify-between group hover:border-outline transition-colors cursor-pointer">
+<div class="absolute top-0 left-0 bg-[#0ea5e9] text-white font-label-bold text-label-bold px-3 py-1 uppercase tracking-widest flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">inventory_2</span>
+                                Preserve
+                            </div>
+<div class="mt-8">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Spinach RSL Alert</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Batch #4892 requires immediate processing.</p>
+</div>
+<div class="mt-6 flex items-end justify-between border-t border-outline-variant pt-4">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Remaining Shelf Life</span>
+<span class="font-headline-lg text-headline-lg text-on-surface">1.2 <span class="text-sm font-normal text-on-surface-variant">Days</span></span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">arrow_forward</span>
+</div>
+</div>
+<!-- Secondary Card 2 -->
+<div class="flex-1 bg-surface-container editorial-border p-6 relative flex flex-col justify-between group hover:border-outline transition-colors cursor-pointer">
+<div class="absolute top-0 left-0 bg-[#10b981] text-white font-label-bold text-label-bold px-3 py-1 uppercase tracking-widest flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">autorenew</span>
+                                Recover
+                            </div>
+<div class="mt-8">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Paneer B2B Transfer</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Excess stock at Node 4 available for internal transfer to Node 1.</p>
+</div>
+<div class="mt-6 flex items-end justify-between border-t border-outline-variant pt-4">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Recoverable Volume</span>
+<span class="font-headline-lg text-headline-lg text-on-surface">45 <span class="text-sm font-normal text-on-surface-variant">kg</span></span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION 2: NODE OPERATIONS & INTELLIGENCE GRID -->
+<div class="col-span-1 md:col-span-12 mb-8">
+<h2 class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-[0.2em] mb-6 flex items-center gap-4">
+<span class="w-8 h-px bg-outline-variant"></span>
+                        Node Operations &amp; Intelligence
+                        <span class="flex-1 h-px bg-outline-variant"></span>
+</h2>
+</div>
+<div class="col-span-1 md:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-gutter mb-16">
+<!-- Col 1: Kitchen -->
+<div class="bg-surface editorial-border card-asymmetric-padding flex flex-col justify-between h-80 relative group hover:-translate-y-1 transition-transform duration-300 hover:brutalist-shadow-blue">
+<div class="absolute top-0 right-0 border-b border-l border-outline-variant bg-surface-container-low px-3 py-1 text-on-surface-variant font-label-sm text-label-sm uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">restaurant</span> Kitchen
+                        </div>
+<div>
+<span class="font-label-bold text-label-bold text-[#ef4444] uppercase tracking-widest mb-2 block">Alert</span>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2 leading-tight">The Art of the Yield</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Cauliflower processing efficiency below cluster average.</p>
+</div>
+<div class="border-t-2 border-outline-variant pt-4 mt-8 flex justify-between items-end">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase block mb-1">Current Yield</span>
+<span class="font-display-lg text-display-lg text-on-surface">51%</span>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase block mb-1">Standard</span>
+<span class="font-headline-md text-headline-md text-outline">58%</span>
+</div>
+</div>
+</div>
+<!-- Col 2: Mandi Routing -->
+<div class="bg-surface editorial-border card-asymmetric-padding flex flex-col justify-between h-80 relative group hover:-translate-y-1 transition-transform duration-300 hover:brutalist-shadow-blue">
+<div class="absolute top-0 right-0 border-b border-l border-outline-variant bg-surface-container-low px-3 py-1 text-on-surface-variant font-label-sm text-label-sm uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">local_shipping</span> Mandi
+                        </div>
+<div>
+<span class="font-label-bold text-label-bold text-[#0ea5e9] uppercase tracking-widest mb-2 block">Priority Action</span>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2 leading-tight">FEFO Crate Dispatch</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Route critical aging inventory to highest-velocity store.</p>
+</div>
+<div class="border-t-2 border-outline-variant pt-4 mt-8 bg-surface-container-lowest p-4 editorial-border">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline">route</span>
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase block">Route Assignment</span>
+<span class="font-label-bold text-label-bold text-on-surface uppercase">TM-4471 → Store 12</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Col 3: FPO Forecast (Off-white styling inverted for contrast) -->
+<div class="bg-[#F8FAFC] text-[#0F172A] border-2 border-[#0F172A] card-asymmetric-padding flex flex-col justify-between h-80 relative group hover:-translate-y-1 transition-transform duration-300 hover:brutalist-shadow-emerald">
+<div class="absolute top-0 right-0 border-b-2 border-l-2 border-[#0F172A] bg-white px-3 py-1 text-[#0F172A] font-label-sm text-label-sm uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">agriculture</span> FPO
+                        </div>
+<div>
+<span class="font-label-bold text-label-bold text-[#10b981] uppercase tracking-widest mb-2 block">Procurement</span>
+<h3 class="font-headline-md text-headline-md text-[#0F172A] mb-2 leading-tight">Cluster Harvest Demand</h3>
+<p class="font-body-md text-body-md text-[#334155]">Aggregated 7-day tomato requirement across all active nodes.</p>
+</div>
+<div class="border-t-2 border-[#0F172A] pt-4 mt-8">
+<span class="font-label-sm text-label-sm text-[#475569] uppercase block mb-1">Required Volume</span>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-[#0F172A] tracking-tighter">3.24</span>
+<span class="font-headline-md text-headline-md text-[#0F172A]">Tons</span>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION 3: BOTTOM SECTION -->
+<div class="col-span-1 md:col-span-12 grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Main Chart Area (Cols 1-9) -->
+<div class="md:col-span-9 bg-surface editorial-border p-6 flex flex-col">
+<div class="flex justify-between items-center mb-8 border-b border-outline-variant pb-4">
+<h3 class="font-headline-md text-headline-md text-on-surface">Backtest &amp; Counterfactual Proof</h3>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<span class="w-3 h-1 bg-[#0ea5e9]"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Predicted Model</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-1 bg-outline-variant border border-dashed border-outline-variant"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Historical Baseline</span>
+</div>
+</div>
+</div>
+<!-- Conceptual Chart Graphic Built with HTML/CSS -->
+<div class="flex-1 min-h-[300px] w-full relative flex items-end justify-between px-4 pb-8 pt-12 border-l border-b border-outline-variant">
+<!-- Grid lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
+<div class="w-full h-px bg-outline-variant opacity-30"></div>
+<div class="w-full h-px bg-outline-variant opacity-30"></div>
+<div class="w-full h-px bg-outline-variant opacity-30"></div>
+<div class="w-full h-px bg-outline-variant opacity-30"></div>
+<div class="w-full h-px bg-transparent"></div> <!-- Base line -->
+</div>
+<!-- Data Points (Mocked) -->
+<div class="relative h-full w-8 group flex justify-center items-end">
+<div class="absolute bottom-0 w-4 h-[40%] bg-surface-container-high border border-outline-variant transition-all group-hover:bg-outline-variant"></div>
+<div class="absolute bottom-0 w-2 h-[30%] bg-[#0ea5e9] translate-x-3 transition-all group-hover:h-[35%]"></div>
+<span class="absolute -bottom-8 font-label-sm text-label-sm text-on-surface-variant">M</span>
+</div>
+<div class="relative h-full w-8 group flex justify-center items-end">
+<div class="absolute bottom-0 w-4 h-[55%] bg-surface-container-high border border-outline-variant transition-all group-hover:bg-outline-variant"></div>
+<div class="absolute bottom-0 w-2 h-[45%] bg-[#0ea5e9] translate-x-3 transition-all group-hover:h-[50%]"></div>
+<span class="absolute -bottom-8 font-label-sm text-label-sm text-on-surface-variant">T</span>
+</div>
+<div class="relative h-full w-8 group flex justify-center items-end">
+<div class="absolute bottom-0 w-4 h-[30%] bg-surface-container-high border border-outline-variant transition-all group-hover:bg-outline-variant"></div>
+<div class="absolute bottom-0 w-2 h-[20%] bg-[#0ea5e9] translate-x-3 transition-all group-hover:h-[25%]"></div>
+<span class="absolute -bottom-8 font-label-sm text-label-sm text-on-surface-variant">W</span>
+</div>
+<div class="relative h-full w-8 group flex justify-center items-end">
+<div class="absolute bottom-0 w-4 h-[75%] bg-surface-container-high border border-outline-variant transition-all group-hover:bg-outline-variant"></div>
+<div class="absolute bottom-0 w-2 h-[85%] bg-[#0ea5e9] translate-x-3 transition-all group-hover:h-[90%] shadow-[0_0_15px_rgba(14,165,233,0.5)]"></div>
+<span class="absolute -bottom-8 font-label-sm text-label-sm text-on-surface-variant">T</span>
+</div>
+<div class="relative h-full w-8 group flex justify-center items-end">
+<div class="absolute bottom-0 w-4 h-[60%] bg-surface-container-high border border-outline-variant transition-all group-hover:bg-outline-variant"></div>
+<div class="absolute bottom-0 w-2 h-[40%] bg-[#0ea5e9] translate-x-3 transition-all group-hover:h-[45%]"></div>
+<span class="absolute -bottom-8 font-label-sm text-label-sm text-on-surface-variant">F</span>
+</div>
+<div class="relative h-full w-8 group flex justify-center items-end">
+<div class="absolute bottom-0 w-4 h-[85%] bg-surface-container-high border border-outline-variant transition-all group-hover:bg-outline-variant"></div>
+<div class="absolute bottom-0 w-2 h-[70%] bg-[#0ea5e9] translate-x-3 transition-all group-hover:h-[75%]"></div>
+<span class="absolute -bottom-8 font-label-sm text-label-sm text-on-surface-variant">S</span>
+</div>
+<div class="relative h-full w-8 group flex justify-center items-end">
+<div class="absolute bottom-0 w-4 h-[45%] bg-surface-container-high border border-outline-variant transition-all group-hover:bg-outline-variant"></div>
+<div class="absolute bottom-0 w-2 h-[35%] bg-[#0ea5e9] translate-x-3 transition-all group-hover:h-[40%]"></div>
+<span class="absolute -bottom-8 font-label-sm text-label-sm text-on-surface-variant">S</span>
+</div>
+</div>
+</div>
+<!-- Sidebar Parameters (Cols 10-12) -->
+<div class="md:col-span-3 bg-surface-container-low editorial-border p-6 flex flex-col gap-6">
+<h4 class="font-label-bold text-label-bold text-on-surface uppercase tracking-widest border-b border-outline-variant pb-2">Model Parameters</h4>
+<div class="flex flex-col gap-4">
+<div class="group">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Lambda Smoothing</span>
+<span class="font-label-bold text-label-bold text-on-surface group-hover:text-primary transition-colors">0.66</span>
+</div>
+<div class="w-full h-1 bg-surface-variant">
+<div class="h-full bg-outline-variant w-[66%]"></div>
+</div>
+</div>
+<div class="group pt-4 border-t border-outline-variant border-dashed">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Forecast Accuracy</span>
+<span class="font-label-bold text-label-bold text-[#10b981] group-hover:text-white transition-colors">94.2%</span>
+</div>
+<div class="w-full h-1 bg-surface-variant">
+<div class="h-full bg-[#10b981] w-[94.2%]"></div>
+</div>
+</div>
+<div class="group pt-4 border-t border-outline-variant border-dashed">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Confidence Interval</span>
+<span class="font-label-bold text-label-bold text-on-surface group-hover:text-primary transition-colors">± 3.1%</span>
+</div>
+</div>
+<div class="group pt-4 border-t border-outline-variant border-dashed">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Engine State</span>
+<span class="font-label-bold text-label-bold text-[#0ea5e9] flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-[#0ea5e9] animate-pulse"></span>
+                                        LIVE
+                                    </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
