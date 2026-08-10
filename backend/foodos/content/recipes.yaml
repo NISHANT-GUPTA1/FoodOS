@@ -1,0 +1,334 @@
+# FoodOS — recipe bill of materials
+# Owner: Person D
+#
+# 14 dishes. One standard portion each. Quantities are PREPPED (edible) weight in kg.
+# The engine divides by prep_yield from yield_table.yaml to get the purchase quantity,
+# which is how a plan in dishes becomes a purchase list in kilograms.
+#
+#   line qty_kg      -> what ends up in the pan
+#   qty_kg / yield   -> what has to be bought
+#
+# Quantities are per ONE portion. A plan of 63 portions multiplies every line by 63.
+#
+# station: which prep station owns the mise-en-place. Used by the Planner agent to group
+# a rescue menu into work that one person can actually execute in one shift.
+# prep_ahead_hours: how far ahead this dish's mise-en-place is normally cut. This is the
+# number that turns a forecast miss into cut-vegetable waste rather than whole-vegetable
+# inventory, and it is why gobi_manchurian is pathology one.
+
+version: 1
+portion_basis: one_standard_portion
+
+dishes:
+  - id: paneer_butter_masala
+    name: Paneer Butter Masala
+    category: veg_main
+    station: gravy
+    portion_g: 280
+    prep_ahead_hours: 4
+    veg: true
+    lines:
+      - { ingredient: paneer, qty_kg: 0.120 }
+      - { ingredient: tomato, qty_kg: 0.150 }
+      - { ingredient: onion, qty_kg: 0.060 }
+      - { ingredient: cashew, qty_kg: 0.015 }
+      - { ingredient: butter, qty_kg: 0.020 }
+      - { ingredient: cream, qty_kg: 0.020 }
+      - { ingredient: oil_sunflower, qty_kg: 0.010 }
+      - { ingredient: ginger, qty_kg: 0.005 }
+      - { ingredient: garlic, qty_kg: 0.005 }
+      - { ingredient: red_chilli_powder, qty_kg: 0.003 }
+      - { ingredient: garam_masala, qty_kg: 0.002 }
+      - { ingredient: kasuri_methi, qty_kg: 0.001 }
+      - { ingredient: sugar, qty_kg: 0.004 }
+      - { ingredient: salt, qty_kg: 0.004 }
+
+  - id: palak_paneer
+    name: Palak Paneer
+    category: veg_main
+    station: gravy
+    portion_g: 280
+    prep_ahead_hours: 5
+    veg: true
+    lines:
+      - { ingredient: paneer, qty_kg: 0.100 }
+      - { ingredient: spinach, qty_kg: 0.180 }
+      - { ingredient: onion, qty_kg: 0.040 }
+      - { ingredient: tomato, qty_kg: 0.040 }
+      - { ingredient: cream, qty_kg: 0.010 }
+      - { ingredient: butter, qty_kg: 0.010 }
+      - { ingredient: oil_sunflower, qty_kg: 0.010 }
+      - { ingredient: ginger, qty_kg: 0.005 }
+      - { ingredient: garlic, qty_kg: 0.005 }
+      - { ingredient: green_chilli, qty_kg: 0.003 }
+      - { ingredient: cumin, qty_kg: 0.002 }
+      - { ingredient: garam_masala, qty_kg: 0.002 }
+      - { ingredient: salt, qty_kg: 0.004 }
+
+  - id: dal_makhani
+    name: Dal Makhani
+    category: veg_main
+    station: gravy
+    portion_g: 300
+    prep_ahead_hours: 8
+    veg: true
+    lines:
+      - { ingredient: urad_dal_whole, qty_kg: 0.070 }
+      - { ingredient: rajma, qty_kg: 0.020 }
+      - { ingredient: tomato, qty_kg: 0.080 }
+      - { ingredient: onion, qty_kg: 0.030 }
+      - { ingredient: butter, qty_kg: 0.025 }
+      - { ingredient: cream, qty_kg: 0.020 }
+      - { ingredient: ginger, qty_kg: 0.005 }
+      - { ingredient: garlic, qty_kg: 0.005 }
+      - { ingredient: red_chilli_powder, qty_kg: 0.003 }
+      - { ingredient: garam_masala, qty_kg: 0.002 }
+      - { ingredient: kasuri_methi, qty_kg: 0.001 }
+      - { ingredient: salt, qty_kg: 0.004 }
+
+  - id: butter_chicken
+    name: Butter Chicken
+    category: nonveg_main
+    station: gravy
+    portion_g: 300
+    prep_ahead_hours: 6
+    veg: false
+    lines:
+      - { ingredient: chicken_boneless, qty_kg: 0.160 }
+      - { ingredient: tomato, qty_kg: 0.150 }
+      - { ingredient: onion, qty_kg: 0.050 }
+      - { ingredient: curd, qty_kg: 0.030 }
+      - { ingredient: butter, qty_kg: 0.025 }
+      - { ingredient: cream, qty_kg: 0.025 }
+      - { ingredient: cashew, qty_kg: 0.010 }
+      - { ingredient: oil_sunflower, qty_kg: 0.008 }
+      - { ingredient: ginger, qty_kg: 0.006 }
+      - { ingredient: garlic, qty_kg: 0.006 }
+      - { ingredient: red_chilli_powder, qty_kg: 0.004 }
+      - { ingredient: garam_masala, qty_kg: 0.003 }
+      - { ingredient: kasuri_methi, qty_kg: 0.001 }
+      - { ingredient: sugar, qty_kg: 0.003 }
+      - { ingredient: salt, qty_kg: 0.004 }
+
+  - id: chicken_biryani
+    name: Hyderabadi Chicken Biryani
+    category: nonveg_rice
+    station: biryani
+    portion_g: 450
+    prep_ahead_hours: 6
+    veg: false
+    lines:
+      - { ingredient: chicken_bone_in, qty_kg: 0.200 }
+      - { ingredient: rice_basmati, qty_kg: 0.130 }
+      - { ingredient: onion, qty_kg: 0.090 }
+      - { ingredient: curd, qty_kg: 0.050 }
+      - { ingredient: oil_sunflower, qty_kg: 0.030 }
+      - { ingredient: ghee, qty_kg: 0.010 }
+      - { ingredient: milk, qty_kg: 0.015 }
+      - { ingredient: lemon, qty_kg: 0.010 }
+      - { ingredient: mint, qty_kg: 0.008 }
+      - { ingredient: coriander_leaves, qty_kg: 0.008 }
+      - { ingredient: ginger, qty_kg: 0.008 }
+      - { ingredient: garlic, qty_kg: 0.008 }
+      - { ingredient: green_chilli, qty_kg: 0.005 }
+      - { ingredient: garam_masala, qty_kg: 0.004 }
+      - { ingredient: red_chilli_powder, qty_kg: 0.004 }
+      - { ingredient: turmeric, qty_kg: 0.001 }
+      - { ingredient: saffron, qty_kg: 0.00004 }
+      - { ingredient: salt, qty_kg: 0.005 }
+
+  - id: veg_biryani
+    name: Vegetable Dum Biryani
+    category: veg_rice
+    station: biryani
+    portion_g: 420
+    prep_ahead_hours: 5
+    veg: true
+    lines:
+      - { ingredient: rice_basmati, qty_kg: 0.130 }
+      - { ingredient: cauliflower, qty_kg: 0.060 }
+      - { ingredient: carrot, qty_kg: 0.050 }
+      - { ingredient: potato, qty_kg: 0.050 }
+      - { ingredient: french_beans, qty_kg: 0.040 }
+      - { ingredient: green_peas_frozen, qty_kg: 0.030 }
+      - { ingredient: onion, qty_kg: 0.080 }
+      - { ingredient: curd, qty_kg: 0.040 }
+      - { ingredient: oil_sunflower, qty_kg: 0.025 }
+      - { ingredient: ghee, qty_kg: 0.010 }
+      - { ingredient: milk, qty_kg: 0.015 }
+      - { ingredient: mint, qty_kg: 0.008 }
+      - { ingredient: coriander_leaves, qty_kg: 0.008 }
+      - { ingredient: ginger, qty_kg: 0.006 }
+      - { ingredient: garlic, qty_kg: 0.006 }
+      - { ingredient: green_chilli, qty_kg: 0.004 }
+      - { ingredient: garam_masala, qty_kg: 0.004 }
+      - { ingredient: turmeric, qty_kg: 0.001 }
+      - { ingredient: saffron, qty_kg: 0.00003 }
+      - { ingredient: salt, qty_kg: 0.005 }
+
+  - id: mutton_rogan_josh
+    name: Mutton Rogan Josh
+    category: nonveg_main
+    station: gravy
+    portion_g: 300
+    prep_ahead_hours: 8
+    veg: false
+    lines:
+      - { ingredient: mutton, qty_kg: 0.200 }
+      - { ingredient: curd, qty_kg: 0.060 }
+      - { ingredient: onion, qty_kg: 0.070 }
+      - { ingredient: oil_sunflower, qty_kg: 0.025 }
+      - { ingredient: ghee, qty_kg: 0.008 }
+      - { ingredient: ginger, qty_kg: 0.008 }
+      - { ingredient: garlic, qty_kg: 0.008 }
+      - { ingredient: red_chilli_powder, qty_kg: 0.005 }
+      - { ingredient: coriander_powder, qty_kg: 0.004 }
+      - { ingredient: garam_masala, qty_kg: 0.004 }
+      - { ingredient: cumin, qty_kg: 0.002 }
+      - { ingredient: salt, qty_kg: 0.005 }
+
+  - id: goan_fish_curry
+    name: Goan Fish Curry
+    category: nonveg_main
+    station: gravy
+    portion_g: 300
+    prep_ahead_hours: 3
+    veg: false
+    lines:
+      - { ingredient: fish_basa_fillet, qty_kg: 0.160 }
+      - { ingredient: coconut_milk, qty_kg: 0.100 }
+      - { ingredient: tomato, qty_kg: 0.050 }
+      - { ingredient: onion, qty_kg: 0.050 }
+      - { ingredient: oil_sunflower, qty_kg: 0.015 }
+      - { ingredient: tamarind, qty_kg: 0.008 }
+      - { ingredient: ginger, qty_kg: 0.005 }
+      - { ingredient: garlic, qty_kg: 0.005 }
+      - { ingredient: red_chilli_powder, qty_kg: 0.005 }
+      - { ingredient: coriander_powder, qty_kg: 0.004 }
+      - { ingredient: green_chilli, qty_kg: 0.003 }
+      - { ingredient: turmeric, qty_kg: 0.002 }
+      - { ingredient: curry_leaves, qty_kg: 0.002 }
+      - { ingredient: salt, qty_kg: 0.004 }
+
+  - id: chole
+    name: Amritsari Chole
+    category: veg_main
+    station: gravy
+    portion_g: 280
+    prep_ahead_hours: 8
+    veg: true
+    lines:
+      - { ingredient: kabuli_chana, qty_kg: 0.080 }
+      - { ingredient: tomato, qty_kg: 0.100 }
+      - { ingredient: onion, qty_kg: 0.070 }
+      - { ingredient: oil_sunflower, qty_kg: 0.020 }
+      - { ingredient: lemon, qty_kg: 0.008 }
+      - { ingredient: ginger, qty_kg: 0.006 }
+      - { ingredient: garlic, qty_kg: 0.006 }
+      - { ingredient: coriander_leaves, qty_kg: 0.005 }
+      - { ingredient: coriander_powder, qty_kg: 0.004 }
+      - { ingredient: garam_masala, qty_kg: 0.004 }
+      - { ingredient: red_chilli_powder, qty_kg: 0.003 }
+      - { ingredient: salt, qty_kg: 0.004 }
+
+  - id: gobi_manchurian
+    name: Gobi Manchurian
+    category: starter_veg
+    station: wok
+    portion_g: 250
+    prep_ahead_hours: 3
+    veg: true
+    pathology: chronic_overproduction
+    lines:
+      - { ingredient: cauliflower, qty_kg: 0.180 }
+      - { ingredient: oil_sunflower, qty_kg: 0.045 }
+      - { ingredient: onion, qty_kg: 0.040 }
+      - { ingredient: maida, qty_kg: 0.030 }
+      - { ingredient: capsicum, qty_kg: 0.030 }
+      - { ingredient: corn_flour, qty_kg: 0.020 }
+      - { ingredient: spring_onion, qty_kg: 0.015 }
+      - { ingredient: soy_sauce, qty_kg: 0.010 }
+      - { ingredient: chilli_sauce, qty_kg: 0.010 }
+      - { ingredient: tomato_ketchup, qty_kg: 0.010 }
+      - { ingredient: garlic, qty_kg: 0.008 }
+      - { ingredient: ginger, qty_kg: 0.005 }
+      - { ingredient: vinegar, qty_kg: 0.004 }
+      - { ingredient: green_chilli, qty_kg: 0.003 }
+      - { ingredient: salt, qty_kg: 0.003 }
+
+  - id: chilli_paneer
+    name: Chilli Paneer
+    category: starter_veg
+    station: wok
+    portion_g: 250
+    prep_ahead_hours: 2
+    veg: true
+    lines:
+      - { ingredient: paneer, qty_kg: 0.130 }
+      - { ingredient: capsicum, qty_kg: 0.050 }
+      - { ingredient: onion, qty_kg: 0.050 }
+      - { ingredient: oil_sunflower, qty_kg: 0.035 }
+      - { ingredient: corn_flour, qty_kg: 0.015 }
+      - { ingredient: spring_onion, qty_kg: 0.015 }
+      - { ingredient: maida, qty_kg: 0.010 }
+      - { ingredient: soy_sauce, qty_kg: 0.010 }
+      - { ingredient: chilli_sauce, qty_kg: 0.010 }
+      - { ingredient: garlic, qty_kg: 0.008 }
+      - { ingredient: ginger, qty_kg: 0.005 }
+      - { ingredient: vinegar, qty_kg: 0.004 }
+      - { ingredient: green_chilli, qty_kg: 0.003 }
+      - { ingredient: salt, qty_kg: 0.003 }
+
+  - id: veg_hakka_noodles
+    name: Veg Hakka Noodles
+    category: veg_noodles
+    station: wok
+    portion_g: 300
+    prep_ahead_hours: 3
+    veg: true
+    lines:
+      - { ingredient: hakka_noodles, qty_kg: 0.100 }
+      - { ingredient: cabbage, qty_kg: 0.060 }
+      - { ingredient: carrot, qty_kg: 0.040 }
+      - { ingredient: capsicum, qty_kg: 0.040 }
+      - { ingredient: oil_sunflower, qty_kg: 0.025 }
+      - { ingredient: spring_onion, qty_kg: 0.020 }
+      - { ingredient: french_beans, qty_kg: 0.020 }
+      - { ingredient: soy_sauce, qty_kg: 0.012 }
+      - { ingredient: garlic, qty_kg: 0.008 }
+      - { ingredient: chilli_sauce, qty_kg: 0.006 }
+      - { ingredient: vinegar, qty_kg: 0.004 }
+      - { ingredient: ginger, qty_kg: 0.004 }
+      - { ingredient: salt, qty_kg: 0.003 }
+
+  - id: jeera_rice
+    name: Jeera Rice
+    category: veg_rice
+    station: biryani
+    portion_g: 250
+    prep_ahead_hours: 2
+    veg: true
+    lines:
+      - { ingredient: rice_basmati, qty_kg: 0.090 }
+      - { ingredient: ghee, qty_kg: 0.012 }
+      - { ingredient: oil_sunflower, qty_kg: 0.005 }
+      - { ingredient: cumin, qty_kg: 0.003 }
+      - { ingredient: coriander_leaves, qty_kg: 0.003 }
+      - { ingredient: salt, qty_kg: 0.003 }
+      - { ingredient: green_chilli, qty_kg: 0.002 }
+
+  - id: butter_naan
+    name: Butter Naan
+    category: bread
+    station: tandoor
+    portion_g: 110
+    prep_ahead_hours: 1
+    veg: true
+    lines:
+      - { ingredient: maida, qty_kg: 0.070 }
+      - { ingredient: milk, qty_kg: 0.015 }
+      - { ingredient: curd, qty_kg: 0.012 }
+      - { ingredient: butter, qty_kg: 0.010 }
+      - { ingredient: oil_sunflower, qty_kg: 0.004 }
+      - { ingredient: sugar, qty_kg: 0.003 }
+      - { ingredient: salt, qty_kg: 0.002 }

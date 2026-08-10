@@ -1,18 +1,27 @@
 """Backtest — measured savings, not projected savings.
 
-OWNER: Person A (Data & Models).
-CONTRACT (frozen at H3):  run_backtest(site_id) -> dict
+Owner: Person A (Data & Models).
 
-Train on the first part of the history, then replay the last 30 days the model
-has never seen and ask a single question: if the kitchen had prepped what the
-optimiser said instead of what it actually prepped, what would the difference
-have been in rupees and kilos?
+This module carries TWO layers, merged from the two parallel drafts:
 
-That makes the headline number an *output* rather than an assumption, which is
-the answer to the question every serious judge is holding: "how do I know these
-savings aren't made up?"
+  1. `run_backtest()` — the frozen H3 contract, loads its own tables, replays the
+     last N days through the newsvendor optimiser and reports rupees and kilos.
+     Returns a dict. Callers: verify.py, tests/test_models/.
+  2. `run_backtest_holdout()` — fit-before-cutoff / score-after, returns
+     `(BacktestResult, medians)` for the attribution model to consume.
+     Caller: ingest/seed.py.
+     (Named `run_backtest` on feat/b-engine; renamed here so both can coexist.)
 
-The newsvendor quantity:
+Consolidating the two is follow-up work; this merge only makes both callers work.
+
+--- Layer 1 ---
+
+Train on the first part of the history, then replay the last 30 days the model has
+never seen and ask a single question: if the kitchen had prepped what the optimiser
+said instead of what it actually prepped, what would the difference have been in
+rupees and kilos? That makes the headline number an *output* rather than an
+assumption, which answers the question every serious judge is holding: "how do I
+know these savings aren't made up?"
 
     C_u = unit_price - food_cost           margin lost if you run out
     C_o = food_cost + lambda * co2e_price  cost of one portion binned
@@ -25,19 +34,34 @@ production optimiser and the single source of truth. At integration, delete
 `_newsvendor_qty` here and import yours — two objective functions is exactly the
 failure mode the plan warns about.
 
-One honest caveat: true demand is unobservable. We only ever see sold =
-min(demand, produced), so on days the kitchen sold out the real demand was
+One honest caveat: true demand is unobservable. We only ever see
+sold = min(demand, produced), so on days the kitchen sold out the real demand was
 higher than the number scored here. The censoring rate is reported.
+
+--- Layer 2 ---
+
+The rule that layer exists to enforce: the model is fitted on data strictly before
+the held-out window, and evaluated only on days inside it. No refitting, no
+peeking, no "we retrained nightly so every day is out-of-sample really". The
+baseline is same-day-last-week — the honest comparator, because it is what a
+competent kitchen manager already does in their head.
 """
 
 from __future__ import annotations
+
+import datetime as dt
+from dataclasses import dataclass, field
 
 import numpy as np
 import pandas as pd
 
 from ..data import catalog as C
 from . import forecast, loader
+from .forecaster import Forecaster, build_features
 
+# ============================================================================
+# Layer 1 — newsvendor replay (from main). Callers: verify.py, tests/test_models/
+# ============================================================================
 
 def _dish_economics(products: pd.DataFrame, pid: str, lam: float) -> dict:
     price = float(products.loc[pid, "unit_price"] or 0.0)
@@ -225,3 +249,99 @@ if __name__ == "__main__":
         print(f"    {f['lambda']:>7.1f}{f['saving_money_monthly']:>14,.0f}"
               f"{f['saving_kg_monthly']:>13,.0f}{f['overproduction_cut_pct']:>15.0f}%")
     print()
+
+
+# ============================================================================
+# Layer 2 — held-out scoring (from feat/b-engine).
+# Caller: ingest/seed.py.  `run_backtest` there -> `run_backtest_holdout` here.
+# ============================================================================
+
+@dataclass
+class BacktestResult:
+    days: list[dict] = field(default_factory=list)
+    mae: float = 0.0
+    baseline_mae: float = 0.0
+    improvement_pct: float = 0.0
+    held_out_from: dt.date | None = None
+    held_out_to: dt.date | None = None
+
+    @property
+    def beats_baseline(self) -> bool:
+        return self.mae < self.baseline_mae
+
+
+def naive_baseline(sales: pd.DataFrame) -> pd.DataFrame:
+    """Same day last week. What the manager already does, and a genuinely hard target."""
+    frame = sales.sort_values(["dish_id", "date"]).copy()
+    frame["baseline"] = frame.groupby("dish_id", observed=True)["qty_portions"].shift(7)
+    return frame[["date", "dish_id", "baseline"]]
+
+
+def run_backtest_holdout(
+    sales: pd.DataFrame,
+    context: pd.DataFrame,
+    *,
+    held_out_days: int = 28,
+    quantiles: tuple[float, ...] | None = None,
+) -> tuple[BacktestResult, pd.DataFrame]:
+    """Fit before the cutoff, predict after it, score only the held-out days.
+
+    Returns the result and the long-form median forecast for the held-out window, which
+    the attribution model needs in order to split over-production into plan drift and
+    forecast error.
+    """
+    frame = build_features(sales, context)
+    last_date = frame["date"].max()
+    cutoff = (last_date - pd.Timedelta(days=held_out_days - 1)).date()
+
+    forecaster = Forecaster(quantiles=quantiles or ())
+    forecaster.fit(frame, up_to=cutoff)
+
+    held_out = frame[frame["date"] >= pd.Timestamp(cutoff)].dropna(subset=["lag_14", "roll_28"])
+    if held_out.empty:
+        return BacktestResult(), pd.DataFrame(columns=["date", "dish_id", "forecast_median"])
+
+    grid = forecaster.predict_grid(held_out)
+    median = (
+        grid[np.isclose(grid["quantile"], 0.5)]
+        .rename(columns={"value": "forecast_median"})[["date", "dish_id", "forecast_median"]]
+    )
+
+    scored = (
+        held_out[["date", "dish_id", "qty_portions"]]
+        .merge(median, on=["date", "dish_id"], how="left")
+        .merge(naive_baseline(sales), on=["date", "dish_id"], how="left")
+    )
+    scored = scored.dropna(subset=["forecast_median", "baseline"])
+
+    mae = float(np.mean(np.abs(scored["qty_portions"] - scored["forecast_median"])))
+    baseline_mae = float(np.mean(np.abs(scored["qty_portions"] - scored["baseline"])))
+
+    daily = (
+        scored.groupby("date", observed=True)
+        .agg(
+            actual=("qty_portions", "sum"),
+            forecast=("forecast_median", "sum"),
+            baseline=("baseline", "sum"),
+        )
+        .reset_index()
+    )
+
+    result = BacktestResult(
+        days=[
+            {
+                "date": row.date.date(),
+                "actual": round(float(row.actual), 1),
+                "forecast": round(float(row.forecast), 1),
+                "baseline": round(float(row.baseline), 1),
+                "held_out": True,
+            }
+            for row in daily.itertuples()
+        ],
+        mae=round(mae, 2),
+        baseline_mae=round(baseline_mae, 2),
+        improvement_pct=round(100.0 * (baseline_mae - mae) / baseline_mae, 1) if baseline_mae else 0.0,
+        held_out_from=cutoff,
+        held_out_to=last_date.date(),
+    )
+    return result, median

@@ -1,0 +1,330 @@
+# FoodOS — shelf life profiles
+# Owner: Person D
+#
+# Remaining Shelf Life (RSL) is NOT (expiry_date - today). It is a temperature-adjusted
+# model, because the same paneer in a 4 degC chiller and a 9 degC chiller are two very
+# different assets, and the kitchen's chiller is never at 4 degC on a Sunday service.
+#
+# The model the engine implements (Person A owns the code, this file owns the constants):
+#
+#   temp_factor  = q10 ** ((actual_temp_c - ref_temp_c) / 10)      # >1 means faster decay
+#   life_days    = base_shelf_life_days / temp_factor
+#   life_days   *= cut_life_factor        if the batch is cut / portioned / processed
+#   life_days   *= ethylene_penalty       if sensitive AND stored with a producer
+#   rsl_days     = life_days - age_days
+#
+# q10 is the classic Q10 rule: how many times faster spoilage runs per 10 degC rise.
+# Microbial spoilage sits around 2.0-3.0; enzymatic/quality loss in produce sits lower.
+#
+# ethylene_penalty is applied by the engine as a flat multiplier when a sensitive item
+# shares a storage zone with a producer. Keeping bananas next to spinach is a real and
+# very cheap thing to fix, so it gets its own flag rather than being buried in a constant.
+
+version: 1
+ethylene_penalty: 0.70 # multiplier applied to a sensitive item co-stored with a producer
+critical_rsl_days: 1.0 # at or below this, the batch is PRESERVE/RECOVER, not PREVENT
+warning_rsl_days: 2.5 # at or below this, the batch surfaces on the ledger
+
+categories:
+  leafy_greens:
+    base_shelf_life_days: 3.0
+    ref_temp_c: 4.0
+    q10: 2.5
+    cut_life_factor: 0.35
+    ethylene_producer: false
+    ethylene_sensitive: true
+    freeze_tolerant: false
+    notes: Wilts before it spoils. Loses saleability long before it becomes unsafe.
+
+  brassicas:
+    base_shelf_life_days: 7.0
+    ref_temp_c: 4.0
+    q10: 2.2
+    cut_life_factor: 0.40
+    ethylene_producer: false
+    ethylene_sensitive: true
+    freeze_tolerant: true
+    notes: >
+      Whole heads hold a week. Cut florets brown at the cut face in under three days,
+      which is why prepping cauliflower ahead of demand is expensive.
+
+  fruiting_vegetables:
+    base_shelf_life_days: 6.0
+    ref_temp_c: 8.0
+    q10: 2.0
+    cut_life_factor: 0.30
+    ethylene_producer: true
+    ethylene_sensitive: true
+    freeze_tolerant: false
+    notes: Chill injury below 7 degC for tomato and capsicum. Do not "fix" this with a colder zone.
+
+  root_vegetables:
+    base_shelf_life_days: 21.0
+    ref_temp_c: 10.0
+    q10: 1.8
+    cut_life_factor: 0.25
+    ethylene_producer: false
+    ethylene_sensitive: true
+    freeze_tolerant: false
+    notes: Potato sprouts and greens under light and ethylene, not primarily under heat.
+
+  alliums:
+    base_shelf_life_days: 30.0
+    ref_temp_c: 15.0
+    q10: 1.6
+    cut_life_factor: 0.15
+    ethylene_producer: false
+    ethylene_sensitive: false
+    freeze_tolerant: false
+    notes: Chopped onion is a four-hour ingredient. Whole onion is a month.
+
+  herbs:
+    base_shelf_life_days: 2.5
+    ref_temp_c: 4.0
+    q10: 2.6
+    cut_life_factor: 0.40
+    ethylene_producer: false
+    ethylene_sensitive: true
+    freeze_tolerant: false
+
+  dairy_fresh:
+    base_shelf_life_days: 5.0
+    ref_temp_c: 4.0
+    q10: 3.0
+    cut_life_factor: 0.60
+    ethylene_producer: false
+    ethylene_sensitive: false
+    freeze_tolerant: false
+    notes: >
+      Paneer is the single most expensive short-life item in the kitchen. q10 of 3.0 means
+      a chiller running at 9 degC halves its life. This is pathology two.
+
+  dairy_fat:
+    base_shelf_life_days: 45.0
+    ref_temp_c: 4.0
+    q10: 1.5
+    cut_life_factor: 0.90
+    ethylene_producer: false
+    ethylene_sensitive: false
+    freeze_tolerant: true
+
+  poultry_raw:
+    base_shelf_life_days: 2.0
+    ref_temp_c: 2.0
+    q10: 2.8
+    cut_life_factor: 0.70
+    ethylene_producer: false
+    ethylene_sensitive: false
+    freeze_tolerant: true
+
+  red_meat_raw:
+    base_shelf_life_days: 3.5
+    ref_temp_c: 2.0
+    q10: 2.6
+    cut_life_factor: 0.70
+    ethylene_producer: false
+    ethylene_sensitive: false
+    freeze_tolerant: true
+
+  seafood_raw:
+    base_shelf_life_days: 1.5
+    ref_temp_c: 1.0
+    q10: 3.0
+    cut_life_factor: 0.75
+    ethylene_producer: false
+    ethylene_sensitive: false
+    freeze_tolerant: true
+
+  # --- prepared / in-process states -----------------------------------------
+  cut_vegetable:
+    base_shelf_life_days: 1.5
+    ref_temp_c: 4.0
+    q10: 2.5
+    cut_life_factor: 1.00
+    ethylene_producer: false
+    ethylene_sensitive: true
+    freeze_tolerant: false
+    notes: Already-cut state. cut_life_factor is 1.0 here because the penalty is baked into the base.
+
+  marinade:
+    base_shelf_life_days: 1.0
+    ref_temp_c: 2.0
+    q10: 2.8
+    cut_life_factor: 1.00
+    ethylene_producer: false
+    ethylene_sensitive: false
+    freeze_tolerant: false
+
+  batter:
+    base_shelf_life_days: 0.75
+    ref_temp_c: 4.0
+    q10: 2.5
+    cut_life_factor: 1.00
+    ethylene_producer: false
+    ethylene_sensitive: false
+    freeze_tolerant: false
+
+  cooked_gravy:
+    base_shelf_life_days: 2.0
+    ref_temp_c: 4.0
+    q10: 2.8
+    cut_life_factor: 1.00
+    ethylene_producer: false
+    ethylene_sensitive: false
+    freeze_tolerant: true
+    notes: Dairy-heavy gravies split on reheat before they spoil. Saleable life is shorter than safe life.
+
+  cooked_rice:
+    base_shelf_life_days: 1.0
+    ref_temp_c: 4.0
+    q10: 3.0
+    cut_life_factor: 1.00
+    ethylene_producer: false
+    ethylene_sensitive: false
+    freeze_tolerant: true
+    notes: Bacillus cereus risk. Never extend, never recommend a channel with a long lead time.
+
+  fried_snack:
+    base_shelf_life_days: 0.25
+    ref_temp_c: 25.0
+    q10: 1.4
+    cut_life_factor: 1.00
+    ethylene_producer: false
+    ethylene_sensitive: false
+    freeze_tolerant: false
+    notes: Quality death, not microbial. Six hours and the texture is gone.
+
+  # --- ambient ---------------------------------------------------------------
+  dry_goods:
+    base_shelf_life_days: 180.0
+    ref_temp_c: 25.0
+    q10: 1.2
+    cut_life_factor: 1.00
+    ethylene_producer: false
+    ethylene_sensitive: false
+    freeze_tolerant: false
+
+  spices_ground:
+    base_shelf_life_days: 120.0
+    ref_temp_c: 25.0
+    q10: 1.2
+    cut_life_factor: 1.00
+    ethylene_producer: false
+    ethylene_sensitive: false
+    freeze_tolerant: false
+
+  oils_fats:
+    base_shelf_life_days: 150.0
+    ref_temp_c: 25.0
+    q10: 1.3
+    cut_life_factor: 1.00
+    ethylene_producer: false
+    ethylene_sensitive: false
+    freeze_tolerant: false
+
+  sauces_ambient:
+    base_shelf_life_days: 90.0
+    ref_temp_c: 25.0
+    q10: 1.3
+    cut_life_factor: 1.00
+    ethylene_producer: false
+    ethylene_sensitive: false
+    freeze_tolerant: false
+
+  uht_liquid:
+    base_shelf_life_days: 120.0
+    ref_temp_c: 25.0
+    q10: 1.4
+    cut_life_factor: 0.05
+    ethylene_producer: false
+    ethylene_sensitive: false
+    freeze_tolerant: false
+    notes: cut_life_factor is the once-opened collapse. An opened carton is a two-day item.
+
+  frozen:
+    base_shelf_life_days: 270.0
+    ref_temp_c: -18.0
+    q10: 2.0
+    cut_life_factor: 1.00
+    ethylene_producer: false
+    ethylene_sensitive: false
+    freeze_tolerant: true
+
+# Every ingredient in costs.yaml must appear here. tests/test_agents/test_content.py enforces it.
+ingredients:
+  spinach: leafy_greens
+  coriander_leaves: herbs
+  mint: herbs
+  curry_leaves: herbs
+  spring_onion: leafy_greens
+  cauliflower: brassicas
+  cabbage: brassicas
+  tomato: fruiting_vegetables
+  capsicum: fruiting_vegetables
+  french_beans: fruiting_vegetables
+  green_chilli: fruiting_vegetables
+  lemon: fruiting_vegetables
+  potato: root_vegetables
+  carrot: root_vegetables
+  ginger: root_vegetables
+  onion: alliums
+  garlic: alliums
+  paneer: dairy_fresh
+  curd: dairy_fresh
+  milk: dairy_fresh
+  cream: dairy_fat
+  butter: dairy_fat
+  ghee: dairy_fat
+  chicken_boneless: poultry_raw
+  chicken_bone_in: poultry_raw
+  mutton: red_meat_raw
+  fish_basa_fillet: seafood_raw
+  green_peas_frozen: frozen
+  rice_basmati: dry_goods
+  maida: dry_goods
+  corn_flour: dry_goods
+  hakka_noodles: dry_goods
+  urad_dal_whole: dry_goods
+  rajma: dry_goods
+  kabuli_chana: dry_goods
+  cashew: dry_goods
+  saffron: dry_goods
+  sugar: dry_goods
+  salt: dry_goods
+  red_chilli_powder: spices_ground
+  turmeric: spices_ground
+  cumin: spices_ground
+  coriander_powder: spices_ground
+  garam_masala: spices_ground
+  kasuri_methi: spices_ground
+  oil_sunflower: oils_fats
+  soy_sauce: sauces_ambient
+  chilli_sauce: sauces_ambient
+  tomato_ketchup: sauces_ambient
+  vinegar: sauces_ambient
+  tamarind: sauces_ambient
+  coconut_milk: uht_liquid
+
+# Storage zones the demo dataset uses. Person A plants the temperature excursion in COLD_2.
+storage_zones:
+  DRY_1:
+    name: Dry store
+    set_temp_c: 25.0
+    typical_temp_c: 27.5
+  COLD_1:
+    name: Walk-in chiller
+    set_temp_c: 4.0
+    typical_temp_c: 4.6
+  COLD_2:
+    name: Under-counter chiller (prep line)
+    set_temp_c: 4.0
+    typical_temp_c: 9.2
+    notes: Door opened constantly during service. This is the planted pathology-two zone.
+  MEAT_1:
+    name: Meat chiller
+    set_temp_c: 2.0
+    typical_temp_c: 2.4
+  FREEZER_1:
+    name: Freezer
+    set_temp_c: -18.0
+    typical_temp_c: -17.1
