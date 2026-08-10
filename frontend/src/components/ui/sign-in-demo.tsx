@@ -23,11 +23,13 @@ const foodosTestimonials: Testimonial[] = [
   },
 ];
 
+// Farm gate, and all four committed locally — the sign-in screen is the first thing on
+// the projector, and the H34 rehearsal runs with the wifi off.
 const foodosHeroImages = [
-  "/hero_kitchen.jpg",
-  "/hero_fresh.jpg",
-  "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=2160&q=80",
-  "https://images.unsplash.com/photo-1642615835477-d303d7dc9ee9?w=2160&q=80"
+  "/farm-field-sunrise.jpg",
+  "/market-produce-crates.jpg",
+  "/market-vegetables.jpg",
+  "/crop-seedlings.jpg"
 ];
 
 const SignInPageDemo = () => {

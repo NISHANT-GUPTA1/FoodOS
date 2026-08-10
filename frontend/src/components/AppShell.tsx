@@ -20,13 +20,20 @@ import { NAV_GROUPS, type NavGroup } from '../config/nav'
 import { SystemStatusModal } from './SystemStatusModal'
 
 /**
- * Committed local images, not remote URLs.
+ * Farm gate, not kitchen pass — the backdrop should match the story on screen.
  *
- * Ruling 3 — the H34 rehearsal runs with wifi off. A backdrop fetched from a CDN
- * renders as a blank grey wall in aeroplane mode, which on a projector reads as a
- * broken app before anyone has said a word.
+ * Committed local files, never remote URLs. Ruling 3: the H34 rehearsal runs with wifi
+ * off, and a backdrop fetched from a CDN renders as a blank grey wall in aeroplane
+ * mode — which on a projector reads as a broken app before anyone has said a word.
+ *
+ * Photos: Unsplash License (free to use, no attribution required).
  */
-const natureBackgrounds = ['/hero_fresh.jpg', '/hero_kitchen.jpg']
+const natureBackgrounds = [
+  '/farm-field-sunrise.jpg', // Crop field at sunrise — the harvest end of the chain
+  '/market-produce-crates.jpg', // Graded produce in crates — the batch the engine scores
+  '/market-vegetables.jpg', // Mandi baskets — the destination the optimiser picks
+  '/crop-seedlings.jpg', // Seedlings — the season before any of it ships
+]
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate()
