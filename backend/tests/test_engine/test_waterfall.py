@@ -15,7 +15,7 @@ import pytest
 from foodos.engine import queries, rescue, waterfall
 from foodos.engine.optimiser import rank
 from foodos.engine.risk import BatchRisk
-from foodos.ingest import agmarknet
+from foodos.external import agmarknet
 from foodos.schema.enums import ActionType
 
 

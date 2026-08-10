@@ -13,7 +13,7 @@ Expected files (all optional except `products.csv`; the loader ingests what is
 present and reports what was missing, so a partial drop still works):
 
     sites.csv             site_id, name, type, timezone, currency, geo_id
-    agmarknet.csv         AGMARKNET mandi price export — see ingest/agmarknet.py
+    agmarknet.csv         AGMARKNET mandi price export — see external/agmarknet.py
     products.csv          product_id, sku, name, category, uom, unit_cost,
                           unit_price, is_dish, perishable, is_produce,
                           co2e_kg_per_uom, portion_kg, plannable

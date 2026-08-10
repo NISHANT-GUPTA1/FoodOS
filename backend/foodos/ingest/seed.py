@@ -29,7 +29,8 @@ from foodos.config import settings
 from foodos.db import create_all, drop_all, session_scope
 from foodos.engine.context import default_context
 from foodos.engine.recommendation import generate
-from foodos.ingest import agmarknet, channels, loader, sample_data
+from foodos.external import agmarknet
+from foodos.ingest import channels, loader, sample_data
 from foodos.schema.tables import Organization, Site
 
 

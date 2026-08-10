@@ -26,7 +26,7 @@ from foodos.api.schemas import (
     TodayOut,
 )
 from foodos.engine import queries, recommendation, simulator, waterfall
-from foodos.ingest import agmarknet
+from foodos.external import agmarknet
 from foodos.engine.optimiser import ScoredAction
 from foodos.engine.planner import (
     build_batch_decisions,

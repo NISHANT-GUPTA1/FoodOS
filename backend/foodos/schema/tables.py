@@ -497,7 +497,7 @@ class MarketPrice(Base):
 
     Reference data about the outside world, not an observation of this
     customer's stock, so it hangs off nothing. Prices arrive per quintal and
-    are stored per kilogram — see `ingest/agmarknet.py`.
+    are stored per kilogram — see `external/agmarknet.py`.
     """
 
     __tablename__ = "market_price"
