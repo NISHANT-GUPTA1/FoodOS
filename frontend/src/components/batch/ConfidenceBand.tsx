@@ -16,9 +16,13 @@ export function ConfidenceBand({ risk }: ConfidenceBandProps) {
   const token = riskToken(risk.level)
   const confidence = confidenceToken(risk.confidence)
 
+  // A missing band means the deterministic fallback scored this batch, not A's model.
+  // Say that plainly rather than drawing an interval nobody computed.
+  const hasBand = risk.low !== null && risk.high !== null
+
   // Scale the axis a little wider than the interval so the band never touches the edges.
   const axisMin = 0
-  const axisMax = Math.max(risk.high * 1.35, risk.loss_pct * 1.5, 12)
+  const axisMax = Math.max((risk.high ?? risk.loss_pct) * 1.35, risk.loss_pct * 1.5, 12)
   const pct = (value: number) => `${(((value - axisMin) / (axisMax - axisMin)) * 100).toFixed(2)}%`
 
   return (
@@ -41,10 +45,12 @@ export function ConfidenceBand({ risk }: ConfidenceBandProps) {
 
       <div className="mt-6">
         <div className="relative h-3 w-full rounded-full bg-slate-200/80">
-          <div
-            className={`absolute top-0 h-3 rounded-full ${token.bar} opacity-35`}
-            style={{ left: pct(risk.low), width: `calc(${pct(risk.high)} - ${pct(risk.low)})` }}
-          />
+          {hasBand ? (
+            <div
+              className={`absolute top-0 h-3 rounded-full ${token.bar} opacity-35`}
+              style={{ left: pct(risk.low as number), width: `calc(${pct(risk.high as number)} - ${pct(risk.low as number)})` }}
+            />
+          ) : null}
           <div
             className={`absolute -top-1 h-5 w-1 rounded-full ${token.bar}`}
             style={{ left: pct(risk.loss_pct) }}
@@ -52,19 +58,24 @@ export function ConfidenceBand({ risk }: ConfidenceBandProps) {
           />
         </div>
 
-        <div className="relative mt-2 h-8 text-[11px] font-semibold tabular-nums text-slate-600">
-          <span className="absolute -translate-x-1/2" style={{ left: pct(risk.low) }}>
-            q10 {formatLossPct(risk.low)}
-          </span>
-          <span className="absolute -translate-x-1/2" style={{ left: pct(risk.high) }}>
-            q90 {formatLossPct(risk.high)}
-          </span>
-        </div>
+        {hasBand ? (
+          <div className="relative mt-2 h-8 text-[11px] font-semibold tabular-nums text-slate-600">
+            <span className="absolute -translate-x-1/2" style={{ left: pct(risk.low as number) }}>
+              q10 {formatLossPct(risk.low as number)}
+            </span>
+            <span className="absolute -translate-x-1/2" style={{ left: pct(risk.high as number) }}>
+              q90 {formatLossPct(risk.high as number)}
+            </span>
+          </div>
+        ) : (
+          <div className="mt-2 h-8" />
+        )}
       </div>
 
       <p className="mt-1 text-xs leading-relaxed text-slate-600">
-        Quantile heads at q10/q90 from the loss model. The point estimate is what the optimiser
-        scores; the band is what you should plan against.
+        {hasBand
+          ? 'Quantile heads at q10/q90 from the loss model. The point estimate is what the optimiser scores; the band is what you should plan against.'
+          : 'No quantile band on this batch — it was scored by the deterministic Q10 fallback rather than a trained model run, so treat the point estimate as indicative.'}
       </p>
     </div>
   )

@@ -60,14 +60,30 @@ export function BatchIntelligenceScreen() {
           <StateGrid profile={profile} />
           <ConfidenceBand risk={profile.risk} />
         </div>
-        <DriverBars drivers={profile.drivers} modelRunId={profile.model_run_id} />
+        {/* `drivers[]` may be empty — hide the block rather than render an empty chart. */}
+        {profile.drivers.length > 0 ? (
+          <DriverBars drivers={profile.drivers} modelRunId={profile.model_run_id ?? undefined} />
+        ) : (
+          <EmptyState
+            title="No driver attribution yet"
+            description="This batch was scored without a model run, so there is no ranked contribution to show. The loss figure above still stands — it came from the deterministic fallback."
+          />
+        )}
       </div>
 
-      <section className="space-y-3">
-        <h2 className="text-lg font-extrabold tracking-tight text-slate-900">Recommended plan</h2>
-        <RecommendationCard data={profile.recommendation} />
-        <PlanActions planId={profile.best_plan_id} />
-      </section>
+      {/* `best_plan_id` and `recommendation` are null until plans are generated. */}
+      {profile.recommendation && profile.best_plan_id !== null ? (
+        <section className="space-y-3">
+          <h2 className="text-lg font-extrabold tracking-tight text-slate-900">Recommended plan</h2>
+          <RecommendationCard data={profile.recommendation} showActions={false} />
+          <PlanActions planId={profile.best_plan_id} />
+        </section>
+      ) : (
+        <EmptyState
+          title="No plan recommended yet"
+          description="The planner has not scored candidate actions for this consignment. Nothing is wrong — the batch is registered and its risk is above."
+        />
+      )}
 
       {plans.isLoading ? (
         <LoadingState title="Scoring candidate actions" description="Running every candidate through the objective function." />
@@ -148,23 +164,32 @@ function StateGrid({ profile }: { profile: BatchProfile }) {
       <div className="rounded-2xl border border-slate-200 bg-white/80 p-5">
         <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500">Quality score</p>
         <div className="mt-1 flex items-baseline gap-2">
-          <span className="text-5xl font-extrabold tabular-nums text-slate-900">{state.quality_score}</span>
-          <span className="text-sm font-bold text-slate-500">/ 100</span>
-          <span className="ml-auto rounded-full border border-slate-300 bg-slate-50 px-2.5 py-1 text-xs font-extrabold text-slate-700">
-            Grade {state.grade}
+          <span className="text-5xl font-extrabold tabular-nums text-slate-900">
+            {state.quality_score ?? '—'}
           </span>
+          <span className="text-sm font-bold text-slate-500">/ 100</span>
+          {state.grade ? (
+            <span className="ml-auto rounded-full border border-slate-300 bg-slate-50 px-2.5 py-1 text-xs font-extrabold text-slate-700">
+              Grade {state.grade}
+            </span>
+          ) : null}
         </div>
         <div className="mt-4 h-2 w-full rounded-full bg-slate-200/80">
-          <div className="h-2 rounded-full bg-slate-800" style={{ width: `${state.quality_score}%` }} />
+          <div className="h-2 rounded-full bg-slate-800" style={{ width: `${state.quality_score ?? 0}%` }} />
         </div>
+        {state.quality_score === null ? (
+          <p className="mt-2 text-xs font-medium text-slate-500">
+            Not scored yet — the questionnaire has not been submitted for this batch.
+          </p>
+        ) : null}
         <dl className="mt-4 grid grid-cols-2 gap-3 text-xs">
           <div>
             <dt className="font-bold uppercase tracking-wider text-slate-500">Maturity</dt>
-            <dd className="mt-0.5 font-bold capitalize text-slate-900">{state.maturity}</dd>
+            <dd className="mt-0.5 font-bold capitalize text-slate-900">{state.maturity ?? 'Not assessed'}</dd>
           </div>
           <div>
             <dt className="font-bold uppercase tracking-wider text-slate-500">Mechanical damage</dt>
-            <dd className="mt-0.5 font-bold capitalize text-slate-900">{state.damage_factor}</dd>
+            <dd className="mt-0.5 font-bold capitalize text-slate-900">{state.damage_factor ?? 'Not assessed'}</dd>
           </div>
         </dl>
       </div>
@@ -177,10 +202,12 @@ function StateGrid({ profile }: { profile: BatchProfile }) {
             Field heat over 30 °C
           </div>
           <div className="mt-1 text-3xl font-extrabold tabular-nums text-slate-900">
-            {state.field_heat_hours_over_30c} h
+            {state.field_heat_hours_over_30c === null ? '—' : `${state.field_heat_hours_over_30c} h`}
           </div>
           <p className="mt-1 text-xs font-medium text-slate-600">
-            Accumulated between cutting and loading. The single largest driver below.
+            {state.field_heat_hours_over_30c === null
+              ? 'Not captured yet — this comes from the condition step of the questionnaire.'
+              : 'Accumulated between cutting and loading. The single largest driver below.'}
           </p>
         </div>
       </div>

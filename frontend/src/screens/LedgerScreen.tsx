@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { ErrorState, LoadingState } from '../components/StatePanel'
+import { EmptyState, ErrorState, LoadingState } from '../components/StatePanel'
 import { fetchLedgerDashboard } from '../api/mockApi'
 import { SectionHeader } from '../components/SectionHeader'
 
@@ -24,6 +24,13 @@ export function LedgerScreen() {
         title="Batch life and risk"
         description="The ledger keeps one row per batch so the demo can move from aggregate waste to concrete operational choices."
       />
+
+      {data.batches.length === 0 && (
+        <EmptyState
+          title="No open batches"
+          description="Every batch has been consumed or written off. The ledger repopulates at the next goods receipt."
+        />
+      )}
 
       <div className="panel overflow-hidden">
         <table className="min-w-full divide-y divide-[#c4c7c8] text-left text-sm">

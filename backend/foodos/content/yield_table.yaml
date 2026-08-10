@@ -1,0 +1,139 @@
+# FoodOS — standard culinary yield table
+# Owner: Person D
+#
+# Two distinct yields, never mix them up:
+#
+#   prep_yield    = edible prepped weight / as-purchased weight        (always <= 1.0)
+#   cooking_yield = cooked weight / raw prepped weight                 (can be > 1.0)
+#
+# The engine uses prep_yield to turn a recipe requirement into a PURCHASE quantity:
+#
+#   purchase_kg = recipe_qty_kg / prep_yield
+#
+# Recipe lines are stated in PREPPED (edible) weight. A recipe asking for 0.180 kg of
+# cauliflower florets means the kitchen must buy 0.180 / 0.58 = 0.310 kg of whole heads.
+# This gap is where a third of hidden waste lives, which is the whole point of this table.
+#
+# Sources: standard foodservice yield references (CIA / IS 1969 trade practice), adjusted
+# to Indian wholesale market grades (more trim loss than US-graded produce).
+
+version: 1
+default_prep_yield: 1.00 # anything not listed is assumed 1:1 (spices, dry goods, dairy)
+
+prep_yield:
+  # --- brassicas -------------------------------------------------------------
+  cauliflower:
+    yield: 0.58
+    basis: florets_from_whole_head
+    loss: core, leaves, thick stalk, insect trim
+  cabbage:
+    yield: 0.79
+    basis: shredded_from_whole_head
+    loss: outer leaves, core
+
+  # --- fruiting vegetables ---------------------------------------------------
+  tomato:
+    yield: 0.91
+    basis: diced_from_whole
+    loss: eye, bruised shoulders
+  capsicum:
+    yield: 0.80
+    basis: diced_from_whole
+    loss: stem, seed pod, membrane
+  french_beans:
+    yield: 0.88
+    basis: cut_from_whole
+    loss: topped and tailed, strings
+  green_chilli:
+    yield: 0.90
+    basis: chopped
+    loss: stem
+  lemon:
+    yield: 0.45
+    basis: juice_from_whole
+    loss: rind, pith, pips
+
+  # --- roots and tubers ------------------------------------------------------
+  potato:
+    yield: 0.81
+    basis: peeled_diced
+    loss: peel, eyes, greening
+  carrot:
+    yield: 0.83
+    basis: peeled_diced
+    loss: peel, crown, tip
+  ginger:
+    yield: 0.85
+    basis: peeled_paste
+    loss: skin, fibrous nodes
+
+  # --- alliums ---------------------------------------------------------------
+  onion:
+    yield: 0.87
+    basis: peeled_chopped
+    loss: skin, root plate, top
+  garlic:
+    yield: 0.87
+    basis: peeled_paste
+    loss: skin, root plate
+  spring_onion:
+    yield: 0.75
+    basis: trimmed_chopped
+    loss: root, wilted green
+
+  # --- leafy and herbs -------------------------------------------------------
+  spinach:
+    yield: 0.70
+    basis: stemmed_washed
+    loss: thick stems, yellowed leaf, grit
+  coriander_leaves:
+    yield: 0.60
+    basis: picked_leaf
+    loss: stalk, root, yellowed leaf
+  mint:
+    yield: 0.55
+    basis: picked_leaf
+    loss: stalk, blackened leaf
+  curry_leaves:
+    yield: 0.80
+    basis: picked_leaf
+    loss: stalk
+
+  # --- proteins --------------------------------------------------------------
+  chicken_bone_in:
+    yield: 0.85
+    basis: curry_cut_trimmed
+    loss: skin, excess fat, drip
+  chicken_boneless:
+    yield: 0.95
+    basis: diced_trimmed
+    loss: sinew, fat cap, drip
+  mutton:
+    yield: 0.85
+    basis: curry_cut_trimmed
+    loss: excess fat, gland, drip
+  fish_basa_fillet:
+    yield: 0.95
+    basis: portioned
+    loss: belly trim, thaw drip
+  paneer:
+    yield: 1.00
+    basis: cubed
+    loss: none at portion scale
+
+# cooked weight / raw prepped weight — used by the RSL model and by portion planning,
+# never by the purchase calculation.
+cooking_yield:
+  rice_basmati: 2.60 # dry to steamed
+  urad_dal_whole: 2.40
+  rajma: 2.30
+  kabuli_chana: 2.20
+  hakka_noodles: 2.10
+  chicken_boneless: 0.75 # shrink
+  chicken_bone_in: 0.78
+  mutton: 0.70
+  fish_basa_fillet: 0.82
+  paneer: 0.95 # gravy simmer
+  cauliflower_fried: 0.72 # batter pickup net of moisture loss
+  spinach: 0.35 # blanch and puree
+  onion_birista: 0.30 # deep fried onion

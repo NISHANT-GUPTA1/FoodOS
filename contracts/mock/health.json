@@ -1,0 +1,15 @@
+{
+  "status": "ok",
+  "version": "0.1.0",
+  "demo_today": "2026-02-12",
+  "default_site_id": 1,
+  "sites": [
+    {
+      "id": 1,
+      "name": "Spice Garden, Koramangala",
+      "type": "kitchen",
+      "geo_id": null
+    }
+  ],
+  "seeded": true
+}

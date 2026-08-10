@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500;700;800&family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+/* No webfont @import on purpose. FoodOS-Team-Split.md §8 H33-36 runs one
+   rehearsal with wifi off to catch hidden network calls, and pulling Inter,
+   Roboto Slab and JetBrains Mono from fonts.googleapis.com was one of them.
+   Every font-family below already declares a local fallback chain, so the UI
+   degrades to system faces instead of hanging on a blocked request. */
 
 @tailwind base;
 @tailwind components;
@@ -12,9 +16,17 @@
   --border: #c4c7c8;
   --text: #1c1b1b;
   --muted: #444748;
+  /* Horizon tokens — the ONE definition. §7 H0-3: "design tokens (one colour
+     per horizon: PREVENT / PRESERVE / RECOVER)". tailwind.config.js mirrors
+     these exact values; nothing should hardcode a horizon colour again.
+     `-ink` is the accessible text variant for use on the light surfaces —
+     the base tones do not clear contrast ratio as body text on #fcf8f8. */
   --prevent: #10b981;
-  --preserve: #0ea5e9;
+  --prevent-ink: #047857;
+  --preserve: #f59e0b;
+  --preserve-ink: #9a6700;
   --recover: #ef4444;
+  --recover-ink: #ba1a1a;
 }
 
 html,

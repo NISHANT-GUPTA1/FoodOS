@@ -1,0 +1,48 @@
+{
+  "id": 11,
+  "horizon": "RECOVER",
+  "subject_type": "batch",
+  "subject_id": 35,
+  "subject_label": "Mutton",
+  "action_type": "b2b_transfer",
+  "action_params": {
+    "channel_id": 3,
+    "channel_type": "b2b_transfer",
+    "qty": 7.3,
+    "distance_km": 0.4
+  },
+  "baseline_value": 0.0,
+  "recommended_value": 7.3,
+  "saves": {
+    "kg": 6.424,
+    "money": 3654.32,
+    "co2e": 16.06
+  },
+  "confidence": "HIGH",
+  "rationale_text": "7.3 kg of Mutton is at risk (remaining life 2.3 days, P(waste) 100%, Rs 5256 exposed). Best open action: Nalapaka Kitchen (400 m) — Rs 3654 recovered against Rs 0 for doing nothing.",
+  "rationale_facts": {
+    "rsl_days": 2.26,
+    "qty_at_risk": 7.3,
+    "waste_probability": 1.0,
+    "value_at_risk": 5256.0,
+    "uom": "kg",
+    "terms": {
+      "recovered_value": 3784.32,
+      "cost": 130.0,
+      "expected_loss": 630.72,
+      "sustainability": 192.72,
+      "social": 0.0,
+      "total": 3216.32
+    },
+    "objective_value": 3216.32,
+    "objective_value_of_doing_nothing": -5256.0,
+    "price_factor": 0.72,
+    "logistics_cost": 130.0,
+    "residual_loss_probability": 0.12,
+    "feeds_a_human": true
+  },
+  "status": "overridden",
+  "override_reason": "Friday footfall is always higher",
+  "override_value": 72.0,
+  "expires_at": "2026-02-13T00:00:00"
+}

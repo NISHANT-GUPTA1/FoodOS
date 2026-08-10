@@ -1,18 +1,17 @@
 """Backtest — measured savings, not projected savings.
 
-OWNER: Person A (Data & Models).
-CONTRACT (frozen at H3):  run_backtest(site_id) -> dict
+Owner: Person A (Data & Models).
 
-Train on the first part of the history, then replay the last 30 days the model
-has never seen and ask a single question: if the kitchen had prepped what the
-optimiser said instead of what it actually prepped, what would the difference
-have been in rupees and kilos?
+`run_backtest()` is the frozen H3 contract (FoodOS-Team-Split.md §4): loads its
+own tables, replays the last N days through the newsvendor optimiser, reports
+rupees and kilos. Callers: verify.py and tests/test_models/.
 
-That makes the headline number an *output* rather than an assumption, which is
-the answer to the question every serious judge is holding: "how do I know these
-savings aren't made up?"
-
-The newsvendor quantity:
+Train on the first part of the history, then replay the last 30 days the model has
+never seen and ask a single question: if the kitchen had prepped what the optimiser
+said instead of what it actually prepped, what would the difference have been in
+rupees and kilos? That makes the headline number an *output* rather than an
+assumption, which answers the question every serious judge is holding: "how do I
+know these savings aren't made up?"
 
     C_u = unit_price - food_cost           margin lost if you run out
     C_o = food_cost + lambda * co2e_price  cost of one portion binned
@@ -25,9 +24,10 @@ production optimiser and the single source of truth. At integration, delete
 `_newsvendor_qty` here and import yours — two objective functions is exactly the
 failure mode the plan warns about.
 
-One honest caveat: true demand is unobservable. We only ever see sold =
-min(demand, produced), so on days the kitchen sold out the real demand was
+One honest caveat: true demand is unobservable. We only ever see
+sold = min(demand, produced), so on days the kitchen sold out the real demand was
 higher than the number scored here. The censoring rate is reported.
+
 """
 
 from __future__ import annotations
@@ -37,7 +37,6 @@ import pandas as pd
 
 from ..data import catalog as C
 from . import forecast, loader
-
 
 def _dish_economics(products: pd.DataFrame, pid: str, lam: float) -> dict:
     price = float(products.loc[pid, "unit_price"] or 0.0)
@@ -138,7 +137,27 @@ def run_backtest(site_id: str = C.SITE["site_id"], test_days: int = 30,
     total_saving = float(df["saving"].sum())
     total_kg = float(df["saving_kg"].sum())
 
+    n_train = len(all_dates) - n_days
+
     return {
+        # --- Contract 1 (A -> B), frozen at H3 in FoodOS-Team-Split.md §4 ------
+        # These seven keys are the frozen surface. Everything below them is this
+        # module's own richer output, kept because verify.py and the engine read
+        # it. Aliases, not duplicates of the work: same numbers, contract names.
+        #
+        # One deliberate deviation: the contract shows `test_days` as the pair
+        # [21, 30], but it is also this function's input parameter and
+        # tests/test_models/test_planted_faults.py asserts `== 30`. It stays an
+        # int; `test_day_range` carries the pair the contract meant.
+        "train_days": [1, n_train],
+        "test_day_range": [n_train + 1, len(all_dates)],
+        "pinball_loss": accuracy["pinball_loss"],
+        "mape": accuracy["mape"],
+        "coverage": accuracy["interval_coverage_pct"],
+        "baseline_mape": accuracy["baseline_mape"],
+        "counterfactual_saving_kg": round(total_kg, 1),
+        "counterfactual_saving_money": round(total_saving, 2),
+        # ----------------------------------------------------------------------
         "site_id": site_id,
         "model_run_id": run_id,
         "train_start": all_dates[0], "train_end": train_end,
@@ -225,3 +244,4 @@ if __name__ == "__main__":
         print(f"    {f['lambda']:>7.1f}{f['saving_money_monthly']:>14,.0f}"
               f"{f['saving_kg_monthly']:>13,.0f}{f['overproduction_cut_pct']:>15.0f}%")
     print()
+

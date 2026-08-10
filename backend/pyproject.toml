@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "foodos"
+version = "0.1.0"
+description = "FoodOS — B2B Food Waste Intelligence Platform"
+# Team standard is 3.11.x — install that. The floor is not pinned to a single
+# minor so a machine that already has 3.12/3.13 can still run the backend
+# rather than being blocked at hour zero.
+requires-python = ">=3.11"
+
+# Exact stack, nothing else. Adding a library here needs a one-line
+# justification to B first — see backend/README.md.
+dependencies = [
+    # API — B
+    "fastapi==0.115.*",
+    "uvicorn[standard]==0.32.*",
+    # ORM and DTOs — B
+    "sqlalchemy==2.0.*",
+    "pydantic==2.9.*",
+    # Dataframes — A
+    "pandas==2.2.*",
+    "numpy==1.26.*",
+    # Forecasting — A
+    "lightgbm==4.5.*",
+    "scikit-learn==1.5.*",
+    # Agents — D
+    "anthropic",
+    # Config — B
+    "python-dotenv==1.0.*",
+    # Justified additions (both are FastAPI's own plumbing, not new libraries):
+    #   python-multipart — FastAPI cannot parse a multipart upload without it,
+    #     so POST /api/ingest/upload does not exist unless it is installed.
+    "python-multipart==0.0.*",
+    # Content — D
+    #   pyyaml is the only reader of backend/foodos/content/*.yaml and is
+    #   imported unconditionally by foodos/agents/content.py. It was absent
+    #   from feat/b-engine-integrated because that branch predates D's folder;
+    #   on merged main the agents package exists, so without this line a clean
+    #   `pip install -e .` produces an environment where test_agents cannot
+    #   collect. §2 lists YAML as part of D's approved stack.
+    "pyyaml==6.0.*",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.3.*",
+    # httpx is what starlette's TestClient is built on; without it the API
+    # tests cannot run. Test-only, never imported by shipped code.
+    "httpx",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["foodos*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q"

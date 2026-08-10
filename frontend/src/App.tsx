@@ -15,7 +15,6 @@ import { CreateBatchScreen } from './screens/batch/CreateBatchScreen'
 import { WhatIfScreen } from './screens/batch/WhatIfScreen'
 import SignInPageDemo from '@/components/ui/sign-in-demo'
 import DemoOne from '@/components/ui/demo'
-import GradientDemo from '@/components/ui/gradient-demo'
 
 export function App() {
   return (
@@ -24,7 +23,6 @@ export function App() {
       <Route path="/signin" element={<SignInPageDemo />} />
       <Route path="/login" element={<DemoOne />} />
       <Route path="/demo" element={<DemoOne />} />
-      <Route path="/gradient-menu" element={<GradientDemo />} />
       <Route
         path="*"
         element={

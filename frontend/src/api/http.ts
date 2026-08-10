@@ -30,11 +30,12 @@ export function fetchJson<T>(path: string): Promise<T> {
   return request<T>(path)
 }
 
-export function postJson<T>(path: string, body: unknown): Promise<T> {
+/** `body` is optional: accept/override on the kitchen surface post an empty body. */
+export function postJson<T>(path: string, body?: unknown): Promise<T> {
   return request<T>(path, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body: body === undefined ? undefined : JSON.stringify(body),
   })
 }
 

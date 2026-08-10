@@ -147,17 +147,13 @@ export default function Component() {
         if (geometry) geometry.dispose();
         if (material) material.dispose();
       };
-    } else {
-      const script = document.createElement('script');
-      script.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
-      script.async = true;
-      script.onload = () => {
-        if ((window as any).THREE) {
-          initThree((window as any).THREE);
-        }
-      };
-      document.head.appendChild(script);
     }
+    // No CDN fallback on purpose. FoodOS-Team-Split.md §8 H33-36 runs one
+    // rehearsal with wifi off to catch hidden network calls, and fetching
+    // three.min.js from cdnjs was one. `three` is also not on the §2 stack
+    // list, so it cannot simply be bundled instead. Without THREE on window
+    // the canvas stays empty and the form below renders normally — the login
+    // screen works offline, it just loses the background animation.
 
     return () => {
       active = false;

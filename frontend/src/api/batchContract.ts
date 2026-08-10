@@ -54,19 +54,28 @@ export interface BatchListResponse {
  * 5 · GET /api/batches/{id}   — Screen 3 hero. Shape frozen in §2.
  * ------------------------------------------------------------------ */
 
+/**
+ * Every field may be `null` before the questionnaire or the photos land — Contract 2b,
+ * degradation contract. Screen 3 renders a partial profile rather than blanking.
+ */
 export interface BatchState {
-  quality_score: number
-  grade: string
-  maturity: string
-  damage_factor: string
-  field_heat_hours_over_30c: number
+  quality_score: number | null
+  grade: string | null
+  maturity: string | null
+  damage_factor: string | null
+  field_heat_hours_over_30c: number | null
 }
 
 export interface BatchRisk {
   loss_pct: number
   loss_kg: number
-  low: number
-  high: number
+  /**
+   * The quantile band. A MISSING band means the row was scored by the deterministic
+   * fallback rather than by A's model — render the point estimate and say so, never
+   * fabricate an interval around it.
+   */
+  low: number | null
+  high: number | null
   rul_hours: number
   level: RiskLevel
   confidence: ConfidenceLevel
@@ -90,11 +99,14 @@ export interface BatchProfile {
   packaging: PackagingType
   state: BatchState
   risk: BatchRisk
+  /** May be `[]` — Screen 3 hides the block rather than showing an empty chart. */
   drivers: LossDriver[]
-  best_plan_id: number
+  /** `null` until plans are generated. */
+  best_plan_id: number | null
   /** The frozen recommendation card shape, unchanged. */
-  recommendation: RecommendationData
-  model_run_id?: string
+  recommendation: RecommendationData | null
+  /** `null` when the deterministic fallback scored this batch instead of a model run. */
+  model_run_id?: string | null
   source?: SourceStamp
 }
 

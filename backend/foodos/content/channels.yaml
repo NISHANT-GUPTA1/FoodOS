@@ -1,0 +1,279 @@
+# FoodOS — recovery channels
+# Owner: Person D
+#
+# The RECOVER action space. Every channel here is an action the optimiser can take on
+# stock that PREVENT failed to avoid and PRESERVE cannot save.
+#
+# recovery_factor
+#   Fraction of the unit value basis that actually comes back as cash or avoided cost.
+#   basis: menu_price   -> finished, saleable portions
+#   basis: food_cost    -> raw or prepped ingredient, valued at what we paid
+#   recovered_value = qty * unit_value(basis) * recovery_factor
+#
+#   These are NET of the channel's own cost — commission, packing, transport, staff time.
+#   A channel that recovers 65% of menu price but pays 22% commission is entered at 0.43,
+#   not 0.65. Judges will ask. The answer is in this file.
+#
+# THE FEASIBILITY GATE
+#   A channel is eligible only if ALL of:
+#     rsl_hours_remaining >= lead_time_hours + min_residual_life_hours
+#     batch.state       in states
+#     batch.category    in allowed_categories  (or allowed_categories is 'any')
+#     qty               >= min_qty_kg  and (max_qty_kg is null or qty <= max_qty_kg)
+#     day_of_week       in available_days
+#     hour_of_day       within cutoff_hour
+#     every flag in requires  is true for the batch
+#
+#   The gate runs BEFORE ranking. Failing channels are returned to the UI with
+#   exclusion_reason populated and are rendered greyed out, never dropped. An operator
+#   who watches an option vanish without explanation stops trusting the system, and a
+#   judge who sees only the winning option assumes we cherry-picked it.
+
+version: 1
+
+exclusion_reasons:
+  lead_time_exceeds_rsl: Not enough shelf life left to reach this channel in time
+  state_not_accepted: This channel does not accept stock in this state
+  category_not_accepted: This channel does not accept this product category
+  below_min_qty: Below this channel's minimum pickup quantity
+  above_max_qty: Above what this channel can absorb today
+  day_unavailable: This channel does not operate today
+  past_cutoff: Past today's cutoff time for this channel
+  missing_requirement: A required condition is not met
+  cold_chain_unavailable: No cold chain available for the transfer
+  licence_restriction: Food safety rules do not permit this route for this stock
+
+channels:
+  - id: dine_in_special
+    name: Same-day menu special
+    type: own_demand
+    horizon: RECOVER
+    basis: menu_price
+    recovery_factor: 0.72 # 20% discount, no commission, small covers uplift
+    lead_time_hours: 0.5
+    min_residual_life_hours: 3
+    min_qty_kg: 0.0
+    max_qty_kg: 12.0
+    states: [prepped, cooked, raw]
+    allowed_categories: any
+    available_days: [mon, tue, wed, thu, fri, sat, sun]
+    cutoff_hour: 20
+    requires: []
+    co2e_avoided_factor: 1.0
+    notes: >
+      Highest recovery and zero logistics, but capacity is bounded by tonight's covers.
+      The optimiser must not dump 40 kg here just because the rate is best.
+
+  - id: app_flash_deal
+    name: Delivery app flash deal
+    type: aggregator
+    horizon: RECOVER
+    basis: menu_price
+    recovery_factor: 0.43 # 65% list price less 22% aggregator commission and packing
+    lead_time_hours: 2
+    min_residual_life_hours: 4
+    min_qty_kg: 1.0
+    max_qty_kg: 25.0
+    states: [cooked, prepped]
+    allowed_categories: any
+    available_days: [mon, tue, wed, thu, fri, sat, sun]
+    cutoff_hour: 22
+    requires: [menu_listed]
+    co2e_avoided_factor: 1.0
+    notes: Reaches demand we do not otherwise have. Commission is the whole reason it ranks below the in-house special.
+
+  - id: b2b_transfer
+    name: Transfer to sister outlet
+    type: internal_transfer
+    horizon: RECOVER
+    basis: food_cost
+    recovery_factor: 0.90 # full value less transport and handling; it is our own stock
+    lead_time_hours: 6
+    min_residual_life_hours: 12
+    min_qty_kg: 2.0
+    max_qty_kg: null
+    states: [raw, prepped]
+    allowed_categories:
+      [
+        vegetable,
+        dairy,
+        poultry,
+        red_meat,
+        seafood,
+        dry_goods,
+        frozen,
+        cut_vegetable,
+      ]
+    available_days: [mon, tue, wed, thu, fri, sat]
+    cutoff_hour: 16
+    requires: [cold_chain_available]
+    co2e_avoided_factor: 1.0
+    notes: >
+      The best rupee outcome for raw stock, and the reason the Communicator agent exists —
+      somebody has to send the other outlet's manager a message they will actually act on.
+
+  - id: surplus_marketplace
+    name: Surplus marketplace listing
+    type: marketplace
+    horizon: RECOVER
+    basis: menu_price
+    recovery_factor: 0.31
+    lead_time_hours: 4
+    min_residual_life_hours: 6
+    min_qty_kg: 1.5
+    max_qty_kg: 30.0
+    states: [cooked, prepped]
+    allowed_categories: any
+    available_days: [mon, tue, wed, thu, fri, sat, sun]
+    cutoff_hour: 19
+    requires: []
+    co2e_avoided_factor: 1.0
+
+  - id: staff_meal
+    name: Staff meal
+    type: cost_avoidance
+    horizon: RECOVER
+    basis: food_cost
+    recovery_factor: 0.55 # avoided staff-meal ingredient spend, not revenue
+    lead_time_hours: 0.5
+    min_residual_life_hours: 2
+    min_qty_kg: 0.0
+    max_qty_kg: 6.0
+    states: [cooked, prepped, raw]
+    allowed_categories: any
+    available_days: [mon, tue, wed, thu, fri, sat, sun]
+    cutoff_hour: 23
+    requires: []
+    co2e_avoided_factor: 1.0
+    notes: Small ceiling. Real, but it cannot absorb a service-sized error.
+
+  - id: ngo_donation
+    name: NGO / food bank donation
+    type: donation
+    horizon: RECOVER
+    basis: food_cost
+    recovery_factor: 0.18 # 80G tax relief and avoided disposal, not revenue
+    lead_time_hours: 12
+    min_residual_life_hours: 18
+    min_qty_kg: 5.0
+    max_qty_kg: null
+    states: [raw, prepped]
+    allowed_categories: [vegetable, dry_goods, dairy, frozen]
+    available_days: [mon, wed, fri]
+    cutoff_hour: 15
+    requires: [cold_chain_available, unopened_packaging]
+    co2e_avoided_factor: 1.0
+    notes: >
+      Deliberately excludes cooked food. FSSAI surplus-food guidance treats cooked
+      donations as high risk once out of temperature control, and a food-safety
+      incident is not a rounding error on a saving. The system will refuse this route
+      for cooked stock and will say why.
+
+  - id: animal_feed
+    name: Animal feed collection
+    type: downcycle
+    horizon: RECOVER
+    basis: food_cost
+    recovery_factor: 0.04
+    lead_time_hours: 24
+    min_residual_life_hours: 0
+    min_qty_kg: 10.0
+    max_qty_kg: null
+    states: [raw, prepped, trim]
+    allowed_categories: [vegetable, dry_goods]
+    available_days: [tue, thu, sat]
+    cutoff_hour: 11
+    requires: [no_meat_contact]
+    co2e_avoided_factor: 0.6
+
+  - id: compost
+    name: Compost / biogas
+    type: downcycle
+    horizon: RECOVER
+    basis: food_cost
+    recovery_factor: 0.01
+    lead_time_hours: 24
+    min_residual_life_hours: 0
+    min_qty_kg: 0.0
+    max_qty_kg: null
+    states: [raw, prepped, cooked, trim, spoiled]
+    allowed_categories: any
+    available_days: [mon, tue, wed, thu, fri, sat, sun]
+    cutoff_hour: 23
+    requires: []
+    co2e_avoided_factor: 0.35
+    notes: Avoids landfill methane, recovers almost no money. Still beats the bin.
+
+  - id: disposal
+    name: Disposal
+    type: baseline
+    horizon: RECOVER
+    basis: food_cost
+    recovery_factor: 0.0
+    lead_time_hours: 0
+    min_residual_life_hours: 0
+    min_qty_kg: 0.0
+    max_qty_kg: null
+    states: [raw, prepped, cooked, trim, spoiled]
+    allowed_categories: any
+    available_days: [mon, tue, wed, thu, fri, sat, sun]
+    cutoff_hour: 24
+    requires: []
+    co2e_avoided_factor: 0.0
+    is_baseline: true
+    notes: >
+      Always eligible, always ranked last, never hidden. It is the counterfactual every
+      other channel is measured against — the saving we claim is (channel - disposal),
+      not the channel's gross value.
+
+# --- PRESERVE actions -------------------------------------------------------
+# Not channels. Interventions that BUY SHELF LIFE rather than move stock, so the
+# optimiser can compare "save it" against "sell it cheap" on the same axis.
+#
+# life_multiplier here is a FALLBACK, used only for ranking when the batch's zone
+# temperature is unknown. When the zone temperature is known — which it is for every batch
+# in the demo — the RSL model in shelf_life.yaml supersedes it, because the true gain from
+# moving a batch depends on the Q10 of its category and the actual temperature gap, not on
+# a single constant. Expect the engine's figure and this constant to differ; the engine's
+# is the one to show.
+preserve_actions:
+  - id: rezone_to_colder
+    name: Move to the walk-in chiller
+    life_multiplier: 1.8
+    cost: 0
+    lead_time_hours: 0.25
+    applies_to_states: [raw, prepped]
+    notes: Free. The engine should recommend this before anything that costs margin.
+
+  - id: separate_ethylene
+    name: Separate from ethylene producers
+    life_multiplier: 1.43 # undoes the 0.70 ethylene penalty
+    cost: 0
+    lead_time_hours: 0.25
+    applies_to_states: [raw]
+    requires: [ethylene_sensitive]
+
+  - id: blanch_and_chill
+    name: Blanch and chill
+    life_multiplier: 2.2
+    cost_per_kg: 14
+    lead_time_hours: 1
+    applies_to_states: [raw, prepped]
+    allowed_categories: [vegetable]
+
+  - id: cook_to_base
+    name: Cook down to a gravy base
+    life_multiplier: 2.5
+    cost_per_kg: 22
+    lead_time_hours: 2
+    applies_to_states: [raw, prepped]
+    notes: Turns a dying vegetable into a two-day asset. This is what the Planner drafts a special around.
+
+  - id: blast_freeze
+    name: Blast freeze
+    life_multiplier: 20.0
+    cost_per_kg: 9
+    lead_time_hours: 1.5
+    applies_to_states: [raw, prepped, cooked]
+    requires: [freeze_tolerant]
+    notes: Enormous life gain, but quality-limited. Never offer it for leafy greens or fresh paneer.

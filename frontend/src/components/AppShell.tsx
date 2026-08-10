@@ -19,12 +19,14 @@ import {
 import { NAV_GROUPS, type NavGroup } from '../config/nav'
 import { SystemStatusModal } from './SystemStatusModal'
 
-const natureBackgrounds = [
-  'https://images.unsplash.com/photo-1448375240586-882707db888b?w=2160&q=80', // Soothing green forest canopy
-  'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=2160&q=80', // Organic green farm fields
-  'https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=2160&q=80', // Fresh green vegetables & fruits
-  'https://images.unsplash.com/photo-1511497584788-876761c119ef?w=2160&q=80', // Sunlit green woodland grove
-]
+/**
+ * Committed local images, not remote URLs.
+ *
+ * Ruling 3 — the H34 rehearsal runs with wifi off. A backdrop fetched from a CDN
+ * renders as a blank grey wall in aeroplane mode, which on a projector reads as a
+ * broken app before anyone has said a word.
+ */
+const natureBackgrounds = ['/hero_fresh.jpg', '/hero_kitchen.jpg']
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate()
@@ -166,13 +168,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             >
               <button
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="ml-1 flex h-10 w-10 overflow-hidden rounded-2xl border-2 border-slate-300 bg-slate-100 transition hover:border-slate-900 shadow-sm"
+                className="ml-1 flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl border-2 border-slate-300 bg-slate-100 text-sm font-extrabold tracking-wide text-slate-700 transition hover:border-slate-900 shadow-sm"
+                aria-label="Account"
               >
-                <img
-                  alt="User Executive Profile"
-                  className="h-full w-full object-cover"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuD46-9jZimZMlUEzk1lJVdgDhUSwHVR0lLT4nQHvr2sGfRJFlvKBW-rAfOh8Q0XM50mdokC6hjDj5zuKWKmwR4mJLN6CdumiuEOjZdn7-wOO8MI9xMawQosVy4oqduHK6NHZ0YRV3Gu4vO7kHPInYCHiPcW3UsB56ynE49Ff3KEAH_7nVZR7fjJ_c6ZXC6Y2vtKyD5orLaKKAi_PogRd910KJBDqHlgEz8MVg14loZVKRp_T_XhMalIKg"
-                />
+                KM
               </button>
 
               {/* Profile Hover Dropdown Card */}
@@ -180,12 +179,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <div className="absolute right-0 top-11 z-50 w-80 rounded-3xl border border-slate-300 bg-slate-900 p-5 text-white shadow-2xl backdrop-blur-2xl animate-in fade-in duration-200">
                   {/* Section 1: Profile Status */}
                   <div className="flex items-center gap-3 border-b border-slate-800 pb-3.5">
-                    <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-2xl border-2 border-emerald-500/70">
-                      <img
-                        alt="Profile Avatar"
-                        className="h-full w-full object-cover"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuD46-9jZimZMlUEzk1lJVdgDhUSwHVR0lLT4nQHvr2sGfRJFlvKBW-rAfOh8Q0XM50mdokC6hjDj5zuKWKmwR4mJLN6CdumiuEOjZdn7-wOO8MI9xMawQosVy4oqduHK6NHZ0YRV3Gu4vO7kHPInYCHiPcW3UsB56ynE49Ff3KEAH_7nVZR7fjJ_c6ZXC6Y2vtKyD5orLaKKAi_PogRd910KJBDqHlgEz8MVg14loZVKRp_T_XhMalIKg"
-                      />
+                    <div className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl border-2 border-emerald-500/70 bg-slate-800 text-sm font-extrabold tracking-wide text-emerald-300">
+                      KM
                       <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-slate-900 bg-emerald-400" />
                     </div>
                     <div className="min-w-0 flex-1">

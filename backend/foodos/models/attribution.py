@@ -1,13 +1,10 @@
-"""Waste attribution — five causes, each with its own detector.
+"""Waste attribution — where today's at-risk value actually came from.
 
-OWNER: Person A (Data & Models).
-CONTRACT (frozen at H3):  attribute(site_id, start, end) -> dict
+Owner: Person A (Data & Models).
 
-Deliberately rules and benchmarks, not ML. Every number here is arithmetic a
-chef can check on the back of a docket, which is the whole point: the engine
-has to survive being argued with by the person whose kitchen it is.
-
-The five detectors:
+Deliberately rules and benchmarks, not ML. Every number here is arithmetic a chef
+can check on the back of a docket, which is the whole point: the engine has to
+survive being argued with by the person whose kitchen it is.
 
   overproduction     produced vs sold, per dish, with the weekday pattern
   prep_trim          actual yield vs the standard culinary yield table
@@ -15,11 +12,11 @@ The five detectors:
   plate_waste        served vs returned, per dish
   quality_rejection  share of intake refused at the gate
 
-One subtlety worth defending in review: the trim detector does NOT read the
-waste log. Kitchens weigh only part of their peel, so the log understates trim
-and would make a bad yield look good. Instead it compares gross kilos actually
-drawn from stock (inventory events) against the net kilos the recipe needed for
-what was produced. That needs no extra discipline from the kitchen at all.
+One subtlety worth defending in review: the trim detector does NOT read the waste
+log. Kitchens weigh only part of their peel, so the log understates trim and would
+make a bad yield look good. Instead it compares gross kilos actually drawn from
+stock against the net kilos the recipe needed. That needs no extra discipline.
+
 """
 
 from __future__ import annotations
@@ -318,3 +315,4 @@ if __name__ == "__main__":
         print(f"    {s['name']:<22} {s['kg']:>6.1f} kg  Rs {s['value']:>8,.0f}"
               f"  {s['batches']} batches  {s['mean_days_held']} days held")
     print()
+

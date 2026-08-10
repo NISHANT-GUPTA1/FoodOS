@@ -7,8 +7,8 @@ import {
   whyDashboard,
 } from '../mocks/dashboard'
 import { getApiMode } from './config'
-import { apiPaths, type ApiResponse, type ImpactResponse, type LedgerResponse, type PlanRequest, type PlanResponse, type RescueResponse, type TodayResponse, type WhyResponse } from './contract'
-import { fetchJson } from './http'
+import { apiPaths, type ApiResponse, type ImpactResponse, type LedgerResponse, type OutcomeResponse, type PlanRequest, type PlanResponse, type RescueResponse, type TodayResponse, type WhyResponse } from './contract'
+import { fetchJson, postJson } from './http'
 
 const delay = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms))
 
@@ -72,4 +72,29 @@ export async function fetchImpactDashboard() {
 
   await delay(150)
   return getImpactDashboard()
+}
+// §4: POST /api/recommendations/{id}/accept and /override. In mock mode these
+// resolve locally so the buttons behave the same way before B's endpoints are
+// wired — C never blocks on B.
+export async function acceptRecommendation(id: string): Promise<OutcomeResponse> {
+  if (getApiMode() === 'live') {
+    return fetchOutcome(apiPaths.accept(id))
+  }
+
+  await delay(180)
+  return { id, status: 'accepted' }
+}
+
+export async function overrideRecommendation(id: string, reason: string): Promise<OutcomeResponse> {
+  if (getApiMode() === 'live') {
+    return fetchOutcome(apiPaths.override(id), { reason })
+  }
+
+  await delay(180)
+  return { id, status: 'overridden' }
+}
+
+async function fetchOutcome(path: string, body?: unknown): Promise<OutcomeResponse> {
+  const response = await postJson<ApiResponse<OutcomeResponse> | OutcomeResponse>(path, body)
+  return 'data' in response ? response.data : response
 }

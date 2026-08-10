@@ -1,0 +1,1945 @@
+{
+  "site_id": 1,
+  "site_name": "Spice Garden, Koramangala",
+  "business_date": "2026-02-12",
+  "lam": 1.0,
+  "kpis": {
+    "kg_at_risk": 186.93,
+    "value_at_risk": 23407.74,
+    "recoverable_today": 13838.46,
+    "preventable_share": 0.6941,
+    "produce_share_of_weight": 0.6185
+  },
+  "waste_drivers": [
+    {
+      "reason": "overproduction",
+      "kg": 183.65,
+      "value": 34241.45,
+      "share": 0.5089
+    },
+    {
+      "reason": "prep_trim",
+      "kg": 285.96,
+      "value": 12458.83,
+      "share": 0.1852
+    },
+    {
+      "reason": "spoilage",
+      "kg": 166.2,
+      "value": 10424.02,
+      "share": 0.1549
+    },
+    {
+      "reason": "plate_waste",
+      "kg": 40.02,
+      "value": 6355.17,
+      "share": 0.0945
+    },
+    {
+      "reason": "quality_rejection",
+      "kg": 82.76,
+      "value": 3803.35,
+      "share": 0.0565
+    }
+  ],
+  "recommendations": [
+    {
+      "id": 11,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 35,
+      "subject_label": "Mutton",
+      "action_type": "b2b_transfer",
+      "action_params": {
+        "channel_id": 3,
+        "channel_type": "b2b_transfer",
+        "qty": 7.3,
+        "distance_km": 0.4
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 7.3,
+      "saves": {
+        "kg": 6.424,
+        "money": 3654.32,
+        "co2e": 16.06
+      },
+      "confidence": "HIGH",
+      "rationale_text": "7.3 kg of Mutton is at risk (remaining life 2.3 days, P(waste) 100%, Rs 5256 exposed). Best open action: Nalapaka Kitchen (400 m) — Rs 3654 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 2.26,
+        "qty_at_risk": 7.3,
+        "waste_probability": 1.0,
+        "value_at_risk": 5256.0,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 3784.32,
+          "cost": 130.0,
+          "expected_loss": 630.72,
+          "sustainability": 192.72,
+          "social": 0.0,
+          "total": 3216.32
+        },
+        "objective_value": 3216.32,
+        "objective_value_of_doing_nothing": -5256.0,
+        "price_factor": 0.72,
+        "logistics_cost": 130.0,
+        "residual_loss_probability": 0.12,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 12,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 39,
+      "subject_label": "Paneer",
+      "action_type": "b2b_transfer",
+      "action_params": {
+        "channel_id": 3,
+        "channel_type": "b2b_transfer",
+        "qty": 8.179,
+        "distance_km": 0.4
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 8.179,
+      "saves": {
+        "kg": 7.198,
+        "money": 2107.77,
+        "co2e": 17.994
+      },
+      "confidence": "HIGH",
+      "rationale_text": "8.2 kg of Paneer is at risk (remaining life 4.5 days, P(waste) 100%, Rs 3108 exposed). Best open action: Nalapaka Kitchen (400 m) — Rs 2108 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 4.48,
+        "qty_at_risk": 8.179,
+        "waste_probability": 1.0,
+        "value_at_risk": 3108.02,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 2237.77,
+          "cost": 130.0,
+          "expected_loss": 372.96,
+          "sustainability": 215.94,
+          "social": 0.0,
+          "total": 1950.75
+        },
+        "objective_value": 1950.75,
+        "objective_value_of_doing_nothing": -3108.02,
+        "price_factor": 0.72,
+        "logistics_cost": 130.0,
+        "residual_loss_probability": 0.12,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 13,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 34,
+      "subject_label": "Chicken",
+      "action_type": "b2b_transfer",
+      "action_params": {
+        "channel_id": 3,
+        "channel_type": "b2b_transfer",
+        "qty": 12.05,
+        "distance_km": 0.4
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 12.05,
+      "saves": {
+        "kg": 10.604,
+        "money": 1691.96,
+        "co2e": 26.51
+      },
+      "confidence": "HIGH",
+      "rationale_text": "12.1 kg of Chicken is at risk (remaining life 2.2 days, P(waste) 100%, Rs 2530 exposed). Best open action: Nalapaka Kitchen (400 m) — Rs 1692 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 2.25,
+        "qty_at_risk": 12.05,
+        "waste_probability": 1.0,
+        "value_at_risk": 2530.5,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 1821.96,
+          "cost": 130.0,
+          "expected_loss": 303.66,
+          "sustainability": 318.12,
+          "social": 0.0,
+          "total": 1706.42
+        },
+        "objective_value": 1706.42,
+        "objective_value_of_doing_nothing": -2530.5,
+        "price_factor": 0.72,
+        "logistics_cost": 130.0,
+        "residual_loss_probability": 0.12,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 14,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 36,
+      "subject_label": "Seer fish",
+      "action_type": "b2b_transfer",
+      "action_params": {
+        "channel_id": 3,
+        "channel_type": "b2b_transfer",
+        "qty": 4.696,
+        "distance_km": 0.4
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 4.696,
+      "saves": {
+        "kg": 4.132,
+        "money": 1492.94,
+        "co2e": 10.331
+      },
+      "confidence": "HIGH",
+      "rationale_text": "4.7 kg of Seer fish is at risk (remaining life 2.3 days, P(waste) 100%, Rs 2254 exposed). Best open action: Nalapaka Kitchen (400 m) — Rs 1493 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 2.26,
+        "qty_at_risk": 4.696,
+        "waste_probability": 1.0,
+        "value_at_risk": 2254.08,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 1622.94,
+          "cost": 130.0,
+          "expected_loss": 270.49,
+          "sustainability": 123.96,
+          "social": 0.0,
+          "total": 1346.41
+        },
+        "objective_value": 1346.41,
+        "objective_value_of_doing_nothing": -2254.08,
+        "price_factor": 0.72,
+        "logistics_cost": 130.0,
+        "residual_loss_probability": 0.12,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 1,
+      "horizon": "PREVENT",
+      "subject_type": "dish",
+      "subject_id": 41,
+      "subject_label": "Chicken Biryani",
+      "action_type": "set_prep_qty",
+      "action_params": {
+        "qty": 64.0,
+        "uom": "portion"
+      },
+      "baseline_value": 84.0,
+      "recommended_value": 64.0,
+      "saves": {
+        "kg": 8.25,
+        "money": 1478.75,
+        "co2e": 46.31
+      },
+      "confidence": "HIGH",
+      "rationale_text": "Reduce tomorrow's Chicken Biryani from 84 to 64 portion. Forecast median 62 (10-90 band 55-71). Optimal service level 0.62 given a Rs 180 margin and Rs 111 cost per unsold unit.",
+      "rationale_facts": {
+        "unit_price": 275.0,
+        "unit_cost": 95.28,
+        "disposal_per_unit": 1.8,
+        "waste_penalty_per_unit": 13.5,
+        "cu": 179.72,
+        "co": 97.08,
+        "co_effective": 110.58,
+        "lambda": 1.0,
+        "q_star": 0.6191,
+        "habitual_service_level": 0.92,
+        "expected_leftover_baseline": 21.76,
+        "expected_leftover_recommended": 3.43,
+        "lost_margin_on_extra_sales": 300.52,
+        "interval_relative_width": 0.261
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T06:00:00"
+    },
+    {
+      "id": 16,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 43,
+      "subject_label": "Butter",
+      "action_type": "b2b_transfer",
+      "action_params": {
+        "channel_id": 3,
+        "channel_type": "b2b_transfer",
+        "qty": 2.711,
+        "distance_km": 0.4
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 2.711,
+      "saves": {
+        "kg": 2.386,
+        "money": 885.0,
+        "co2e": 5.964
+      },
+      "confidence": "HIGH",
+      "rationale_text": "2.7 kg of Butter is at risk (remaining life 4.6 days, P(waste) 100%, Rs 1410 exposed). Best open action: Nalapaka Kitchen (400 m) — Rs 885 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 4.56,
+        "qty_at_risk": 2.711,
+        "waste_probability": 1.0,
+        "value_at_risk": 1409.72,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 1015.0,
+          "cost": 130.0,
+          "expected_loss": 169.17,
+          "sustainability": 71.58,
+          "social": 0.0,
+          "total": 787.41
+        },
+        "objective_value": 787.41,
+        "objective_value_of_doing_nothing": -1409.72,
+        "price_factor": 0.72,
+        "logistics_cost": 130.0,
+        "residual_loss_probability": 0.12,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 2,
+      "horizon": "PREVENT",
+      "subject_type": "dish",
+      "subject_id": 43,
+      "subject_label": "Paneer Butter Masala",
+      "action_type": "set_prep_qty",
+      "action_params": {
+        "qty": 62.0,
+        "uom": "portion"
+      },
+      "baseline_value": 72.0,
+      "recommended_value": 62.0,
+      "saves": {
+        "kg": 2.76,
+        "money": 689.09,
+        "co2e": 17.18
+      },
+      "confidence": "HIGH",
+      "rationale_text": "Reduce tomorrow's Paneer Butter Masala from 72 to 62 portion. Forecast median 62 (10-90 band 56-65). Optimal service level 0.60 given a Rs 148 margin and Rs 97 cost per unsold unit.",
+      "rationale_facts": {
+        "unit_price": 235.0,
+        "unit_cost": 86.85,
+        "disposal_per_unit": 1.2,
+        "waste_penalty_per_unit": 9.0,
+        "cu": 148.15,
+        "co": 88.05,
+        "co_effective": 97.05,
+        "lambda": 1.0,
+        "q_star": 0.6042,
+        "habitual_service_level": 0.92,
+        "expected_leftover_baseline": 11.46,
+        "expected_leftover_recommended": 2.27,
+        "lost_margin_on_extra_sales": 120.05,
+        "interval_relative_width": 0.151
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T06:00:00"
+    },
+    {
+      "id": 15,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 5,
+      "subject_label": "Potato",
+      "action_type": "b2b_transfer",
+      "action_params": {
+        "channel_id": 3,
+        "channel_type": "b2b_transfer",
+        "qty": 39.924,
+        "distance_km": 0.4
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 39.924,
+      "saves": {
+        "kg": 35.133,
+        "money": 674.87,
+        "co2e": 87.833
+      },
+      "confidence": "HIGH",
+      "rationale_text": "39.9 kg of Potato is at risk (remaining life 27.9 days, P(waste) 100%, Rs 1118 exposed). Best open action: Nalapaka Kitchen (400 m) — Rs 675 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 27.9,
+        "qty_at_risk": 39.924,
+        "waste_probability": 1.0,
+        "value_at_risk": 1117.87,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 804.87,
+          "cost": 130.0,
+          "expected_loss": 134.14,
+          "sustainability": 1053.99,
+          "social": 0.0,
+          "total": 1594.72
+        },
+        "objective_value": 1594.72,
+        "objective_value_of_doing_nothing": -1117.87,
+        "price_factor": 0.72,
+        "logistics_cost": 130.0,
+        "residual_loss_probability": 0.12,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 17,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 16,
+      "subject_label": "Garlic",
+      "action_type": "b2b_transfer",
+      "action_params": {
+        "channel_id": 3,
+        "channel_type": "b2b_transfer",
+        "qty": 5.776,
+        "distance_km": 0.4
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 5.776,
+      "saves": {
+        "kg": 5.083,
+        "money": 618.57,
+        "co2e": 12.707
+      },
+      "confidence": "HIGH",
+      "rationale_text": "5.8 kg of Garlic is at risk (remaining life 28.0 days, P(waste) 100%, Rs 1040 exposed). Best open action: Nalapaka Kitchen (400 m) — Rs 619 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 28.02,
+        "qty_at_risk": 5.776,
+        "waste_probability": 1.0,
+        "value_at_risk": 1039.68,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 748.57,
+          "cost": 130.0,
+          "expected_loss": 124.76,
+          "sustainability": 152.49,
+          "social": 0.0,
+          "total": 646.3
+        },
+        "objective_value": 646.3,
+        "objective_value_of_doing_nothing": -1039.68,
+        "price_factor": 0.72,
+        "logistics_cost": 130.0,
+        "residual_loss_probability": 0.12,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 19,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 40,
+      "subject_label": "Curd",
+      "action_type": "b2b_transfer",
+      "action_params": {
+        "channel_id": 3,
+        "channel_type": "b2b_transfer",
+        "qty": 11.354,
+        "distance_km": 0.4
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 11.354,
+      "saves": {
+        "kg": 9.992,
+        "money": 442.24,
+        "co2e": 24.979
+      },
+      "confidence": "HIGH",
+      "rationale_text": "11.4 kg of Curd is at risk (remaining life 4.6 days, P(waste) 100%, Rs 795 exposed). Best open action: Nalapaka Kitchen (400 m) — Rs 442 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 4.6,
+        "qty_at_risk": 11.354,
+        "waste_probability": 1.0,
+        "value_at_risk": 794.78,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 572.24,
+          "cost": 130.0,
+          "expected_loss": 95.37,
+          "sustainability": 299.76,
+          "social": 0.0,
+          "total": 646.63
+        },
+        "objective_value": 646.63,
+        "objective_value_of_doing_nothing": -794.78,
+        "price_factor": 0.72,
+        "logistics_cost": 130.0,
+        "residual_loss_probability": 0.12,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 18,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 9,
+      "subject_label": "Spinach",
+      "action_type": "b2b_transfer",
+      "action_params": {
+        "channel_id": 3,
+        "channel_type": "b2b_transfer",
+        "qty": 23.4,
+        "distance_km": 0.4
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 23.4,
+      "saves": {
+        "kg": 20.592,
+        "money": 375.44,
+        "co2e": 51.48
+      },
+      "confidence": "HIGH",
+      "rationale_text": "23.4 kg of Spinach is at risk (remaining life 0.8 days, P(waste) 100%, Rs 702 exposed). Best open action: Nalapaka Kitchen (400 m) — Rs 375 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 0.81,
+        "qty_at_risk": 23.4,
+        "waste_probability": 1.0,
+        "value_at_risk": 702.0,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 505.44,
+          "cost": 130.0,
+          "expected_loss": 84.24,
+          "sustainability": 617.76,
+          "social": 0.0,
+          "total": 908.96
+        },
+        "objective_value": 908.96,
+        "objective_value_of_doing_nothing": -702.0,
+        "price_factor": 0.72,
+        "logistics_cost": 130.0,
+        "residual_loss_probability": 0.12,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 21,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 42,
+      "subject_label": "Cream",
+      "action_type": "b2b_transfer",
+      "action_params": {
+        "channel_id": 3,
+        "channel_type": "b2b_transfer",
+        "qty": 2.449,
+        "distance_km": 0.4
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 2.449,
+      "saves": {
+        "kg": 2.155,
+        "money": 257.92,
+        "co2e": 5.388
+      },
+      "confidence": "HIGH",
+      "rationale_text": "2.4 kg of Cream is at risk (remaining life 4.4 days, P(waste) 100%, Rs 539 exposed). Best open action: Nalapaka Kitchen (400 m) — Rs 258 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 4.43,
+        "qty_at_risk": 2.449,
+        "waste_probability": 1.0,
+        "value_at_risk": 538.78,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 387.92,
+          "cost": 130.0,
+          "expected_loss": 64.65,
+          "sustainability": 64.65,
+          "social": 0.0,
+          "total": 257.92
+        },
+        "objective_value": 257.92,
+        "objective_value_of_doing_nothing": -538.78,
+        "price_factor": 0.72,
+        "logistics_cost": 130.0,
+        "residual_loss_probability": 0.12,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 3,
+      "horizon": "PREVENT",
+      "subject_type": "dish",
+      "subject_id": 50,
+      "subject_label": "Mutton Rogan Josh",
+      "action_type": "set_prep_qty",
+      "action_params": {
+        "qty": 31.0,
+        "uom": "portion"
+      },
+      "baseline_value": 34.5,
+      "recommended_value": 31.0,
+      "saves": {
+        "kg": 0.72,
+        "money": 256.19,
+        "co2e": 24.05
+      },
+      "confidence": "HIGH",
+      "rationale_text": "Reduce tomorrow's Mutton Rogan Josh from 34 to 31 portion. Forecast median 32 (10-90 band 25-35). Optimal service level 0.44 given a Rs 175 margin and Rs 221 cost per unsold unit.",
+      "rationale_facts": {
+        "unit_price": 385.0,
+        "unit_cost": 210.18,
+        "disposal_per_unit": 1.28,
+        "waste_penalty_per_unit": 9.6,
+        "cu": 174.82,
+        "co": 211.46,
+        "co_effective": 221.06,
+        "lambda": 1.0,
+        "q_star": 0.4416,
+        "habitual_service_level": 0.92,
+        "expected_leftover_baseline": 3.91,
+        "expected_leftover_recommended": 1.66,
+        "lost_margin_on_extra_sales": 219.01,
+        "interval_relative_width": 0.306
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T06:00:00"
+    },
+    {
+      "id": 4,
+      "horizon": "PREVENT",
+      "subject_type": "dish",
+      "subject_id": 44,
+      "subject_label": "Gobi Manchurian",
+      "action_type": "set_prep_qty",
+      "action_params": {
+        "qty": 46.0,
+        "uom": "portion"
+      },
+      "baseline_value": 55.0,
+      "recommended_value": 46.0,
+      "saves": {
+        "kg": 2.44,
+        "money": 216.56,
+        "co2e": 4.54
+      },
+      "confidence": "HIGH",
+      "rationale_text": "Reduce tomorrow's Gobi Manchurian from 55 to 46 portion. Forecast median 44 (10-90 band 40-48). Optimal service level 0.80 given a Rs 151 margin and Rs 38 cost per unsold unit.",
+      "rationale_facts": {
+        "unit_price": 180.0,
+        "unit_cost": 28.98,
+        "disposal_per_unit": 1.12,
+        "waste_penalty_per_unit": 8.4,
+        "cu": 151.02,
+        "co": 30.1,
+        "co_effective": 38.5,
+        "lambda": 1.0,
+        "q_star": 0.7969,
+        "habitual_service_level": 0.92,
+        "expected_leftover_baseline": 11.25,
+        "expected_leftover_recommended": 2.55,
+        "lost_margin_on_extra_sales": 45.31,
+        "interval_relative_width": 0.17
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T06:00:00"
+    },
+    {
+      "id": 5,
+      "horizon": "PREVENT",
+      "subject_type": "dish",
+      "subject_id": 54,
+      "subject_label": "Fish Curry",
+      "action_type": "set_prep_qty",
+      "action_params": {
+        "qty": 30.0,
+        "uom": "portion"
+      },
+      "baseline_value": 33.25,
+      "recommended_value": 30.0,
+      "saves": {
+        "kg": 0.83,
+        "money": 209.73,
+        "co2e": 3.59
+      },
+      "confidence": "HIGH",
+      "rationale_text": "Reduce tomorrow's Fish Curry from 33 to 30 portion. Forecast median 28 (10-90 band 21-32). Optimal service level 0.61 given a Rs 182 margin and Rs 118 cost per unsold unit.",
+      "rationale_facts": {
+        "unit_price": 290.0,
+        "unit_cost": 107.77,
+        "disposal_per_unit": 1.2,
+        "waste_penalty_per_unit": 9.0,
+        "cu": 182.23,
+        "co": 108.97,
+        "co_effective": 117.97,
+        "lambda": 1.0,
+        "q_star": 0.607,
+        "habitual_service_level": 0.92,
+        "expected_leftover_baseline": 5.42,
+        "expected_leftover_recommended": 2.67,
+        "lost_margin_on_extra_sales": 90.38,
+        "interval_relative_width": 0.375
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T06:00:00"
+    },
+    {
+      "id": 22,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 29,
+      "subject_label": "Lemon",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 5.0,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 5.0,
+      "saves": {
+        "kg": 4.9,
+        "money": 157.5,
+        "co2e": 12.25
+      },
+      "confidence": "HIGH",
+      "rationale_text": "5.0 kg of Lemon is at risk (remaining life 4.6 days, P(waste) 100%, Rs 450 exposed). Best open action: Staff meal — Rs 158 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 4.62,
+        "qty_at_risk": 5.0,
+        "waste_probability": 1.0,
+        "value_at_risk": 450.0,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 157.5,
+          "cost": 0.0,
+          "expected_loss": 9.0,
+          "sustainability": 147.0,
+          "social": 0.0,
+          "total": 295.5
+        },
+        "objective_value": 295.5,
+        "objective_value_of_doing_nothing": -450.0,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 20,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 33,
+      "subject_label": "Banana",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 7.792,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 7.792,
+      "saves": {
+        "kg": 7.636,
+        "money": 150.0,
+        "co2e": 19.09
+      },
+      "confidence": "HIGH",
+      "rationale_text": "7.8 kg of Banana is at risk (remaining life 4.6 days, P(waste) 100%, Rs 429 exposed). Best open action: Staff meal — Rs 150 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 4.62,
+        "qty_at_risk": 7.792,
+        "waste_probability": 1.0,
+        "value_at_risk": 428.56,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 150.0,
+          "cost": 0.0,
+          "expected_loss": 8.57,
+          "sustainability": 229.08,
+          "social": 0.0,
+          "total": 370.51
+        },
+        "objective_value": 370.51,
+        "objective_value_of_doing_nothing": -428.56,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 23,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 38,
+      "subject_label": "Egg",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 2.991,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 2.991,
+      "saves": {
+        "kg": 2.931,
+        "money": 146.56,
+        "co2e": 7.328
+      },
+      "confidence": "HIGH",
+      "rationale_text": "3.0 kg of Egg is at risk (remaining life 4.5 days, P(waste) 100%, Rs 419 exposed). Best open action: Staff meal — Rs 147 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 4.45,
+        "qty_at_risk": 2.991,
+        "waste_probability": 1.0,
+        "value_at_risk": 418.74,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 146.56,
+          "cost": 0.0,
+          "expected_loss": 8.37,
+          "sustainability": 87.93,
+          "social": 0.0,
+          "total": 226.12
+        },
+        "objective_value": 226.12,
+        "objective_value_of_doing_nothing": -418.74,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 6,
+      "horizon": "PREVENT",
+      "subject_type": "dish",
+      "subject_id": 42,
+      "subject_label": "Veg Biryani",
+      "action_type": "set_prep_qty",
+      "action_params": {
+        "qty": 40.0,
+        "uom": "portion"
+      },
+      "baseline_value": 45.25,
+      "recommended_value": 40.0,
+      "saves": {
+        "kg": 1.99,
+        "money": 137.88,
+        "co2e": 4.5
+      },
+      "confidence": "HIGH",
+      "rationale_text": "Reduce tomorrow's Veg Biryani from 45 to 40 portion. Forecast median 38 (10-90 band 34-42). Optimal service level 0.73 given a Rs 164 margin and Rs 60 cost per unsold unit.",
+      "rationale_facts": {
+        "unit_price": 210.0,
+        "unit_cost": 45.65,
+        "disposal_per_unit": 1.68,
+        "waste_penalty_per_unit": 12.6,
+        "cu": 164.35,
+        "co": 47.33,
+        "co_effective": 59.93,
+        "lambda": 1.0,
+        "q_star": 0.7328,
+        "habitual_service_level": 0.92,
+        "expected_leftover_baseline": 7.26,
+        "expected_leftover_recommended": 2.53,
+        "lost_margin_on_extra_sales": 85.87,
+        "interval_relative_width": 0.224
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T06:00:00"
+    },
+    {
+      "id": 26,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 31,
+      "subject_label": "Mushroom",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 1.773,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 1.773,
+      "saves": {
+        "kg": 1.738,
+        "money": 136.52,
+        "co2e": 4.344
+      },
+      "confidence": "HIGH",
+      "rationale_text": "1.8 kg of Mushroom is at risk (remaining life 5.7 days, P(waste) 100%, Rs 390 exposed). Best open action: Staff meal — Rs 137 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 5.66,
+        "qty_at_risk": 1.773,
+        "waste_probability": 1.0,
+        "value_at_risk": 390.06,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 136.52,
+          "cost": 0.0,
+          "expected_loss": 7.8,
+          "sustainability": 52.14,
+          "social": 0.0,
+          "total": 180.86
+        },
+        "objective_value": 180.86,
+        "objective_value_of_doing_nothing": -390.06,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 25,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 50,
+      "subject_label": "Gram flour",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 4.076,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 4.076,
+      "saves": {
+        "kg": 3.994,
+        "money": 128.39,
+        "co2e": 9.986
+      },
+      "confidence": "HIGH",
+      "rationale_text": "4.1 kg of Gram flour is at risk (remaining life 174.9 days, P(waste) 100%, Rs 367 exposed). Best open action: Staff meal — Rs 128 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 174.89,
+        "qty_at_risk": 4.076,
+        "waste_probability": 1.0,
+        "value_at_risk": 366.84,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 128.39,
+          "cost": 0.0,
+          "expected_loss": 7.34,
+          "sustainability": 119.82,
+          "social": 0.0,
+          "total": 240.87
+        },
+        "objective_value": 240.87,
+        "objective_value_of_doing_nothing": -366.84,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 27,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 18,
+      "subject_label": "Capsicum",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 3.975,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 3.975,
+      "saves": {
+        "kg": 3.896,
+        "money": 111.3,
+        "co2e": 9.739
+      },
+      "confidence": "HIGH",
+      "rationale_text": "4.0 kg of Capsicum is at risk (remaining life 5.8 days, P(waste) 100%, Rs 318 exposed). Best open action: Staff meal — Rs 111 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 5.75,
+        "qty_at_risk": 3.975,
+        "waste_probability": 1.0,
+        "value_at_risk": 318.0,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 111.3,
+          "cost": 0.0,
+          "expected_loss": 6.36,
+          "sustainability": 116.88,
+          "social": 0.0,
+          "total": 221.82
+        },
+        "objective_value": 221.82,
+        "objective_value_of_doing_nothing": -318.0,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 24,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 17,
+      "subject_label": "Carrot",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 6.922,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 6.922,
+      "saves": {
+        "kg": 6.784,
+        "money": 109.02,
+        "co2e": 16.959
+      },
+      "confidence": "HIGH",
+      "rationale_text": "6.9 kg of Carrot is at risk (remaining life 8.8 days, P(waste) 100%, Rs 311 exposed). Best open action: Staff meal — Rs 109 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 8.78,
+        "qty_at_risk": 6.922,
+        "waste_probability": 1.0,
+        "value_at_risk": 311.49,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 109.02,
+          "cost": 0.0,
+          "expected_loss": 6.23,
+          "sustainability": 203.52,
+          "social": 0.0,
+          "total": 306.31
+        },
+        "objective_value": 306.31,
+        "objective_value_of_doing_nothing": -311.49,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 7,
+      "horizon": "PREVENT",
+      "subject_type": "dish",
+      "subject_id": 48,
+      "subject_label": "Jeera Rice",
+      "action_type": "set_prep_qty",
+      "action_params": {
+        "qty": 59.0,
+        "uom": "portion"
+      },
+      "baseline_value": 64.25,
+      "recommended_value": 59.0,
+      "saves": {
+        "kg": 1.38,
+        "money": 92.8,
+        "co2e": 2.7
+      },
+      "confidence": "HIGH",
+      "rationale_text": "Reduce tomorrow's Jeera Rice from 64 to 59 portion. Forecast median 58 (10-90 band 53-60). Optimal service level 0.76 given a Rs 106 margin and Rs 34 cost per unsold unit.",
+      "rationale_facts": {
+        "unit_price": 130.0,
+        "unit_cost": 24.36,
+        "disposal_per_unit": 1.12,
+        "waste_penalty_per_unit": 8.4,
+        "cu": 105.64,
+        "co": 25.48,
+        "co_effective": 33.88,
+        "lambda": 1.0,
+        "q_star": 0.7572,
+        "habitual_service_level": 0.92,
+        "expected_leftover_baseline": 7.08,
+        "expected_leftover_recommended": 2.14,
+        "lost_margin_on_extra_sales": 33.01,
+        "interval_relative_width": 0.128
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T06:00:00"
+    },
+    {
+      "id": 8,
+      "horizon": "PREVENT",
+      "subject_type": "dish",
+      "subject_id": 45,
+      "subject_label": "Palak Paneer",
+      "action_type": "set_prep_qty",
+      "action_params": {
+        "qty": 38.0,
+        "uom": "portion"
+      },
+      "baseline_value": 41.0,
+      "recommended_value": 38.0,
+      "saves": {
+        "kg": 0.8,
+        "money": 88.91,
+        "co2e": 3.19
+      },
+      "confidence": "HIGH",
+      "rationale_text": "Reduce tomorrow's Palak Paneer from 41 to 38 portion. Forecast median 34 (10-90 band 29-40). Optimal service level 0.72 given a Rs 166 margin and Rs 64 cost per unsold unit.",
+      "rationale_facts": {
+        "unit_price": 220.0,
+        "unit_cost": 54.11,
+        "disposal_per_unit": 1.2,
+        "waste_penalty_per_unit": 9.0,
+        "cu": 165.89,
+        "co": 55.31,
+        "co_effective": 64.31,
+        "lambda": 1.0,
+        "q_star": 0.7206,
+        "habitual_service_level": 0.92,
+        "expected_leftover_baseline": 6.41,
+        "expected_leftover_recommended": 3.76,
+        "lost_margin_on_extra_sales": 57.77,
+        "interval_relative_width": 0.296
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T06:00:00"
+    },
+    {
+      "id": 28,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 22,
+      "subject_label": "Okra",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 4.555,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 4.555,
+      "saves": {
+        "kg": 4.464,
+        "money": 87.68,
+        "co2e": 11.16
+      },
+      "confidence": "HIGH",
+      "rationale_text": "4.6 kg of Okra is at risk (remaining life 5.6 days, P(waste) 100%, Rs 251 exposed). Best open action: Staff meal — Rs 88 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 5.57,
+        "qty_at_risk": 4.555,
+        "waste_probability": 1.0,
+        "value_at_risk": 250.52,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 87.68,
+          "cost": 0.0,
+          "expected_loss": 5.01,
+          "sustainability": 133.92,
+          "social": 0.0,
+          "total": 216.59
+        },
+        "objective_value": 216.59,
+        "objective_value_of_doing_nothing": -250.52,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 29,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 59,
+      "subject_label": "Dosa batter",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 3.48,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 3.48,
+      "saves": {
+        "kg": 3.41,
+        "money": 85.26,
+        "co2e": 8.526
+      },
+      "confidence": "HIGH",
+      "rationale_text": "3.5 kg of Dosa batter is at risk (remaining life 1.6 days, P(waste) 100%, Rs 244 exposed). Best open action: Staff meal — Rs 85 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 1.57,
+        "qty_at_risk": 3.48,
+        "waste_probability": 1.0,
+        "value_at_risk": 243.6,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 85.26,
+          "cost": 0.0,
+          "expected_loss": 4.87,
+          "sustainability": 102.3,
+          "social": 0.0,
+          "total": 182.69
+        },
+        "objective_value": 182.69,
+        "objective_value_of_doing_nothing": -243.6,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 9,
+      "horizon": "PREVENT",
+      "subject_type": "dish",
+      "subject_id": 53,
+      "subject_label": "Mixed Veg Curry",
+      "action_type": "set_prep_qty",
+      "action_params": {
+        "qty": 43.0,
+        "uom": "portion"
+      },
+      "baseline_value": 49.0,
+      "recommended_value": 43.0,
+      "saves": {
+        "kg": 1.73,
+        "money": 82.56,
+        "co2e": 2.16
+      },
+      "confidence": "HIGH",
+      "rationale_text": "Reduce tomorrow's Mixed Veg Curry from 49 to 43 portion. Forecast median 41 (10-90 band 38-44). Optimal service level 0.85 given a Rs 165 margin and Rs 30 cost per unsold unit.",
+      "rationale_facts": {
+        "unit_price": 185.0,
+        "unit_cost": 20.02,
+        "disposal_per_unit": 1.2,
+        "waste_penalty_per_unit": 9.0,
+        "cu": 164.98,
+        "co": 21.22,
+        "co_effective": 30.22,
+        "lambda": 1.0,
+        "q_star": 0.8452,
+        "habitual_service_level": 0.92,
+        "expected_leftover_baseline": 7.71,
+        "expected_leftover_recommended": 1.95,
+        "lost_margin_on_extra_sales": 39.66,
+        "interval_relative_width": 0.139
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T06:00:00"
+    },
+    {
+      "id": 30,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 30,
+      "subject_label": "French beans",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 3.879,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 3.879,
+      "saves": {
+        "kg": 3.801,
+        "money": 81.46,
+        "co2e": 9.504
+      },
+      "confidence": "HIGH",
+      "rationale_text": "3.9 kg of French beans is at risk (remaining life 5.7 days, P(waste) 100%, Rs 233 exposed). Best open action: Staff meal — Rs 81 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 5.71,
+        "qty_at_risk": 3.879,
+        "waste_probability": 1.0,
+        "value_at_risk": 232.74,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 81.46,
+          "cost": 0.0,
+          "expected_loss": 4.65,
+          "sustainability": 114.03,
+          "social": 0.0,
+          "total": 190.84
+        },
+        "objective_value": 190.84,
+        "objective_value_of_doing_nothing": -232.74,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 32,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 24,
+      "subject_label": "Green peas",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 2.432,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 2.432,
+      "saves": {
+        "kg": 2.383,
+        "money": 76.61,
+        "co2e": 5.958
+      },
+      "confidence": "HIGH",
+      "rationale_text": "2.4 kg of Green peas is at risk (remaining life 5.7 days, P(waste) 100%, Rs 219 exposed). Best open action: Staff meal — Rs 77 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 5.69,
+        "qty_at_risk": 2.432,
+        "waste_probability": 1.0,
+        "value_at_risk": 218.88,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 76.61,
+          "cost": 0.0,
+          "expected_loss": 4.38,
+          "sustainability": 71.49,
+          "social": 0.0,
+          "total": 143.72
+        },
+        "objective_value": 143.72,
+        "objective_value_of_doing_nothing": -218.88,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 10,
+      "horizon": "PREVENT",
+      "subject_type": "dish",
+      "subject_id": 49,
+      "subject_label": "Dal Tadka",
+      "action_type": "set_prep_qty",
+      "action_params": {
+        "qty": 72.0,
+        "uom": "portion"
+      },
+      "baseline_value": 78.25,
+      "recommended_value": 72.0,
+      "saves": {
+        "kg": 1.72,
+        "money": 73.84,
+        "co2e": 2.05
+      },
+      "confidence": "HIGH",
+      "rationale_text": "Reduce tomorrow's Dal Tadka from 78 to 72 portion. Forecast median 68 (10-90 band 55-75). Optimal service level 0.79 given a Rs 122 margin and Rs 33 cost per unsold unit.",
+      "rationale_facts": {
+        "unit_price": 145.0,
+        "unit_cost": 23.08,
+        "disposal_per_unit": 1.2,
+        "waste_penalty_per_unit": 9.0,
+        "cu": 121.92,
+        "co": 24.28,
+        "co_effective": 33.28,
+        "lambda": 1.0,
+        "q_star": 0.7856,
+        "habitual_service_level": 0.92,
+        "expected_leftover_baseline": 12.29,
+        "expected_leftover_recommended": 6.58,
+        "lost_margin_on_extra_sales": 64.97,
+        "interval_relative_width": 0.287
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T06:00:00"
+    },
+    {
+      "id": 34,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 13,
+      "subject_label": "Green chilli",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 2.449,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 2.449,
+      "saves": {
+        "kg": 2.4,
+        "money": 60.0,
+        "co2e": 6.0
+      },
+      "confidence": "HIGH",
+      "rationale_text": "2.4 kg of Green chilli is at risk (remaining life 5.7 days, P(waste) 100%, Rs 171 exposed). Best open action: Staff meal — Rs 60 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 5.71,
+        "qty_at_risk": 2.449,
+        "waste_probability": 1.0,
+        "value_at_risk": 171.43,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 60.0,
+          "cost": 0.0,
+          "expected_loss": 3.43,
+          "sustainability": 72.0,
+          "social": 0.0,
+          "total": 128.57
+        },
+        "objective_value": 128.57,
+        "objective_value_of_doing_nothing": -171.43,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 31,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 8,
+      "subject_label": "Spinach",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 5.419,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 5.419,
+      "saves": {
+        "kg": 5.311,
+        "money": 56.9,
+        "co2e": 13.277
+      },
+      "confidence": "HIGH",
+      "rationale_text": "5.4 kg of Spinach is at risk (remaining life 2.5 days, P(waste) 100%, Rs 163 exposed). Best open action: Staff meal — Rs 57 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 2.48,
+        "qty_at_risk": 5.419,
+        "waste_probability": 1.0,
+        "value_at_risk": 162.57,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 56.9,
+          "cost": 0.0,
+          "expected_loss": 3.25,
+          "sustainability": 159.33,
+          "social": 0.0,
+          "total": 212.98
+        },
+        "objective_value": 212.98,
+        "objective_value_of_doing_nothing": -162.57,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 33,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 32,
+      "subject_label": "Cucumber",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 4.206,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 4.206,
+      "saves": {
+        "kg": 4.122,
+        "money": 51.52,
+        "co2e": 10.305
+      },
+      "confidence": "HIGH",
+      "rationale_text": "4.2 kg of Cucumber is at risk (remaining life 5.7 days, P(waste) 100%, Rs 147 exposed). Best open action: Staff meal — Rs 52 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 5.65,
+        "qty_at_risk": 4.206,
+        "waste_probability": 1.0,
+        "value_at_risk": 147.21,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 51.52,
+          "cost": 0.0,
+          "expected_loss": 2.94,
+          "sustainability": 123.66,
+          "social": 0.0,
+          "total": 172.24
+        },
+        "objective_value": 172.24,
+        "objective_value_of_doing_nothing": -147.21,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 35,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 11,
+      "subject_label": "Coriander leaves",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 2.0,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 2.0,
+      "saves": {
+        "kg": 1.96,
+        "money": 42.0,
+        "co2e": 4.9
+      },
+      "confidence": "HIGH",
+      "rationale_text": "2.0 kg of Coriander leaves is at risk (remaining life 2.6 days, P(waste) 100%, Rs 120 exposed). Best open action: Staff meal — Rs 42 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 2.58,
+        "qty_at_risk": 2.0,
+        "waste_probability": 1.0,
+        "value_at_risk": 120.0,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 42.0,
+          "cost": 0.0,
+          "expected_loss": 2.4,
+          "sustainability": 58.8,
+          "social": 0.0,
+          "total": 98.4
+        },
+        "objective_value": 98.4,
+        "objective_value_of_doing_nothing": -120.0,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 37,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 41,
+      "subject_label": "Milk",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 1.292,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 1.292,
+      "saves": {
+        "kg": 1.266,
+        "money": 26.23,
+        "co2e": 3.165
+      },
+      "confidence": "HIGH",
+      "rationale_text": "1.3 kg of Milk is at risk (remaining life 4.3 days, P(waste) 100%, Rs 75 exposed). Best open action: Staff meal — Rs 26 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 4.34,
+        "qty_at_risk": 1.292,
+        "waste_probability": 1.0,
+        "value_at_risk": 74.94,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 26.23,
+          "cost": 0.0,
+          "expected_loss": 1.5,
+          "sustainability": 37.98,
+          "social": 0.0,
+          "total": 62.71
+        },
+        "objective_value": 62.71,
+        "objective_value_of_doing_nothing": -74.94,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 36,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 19,
+      "subject_label": "Cabbage",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 2.721,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 2.721,
+      "saves": {
+        "kg": 2.667,
+        "money": 23.81,
+        "co2e": 6.666
+      },
+      "confidence": "HIGH",
+      "rationale_text": "2.7 kg of Cabbage is at risk (remaining life 8.8 days, P(waste) 100%, Rs 68 exposed). Best open action: Staff meal — Rs 24 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 8.78,
+        "qty_at_risk": 2.721,
+        "waste_probability": 1.0,
+        "value_at_risk": 68.03,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 23.81,
+          "cost": 0.0,
+          "expected_loss": 1.36,
+          "sustainability": 80.01,
+          "social": 0.0,
+          "total": 102.46
+        },
+        "objective_value": 102.46,
+        "objective_value_of_doing_nothing": -68.03,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 40,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 27,
+      "subject_label": "Curry leaves",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 0.687,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 0.687,
+      "saves": {
+        "kg": 0.673,
+        "money": 19.24,
+        "co2e": 1.683
+      },
+      "confidence": "HIGH",
+      "rationale_text": "0.7 kg of Curry leaves is at risk (remaining life 2.6 days, P(waste) 100%, Rs 55 exposed). Best open action: Staff meal — Rs 19 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 2.57,
+        "qty_at_risk": 0.687,
+        "waste_probability": 1.0,
+        "value_at_risk": 54.96,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 19.24,
+          "cost": 0.0,
+          "expected_loss": 1.1,
+          "sustainability": 20.19,
+          "social": 0.0,
+          "total": 38.33
+        },
+        "objective_value": 38.33,
+        "objective_value_of_doing_nothing": -54.96,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 38,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 25,
+      "subject_label": "Mint leaves",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 0.887,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 0.887,
+      "saves": {
+        "kg": 0.869,
+        "money": 18.63,
+        "co2e": 2.173
+      },
+      "confidence": "HIGH",
+      "rationale_text": "0.9 kg of Mint leaves is at risk (remaining life 1.5 days, P(waste) 100%, Rs 53 exposed). Best open action: Staff meal — Rs 19 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 1.5,
+        "qty_at_risk": 0.887,
+        "waste_probability": 1.0,
+        "value_at_risk": 53.22,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 18.63,
+          "cost": 0.0,
+          "expected_loss": 1.06,
+          "sustainability": 26.07,
+          "social": 0.0,
+          "total": 43.64
+        },
+        "objective_value": 43.64,
+        "objective_value_of_doing_nothing": -53.22,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 39,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 10,
+      "subject_label": "Coriander leaves",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 0.873,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 0.873,
+      "saves": {
+        "kg": 0.856,
+        "money": 18.33,
+        "co2e": 2.139
+      },
+      "confidence": "HIGH",
+      "rationale_text": "0.9 kg of Coriander leaves is at risk (remaining life 1.5 days, P(waste) 100%, Rs 52 exposed). Best open action: Staff meal — Rs 18 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 1.53,
+        "qty_at_risk": 0.873,
+        "waste_probability": 1.0,
+        "value_at_risk": 52.38,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 18.33,
+          "cost": 0.0,
+          "expected_loss": 1.05,
+          "sustainability": 25.68,
+          "social": 0.0,
+          "total": 42.96
+        },
+        "objective_value": 42.96,
+        "objective_value_of_doing_nothing": -52.38,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    },
+    {
+      "id": 41,
+      "horizon": "RECOVER",
+      "subject_type": "batch",
+      "subject_id": 26,
+      "subject_label": "Mint leaves",
+      "action_type": "staff_meal",
+      "action_params": {
+        "channel_id": 1,
+        "channel_type": "staff_meal",
+        "qty": 0.75,
+        "distance_km": 0.0
+      },
+      "baseline_value": 0.0,
+      "recommended_value": 0.75,
+      "saves": {
+        "kg": 0.735,
+        "money": 15.75,
+        "co2e": 1.837
+      },
+      "confidence": "HIGH",
+      "rationale_text": "0.8 kg of Mint leaves is at risk (remaining life 2.6 days, P(waste) 100%, Rs 45 exposed). Best open action: Staff meal — Rs 16 recovered against Rs 0 for doing nothing.",
+      "rationale_facts": {
+        "rsl_days": 2.56,
+        "qty_at_risk": 0.75,
+        "waste_probability": 1.0,
+        "value_at_risk": 45.0,
+        "uom": "kg",
+        "terms": {
+          "recovered_value": 15.75,
+          "cost": 0.0,
+          "expected_loss": 0.9,
+          "sustainability": 22.05,
+          "social": 0.0,
+          "total": 36.9
+        },
+        "objective_value": 36.9,
+        "objective_value_of_doing_nothing": -45.0,
+        "price_factor": 0.35,
+        "logistics_cost": 0.0,
+        "residual_loss_probability": 0.02,
+        "feeds_a_human": true
+      },
+      "status": "pending",
+      "override_reason": null,
+      "override_value": null,
+      "expires_at": "2026-02-13T00:00:00"
+    }
+  ]
+}

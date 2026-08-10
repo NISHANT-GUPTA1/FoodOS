@@ -1,15 +1,15 @@
 import { ArrowUpRight } from 'lucide-react'
 import type { KpiCardData } from '../mocks/dashboard'
-import { formatPercent } from '../utils/format'
 
 interface KpiCardProps {
   data: KpiCardData
 }
 
+// Horizon tokens, same single definition as index.css / tailwind.config.js.
 const toneClasses: Record<KpiCardData['tone'], string> = {
-  prevent: 'from-emerald-500/25 to-emerald-500/5 border-emerald-400/20',
-  preserve: 'from-amber-500/25 to-amber-500/5 border-amber-400/20',
-  recover: 'from-rose-500/25 to-rose-500/5 border-rose-400/20',
+  prevent: 'from-prevent/25 to-prevent/5 border-prevent/20',
+  preserve: 'from-preserve/25 to-preserve/5 border-preserve/20',
+  recover: 'from-recover/25 to-recover/5 border-recover/20',
 }
 
 export function KpiCard({ data }: KpiCardProps) {
@@ -28,7 +28,6 @@ export function KpiCard({ data }: KpiCardProps) {
         <span className="chip border border-[#c4c7c8] bg-[#f1edec] text-[#1c1b1b]">{data.delta}</span>
         <span className="text-[#444748]">{data.note}</span>
       </div>
-      <div className="mt-4 text-xs text-[#646464]">Tone marker: {formatPercent(data.tone === 'prevent' ? 0.63 : data.tone === 'preserve' ? 0.52 : 0.41)}</div>
     </div>
   )
 }
