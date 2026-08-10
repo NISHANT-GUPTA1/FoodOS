@@ -87,6 +87,80 @@ h4 {
   }
 }
 
+@layer utilities {
+  /* Keyframes for sign-in animations */
+  @keyframes fadeSlideIn {
+    from {
+      opacity: 0;
+      filter: blur(8px);
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0px);
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes slideRightIn {
+    from {
+      opacity: 0;
+      filter: blur(12px);
+      transform: translateX(32px);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0px);
+      transform: translateX(0px);
+    }
+  }
+
+  @keyframes testimonialIn {
+    from {
+      opacity: 0;
+      filter: blur(8px);
+      transform: translateY(20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0px);
+      transform: translateY(0px) scale(1);
+    }
+  }
+
+  .animate-element {
+    animation: fadeSlideIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+
+  .animate-slide-right {
+    animation: slideRightIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+
+  .animate-testimonial {
+    animation: testimonialIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+
+  .animate-delay-100 { animation-delay: 100ms; }
+  .animate-delay-200 { animation-delay: 200ms; }
+  .animate-delay-300 { animation-delay: 300ms; }
+  .animate-delay-400 { animation-delay: 400ms; }
+  .animate-delay-500 { animation-delay: 500ms; }
+  .animate-delay-600 { animation-delay: 600ms; }
+  .animate-delay-700 { animation-delay: 700ms; }
+  .animate-delay-800 { animation-delay: 800ms; }
+  .animate-delay-900 { animation-delay: 900ms; }
+  .animate-delay-1000 { animation-delay: 1000ms; }
+  .animate-delay-1200 { animation-delay: 1200ms; }
+  .animate-delay-1400 { animation-delay: 1400ms; }
+
+  .custom-checkbox {
+    @apply h-4 w-4 rounded border-slate-700 bg-slate-800 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-slate-900;
+  }
+}
+
 @media print {
   @page {
     size: A5 portrait;

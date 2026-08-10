@@ -6,6 +6,16 @@ import { formatCo2e, formatInr } from '../utils/format'
 
 interface RecommendationCardProps {
   data: RecommendationData
+  /**
+   * The buttons below post to the KITCHEN lifecycle
+   * (`/api/recommendations/{id}/accept|override`).
+   *
+   * The agri batch surface has its own pair — Contract 2b #8/#9 route a plan through
+   * `/api/plans/{id}/accept|override` — so Screen 3 renders the card with
+   * `showActions={false}` and owns the lifecycle itself. Default stays `true`, so
+   * every existing kitchen caller is untouched.
+   */
+  showActions?: boolean
 }
 
 // One colour per horizon, read from the tokens in index.css / tailwind.config.js.
@@ -28,7 +38,7 @@ const horizonStyles: Record<RecommendationData['horizon'], { border: string; ink
   },
 }
 
-export function RecommendationCard({ data }: RecommendationCardProps) {
+export function RecommendationCard({ data, showActions = true }: RecommendationCardProps) {
   const style = horizonStyles[data.horizon]
 
   const accept = useMutation({ mutationFn: () => acceptRecommendation(data.id) })
@@ -98,25 +108,27 @@ export function RecommendationCard({ data }: RecommendationCardProps) {
             </>
           )}
         </div>
-        <div className="flex flex-wrap gap-3">
-          <button
-            type="button"
-            className="button-primary"
-            onClick={() => accept.mutate()}
-            disabled={pending || Boolean(outcome)}
-          >
-            <Check className="h-4 w-4" />
-            {accept.isPending ? 'Accepting…' : 'Accept'}
-          </button>
-          <button
-            type="button"
-            className="button-ghost"
-            onClick={() => override.mutate()}
-            disabled={pending || Boolean(outcome)}
-          >
-            {override.isPending ? 'Overriding…' : 'Override'}
-          </button>
-        </div>
+        {showActions ? (
+          <div className="flex flex-wrap gap-3">
+            <button
+              type="button"
+              className="button-primary"
+              onClick={() => accept.mutate()}
+              disabled={pending || Boolean(outcome)}
+            >
+              <Check className="h-4 w-4" />
+              {accept.isPending ? 'Accepting…' : 'Accept'}
+            </button>
+            <button
+              type="button"
+              className="button-ghost"
+              onClick={() => override.mutate()}
+              disabled={pending || Boolean(outcome)}
+            >
+              {override.isPending ? 'Overriding…' : 'Override'}
+            </button>
+          </div>
+        ) : null}
       </div>
     </article>
   )
