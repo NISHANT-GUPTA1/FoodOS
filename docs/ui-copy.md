@@ -365,6 +365,21 @@ one. A field that empties for 300 ms and refills reads as a bug to everyone watc
 Never abbreviate money to `1.2L` or `₹1.2 lakh` in a figure. Lakh notation is fine in
 prose on the deck; in a table it invites a conversion error in the judge's head.
 
+**Verified at the A/B/C/D merge.** C's `frontend/src/utils/format.ts` uses
+`Intl.NumberFormat('en-IN')`; the backend uses `agents/facts.py::format_indian`. They
+agree on every figure the demo shows:
+
+| value | `en-IN` (C) | `format_indian` (backend) |
+| --- | --- | --- |
+| 122260 | `1,22,260` | `1,22,260` |
+| 153760 | `1,53,760` | `1,53,760` |
+| 10000 | `10,000` | `10,000` |
+| 1234567 | `12,34,567` | `12,34,567` |
+
+The backend side is pinned by `tests/test_external/test_content_pack.py`. The two
+implementations are independent, so if either is swapped for a hand-rolled grouper this
+table is the check to re-run.
+
 ---
 
 ## 6. What this copy deliberately does not say
