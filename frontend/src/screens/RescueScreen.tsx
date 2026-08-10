@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { ErrorState, LoadingState } from '../components/StatePanel'
+import { EmptyState, ErrorState, LoadingState } from '../components/StatePanel'
 import { fetchRescueDashboard } from '../api/mockApi'
 import { SectionHeader } from '../components/SectionHeader'
 
@@ -24,6 +24,13 @@ export function RescueScreen() {
         title="Ranked exits for at-risk food"
         description="The safety gate stays visible and the excluded channels are greyed out so the judge can see why each option is or is not eligible."
       />
+
+      {data.rows.length === 0 && (
+        <EmptyState
+          title="No rescue routes needed"
+          description="Nothing is close enough to its shelf-life limit to need a channel today."
+        />
+      )}
 
       <div className="grid gap-4 xl:grid-cols-2">
         {data.rows.map((row) => (

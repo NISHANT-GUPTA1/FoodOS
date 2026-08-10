@@ -1,4 +1,6 @@
+import { useMutation } from '@tanstack/react-query'
 import { Check, Clock3, Flame, RotateCcw } from 'lucide-react'
+import { acceptRecommendation, overrideRecommendation } from '../api/mockApi'
 import type { RecommendationData } from '../mocks/dashboard'
 import { formatCo2e, formatInr } from '../utils/format'
 
@@ -6,20 +8,22 @@ interface RecommendationCardProps {
   data: RecommendationData
 }
 
-const horizonStyles: Record<RecommendationData['horizon'], { border: string; chip: string; icon: React.ReactNode }> = {
+// One colour per horizon, read from the tokens in index.css / tailwind.config.js.
+// `ink` is the accessible text tone; `border` tints the card edge.
+const horizonStyles: Record<RecommendationData['horizon'], { border: string; ink: string; icon: React.ReactNode }> = {
   PREVENT: {
-    border: 'border-emerald-400/20',
-    chip: 'bg-emerald-400/15 text-emerald-200',
+    border: 'border-prevent/20',
+    ink: 'text-prevent-ink',
     icon: <Flame className="h-4 w-4" />,
   },
   PRESERVE: {
-    border: 'border-amber-400/20',
-    chip: 'bg-amber-400/15 text-amber-100',
+    border: 'border-preserve/20',
+    ink: 'text-preserve-ink',
     icon: <Clock3 className="h-4 w-4" />,
   },
   RECOVER: {
-    border: 'border-rose-400/20',
-    chip: 'bg-rose-400/15 text-rose-100',
+    border: 'border-recover/20',
+    ink: 'text-recover-ink',
     icon: <RotateCcw className="h-4 w-4" />,
   },
 }
@@ -27,12 +31,19 @@ const horizonStyles: Record<RecommendationData['horizon'], { border: string; chi
 export function RecommendationCard({ data }: RecommendationCardProps) {
   const style = horizonStyles[data.horizon]
 
+  const accept = useMutation({ mutationFn: () => acceptRecommendation(data.id) })
+  const override = useMutation({ mutationFn: () => overrideRecommendation(data.id, 'Overridden from the card') })
+
+  const outcome = accept.data?.status ?? override.data?.status
+  const pending = accept.isPending || override.isPending
+  const failed = accept.isError || override.isError
+
   return (
     <article className={`panel ${style.border} p-5 text-[#1c1b1b] transition hover:-translate-y-0.5 hover:border-[#747878]`}>
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-3xl space-y-3">
           <div className="flex flex-wrap items-center gap-3">
-            <span className={`chip border border-[#c4c7c8] bg-[#f1edec] ${style.chip.includes('emerald') ? 'text-emerald-700' : style.chip.includes('amber') ? 'text-[#9a6700]' : 'text-[#ba1a1a]'}`}>{style.icon} <span className="ml-2">{data.horizon}</span></span>
+            <span className={`chip border border-[#c4c7c8] bg-[#f1edec] ${style.ink}`}>{style.icon} <span className="ml-2">{data.horizon}</span></span>
             <span className="text-xs uppercase tracking-[0.25em] text-[#646464]">Confidence {Math.round(data.confidence * 100)}%</span>
             <span className="text-xs uppercase tracking-[0.25em] text-[#646464]">Expires in {data.expiresIn}</span>
           </div>
@@ -75,15 +86,35 @@ export function RecommendationCard({ data }: RecommendationCardProps) {
 
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-[#c4c7c8] pt-4">
         <div className="text-sm text-[#444748]">
-          <span className="font-medium text-[#1c1b1b]">{Math.round(data.confidence * 100)}%</span> confidence from the current mock contract.
+          {failed ? (
+            <span className="text-[#ba1a1a]">That did not save. Try again — the recommendation is unchanged.</span>
+          ) : outcome ? (
+            <span>
+              Marked <span className="font-medium text-[#1c1b1b]">{outcome}</span>. It stays on the list until the next refresh.
+            </span>
+          ) : (
+            <>
+              <span className="font-medium text-[#1c1b1b]">{Math.round(data.confidence * 100)}%</span> confidence from the current mock contract.
+            </>
+          )}
         </div>
         <div className="flex flex-wrap gap-3">
-          <button type="button" className="button-primary">
+          <button
+            type="button"
+            className="button-primary"
+            onClick={() => accept.mutate()}
+            disabled={pending || Boolean(outcome)}
+          >
             <Check className="h-4 w-4" />
-            Accept
+            {accept.isPending ? 'Accepting…' : 'Accept'}
           </button>
-          <button type="button" className="button-ghost">
-            Override
+          <button
+            type="button"
+            className="button-ghost"
+            onClick={() => override.mutate()}
+            disabled={pending || Boolean(outcome)}
+          >
+            {override.isPending ? 'Overriding…' : 'Override'}
           </button>
         </div>
       </div>

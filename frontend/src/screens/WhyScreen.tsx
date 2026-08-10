@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { fetchWhyDashboard } from '../api/mockApi'
 import { SectionHeader } from '../components/SectionHeader'
-import { ErrorState, LoadingState } from '../components/StatePanel'
+import { EmptyState, ErrorState, LoadingState } from '../components/StatePanel'
 
 export function WhyScreen() {
   const { data, isLoading, isError } = useQuery({
@@ -55,6 +55,14 @@ export function WhyScreen() {
         <section className="space-y-4">
           <div className="panel p-5">
             <h2 className="text-lg font-semibold text-[#1c1b1b]">Top contributors</h2>
+            {data.contributors.length === 0 && (
+              <div className="mt-4">
+                <EmptyState
+                  title="No contributors to attribute"
+                  description="Waste in this window is below the reporting threshold, so there is nothing to decompose."
+                />
+              </div>
+            )}
             <div className="mt-4 space-y-3">
               {data.contributors.map((item) => (
                 <div key={item.label} className="rounded-2xl border border-[#c4c7c8] bg-[#f6f3f2] p-4">

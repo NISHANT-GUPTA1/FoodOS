@@ -91,8 +91,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <button className="text-[#444748] transition-colors duration-200 hover:text-[#5d5f5f]">
               <ShieldCheck className="h-5 w-5" />
             </button>
-            <button className="ml-2 h-10 w-10 overflow-hidden rounded-full border border-[#c4c7c8] bg-[#e5e2e1]">
-              <img alt="User Executive Profile" className="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD46-9jZimZMlUEzk1lJVdgDhUSwHVR0lLT4nQHvr2sGfRJFlvKBW-rAfOh8Q0XM50mdokC6hjDj5zuKWKmwR4mJLN6CdumiuEOjZdn7-wOO8MI9xMawQosVy4oqduHK6NHZ0YRV3Gu4vO7kHPInYCHiPcW3UsB56ynE49Ff3KEAH_7nVZR7fjJ_c6ZXC6Y2vtKyD5orLaKKAi_PogRd910KJBDqHlgEz8MVg14loZVKRp_T_XhMalIKg" />
+            {/* Initials, not a remote avatar — see §8 H33-36, the wifi-off rehearsal. */}
+            <button
+              className="ml-2 flex h-10 w-10 items-center justify-center rounded-full border border-[#c4c7c8] bg-[#e5e2e1] text-sm font-semibold tracking-wide text-[#444748]"
+              aria-label="Account"
+            >
+              KM
             </button>
           </div>
         </header>

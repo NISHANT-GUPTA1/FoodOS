@@ -10,14 +10,12 @@ import { TrackTwoScreen } from './screens/TrackTwoScreen'
 import { TodayScreen } from './screens/TodayScreen'
 import { WhyScreen } from './screens/WhyScreen'
 import DemoOne from '@/components/ui/demo'
-import GradientDemo from '@/components/ui/gradient-demo'
 
 export function App() {
   return (
     <Routes>
       <Route path="/login" element={<DemoOne />} />
       <Route path="/demo" element={<DemoOne />} />
-      <Route path="/gradient-menu" element={<GradientDemo />} />
       <Route
         path="*"
         element={

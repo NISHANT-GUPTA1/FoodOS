@@ -115,6 +115,11 @@ export interface ImpactResponse {
   }
 }
 
+export interface OutcomeResponse {
+  id: string
+  status: 'accepted' | 'overridden' | 'pending'
+}
+
 export const apiPaths = {
   today: '/api/today',
   why: '/api/why',
@@ -122,4 +127,6 @@ export const apiPaths = {
   ledger: '/api/ledger',
   rescue: '/api/rescue',
   impact: '/api/impact',
+  accept: (id: string) => `/api/recommendations/${id}/accept`,
+  override: (id: string) => `/api/recommendations/${id}/override`,
 } as const

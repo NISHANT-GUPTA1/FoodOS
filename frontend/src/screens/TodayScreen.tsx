@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { ArrowRight, Check, ChevronRight, Clock3, Coins, RefreshCw, Scale, ShieldCheck } from 'lucide-react'
 import { fetchTodayDashboard } from '../api/mockApi'
+import { KpiCard } from '../components/KpiCard'
 import { RecommendationCard } from '../components/RecommendationCard'
-import { ErrorState, LoadingState } from '../components/StatePanel'
+import { EmptyState, ErrorState, LoadingState } from '../components/StatePanel'
 import { SectionHeader } from '../components/SectionHeader'
+import heroImage from '../assets/hero.png'
 
 export function TodayScreen() {
   const { data, isLoading, isError } = useQuery({
@@ -37,10 +39,11 @@ export function TodayScreen() {
         <div className="relative overflow-hidden border border-[#c4c7c8] bg-[#f1edec] p-6 md:col-span-8 lg:p-8">
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0 bg-gradient-to-r from-[#f1edec] via-[#f1edec]/95 to-[#f1edec]/40" />
+            {/* Bundled, not fetched — see §8 H33-36, the wifi-off rehearsal. */}
             <img
               alt="Culinary craft"
               className="h-full w-full object-cover opacity-25"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvBjqGiRZpP-OOpAO-MPwti4iwe_mfDUbfdTZMscv7jsL1ohZBD2-SEHefCuSNX6FO59v80CatLC8a4lVN6Lu-5SmQGKfrqACZnhyVco5MiuOn7AofHfuzHZxyiv1jz4XI93nCgmVNrgvmydUnUhG5YW4IVXBLq6O_W2dVfPExc96BrKbICRcd8CfOTZWyi5mHBR6tudi4DujrAzZQQ2WRAVL2qAok_BJGmOwWv-r6cPw-Dz1pGkvCKw"
+              src={heroImage}
             />
           </div>
 
@@ -136,16 +139,30 @@ export function TodayScreen() {
         </div>
       </section>
 
+      {/* §7 H3-8: "3 KPIs (kg at risk, ₹ at risk, % preventable)". */}
+      <section className="grid gap-4 md:grid-cols-3">
+        {data.kpis.map((kpi) => (
+          <KpiCard key={kpi.label} data={kpi} />
+        ))}
+      </section>
+
       <section className="space-y-4 pt-2">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-2xl font-semibold tracking-tight text-[#1c1b1b]">Ranked actions</h2>
           <span className="text-sm uppercase tracking-[0.16em] text-[#646464]">All actions are derived from the mock contract.</span>
         </div>
-        <div className="space-y-4">
-          {data.recommendations.map((item) => (
-            <RecommendationCard key={item.id} data={item} />
-          ))}
-        </div>
+        {data.recommendations.length === 0 ? (
+          <EmptyState
+            title="Nothing at risk right now"
+            description="Every batch is inside its shelf life and no dish is over-prepped. This screen fills as the day runs."
+          />
+        ) : (
+          <div className="space-y-4">
+            {data.recommendations.map((item) => (
+              <RecommendationCard key={item.id} data={item} />
+            ))}
+          </div>
+        )}
       </section>
     </div>
   )
