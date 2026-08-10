@@ -8,7 +8,9 @@ __pycache__/
 
 # Node (Person C)
 node_modules/
+frontend/node_modules/
 dist/
+frontend/dist/
 .vite/
 
 # Secrets — the Anthropic key lives here, it must never be committed

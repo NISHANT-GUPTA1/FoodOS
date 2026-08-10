@@ -1,0 +1,1 @@
+export type Horizon = 'PREVENT' | 'PRESERVE' | 'RECOVER'

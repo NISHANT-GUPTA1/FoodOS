@@ -1,0 +1,62 @@
+import { useQuery } from '@tanstack/react-query'
+import { ErrorState, LoadingState } from '../components/StatePanel'
+import { fetchLedgerDashboard } from '../api/mockApi'
+import { SectionHeader } from '../components/SectionHeader'
+
+export function LedgerScreen() {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['ledger-dashboard'],
+    queryFn: fetchLedgerDashboard,
+  })
+
+  if (isLoading) {
+    return <LoadingState title="Loading ledger" description="Fetching batch life and risk rows for the current cluster." />
+  }
+
+  if (isError || !data) {
+    return <ErrorState title="Ledger failed to load" description="Batch rows are unavailable until the mock ledger responds." />
+  }
+
+  return (
+    <div className="space-y-6">
+      <SectionHeader
+        eyebrow="Ledger"
+        title="Batch life and risk"
+        description="The ledger keeps one row per batch so the demo can move from aggregate waste to concrete operational choices."
+      />
+
+      <div className="panel overflow-hidden">
+        <table className="min-w-full divide-y divide-[#c4c7c8] text-left text-sm">
+          <thead className="bg-[#f1edec] text-xs uppercase tracking-[0.24em] text-[#646464]">
+            <tr>
+              <th className="px-4 py-3">Batch</th>
+              <th className="px-4 py-3">SKU</th>
+              <th className="px-4 py-3">Qty</th>
+              <th className="px-4 py-3">RSL</th>
+              <th className="px-4 py-3">Risk</th>
+              <th className="px-4 py-3">Value at risk</th>
+              <th className="px-4 py-3">Action</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[#c4c7c8] bg-white">
+            {data.batches.map((row) => (
+              <tr key={row.batch} className="text-[#1c1b1b]">
+                <td className="px-4 py-4 font-medium text-[#1c1b1b]">{row.batch}</td>
+                <td className="px-4 py-4">{row.sku}</td>
+                <td className="px-4 py-4">{row.qtyKg} kg</td>
+                <td className="px-4 py-4">
+                  <span className={`chip border border-[#c4c7c8] bg-[#f1edec] ${row.rslDays < 1 ? 'text-[#ba1a1a]' : row.rslDays < 3 ? 'text-[#9a6700]' : 'text-[#0f766e]'}`}>
+                    {row.rslDays.toFixed(1)} days
+                  </span>
+                </td>
+                <td className="px-4 py-4">{row.riskPercent}%</td>
+                <td className="px-4 py-4">₹{row.valueAtRisk}</td>
+                <td className="px-4 py-4 text-[#1c1b1b]">{row.action}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
