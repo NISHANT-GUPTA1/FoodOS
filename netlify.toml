@@ -1,0 +1,42 @@
+# Netlify build configuration.
+#
+# Kept in the repo rather than typed into the dashboard so the settings are
+# reviewable, survive a project being recreated, and cannot drift from what the
+# code actually needs. Values here override the UI fields.
+
+[build]
+  # The React app lives in frontend/; the repo root is a Python backend that
+  # Netlify neither builds nor hosts.
+  base = "frontend"
+
+  # tsc && vite build — the type check runs first on purpose, so a broken build
+  # fails here rather than shipping a white screen.
+  command = "npm run build"
+
+  # Relative to `base`, so this is frontend/dist.
+  publish = "dist"
+
+[build.environment]
+  # FoodOS-Team-Split-v2.md §2 pins Node 20 LTS. Netlify's default image tracks
+  # a newer major, and a build that works locally on a different major is the
+  # kind of surprise that shows up an hour before a demo.
+  NODE_VERSION = "20"
+
+# ---------------------------------------------------------------------------
+# SPA routing.
+#
+# react-router handles /batches/T1024 and /batch/<code> in the browser, but a
+# cold load or a refresh asks Netlify for that path directly and there is no
+# such file — it would 404.
+#
+# This matters more than usual here: /batch/<code> is the URL baked into the QR
+# code on the crate label. A judge scanning that label goes straight to a cold
+# load of a deep path. Without this rule the passport 404s on the one
+# interaction most likely to be tried in front of them.
+#
+# Must stay LAST — Netlify applies the first matching rule.
+# ---------------------------------------------------------------------------
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
