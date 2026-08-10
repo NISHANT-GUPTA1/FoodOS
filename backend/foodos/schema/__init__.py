@@ -3,6 +3,8 @@
 from foodos.schema.base import Base, TimestampMixin, utcnow
 from foodos.schema.enums import (
     ActionType,
+    BatchEventType,
+    BatchLifecycle,
     BatchState,
     CaptureMethod,
     ChannelType,
@@ -10,6 +12,7 @@ from foodos.schema.enums import (
     Horizon,
     MaturityStage,
     PackagingType,
+    PartyRole,
     InventoryEventType,
     RecommendationStatus,
     RescueOfferStatus,
@@ -22,6 +25,9 @@ from foodos.schema.enums import (
 )
 from foodos.schema.tables import (
     BatchAssessment,
+    BatchEvent,
+    BatchHandoff,
+    BatchStateSnapshot,
     CandidatePlan,
     Consignment,
     LossRiskScore,
@@ -63,6 +69,13 @@ __all__ = [
     "ShipmentJourney",
     "TransportMode",
     "WeatherExposure",
+    # batch identity — the digital passport
+    "BatchEvent",
+    "BatchEventType",
+    "BatchHandoff",
+    "BatchLifecycle",
+    "BatchStateSnapshot",
+    "PartyRole",
     "Base",
     "TimestampMixin",
     "utcnow",
