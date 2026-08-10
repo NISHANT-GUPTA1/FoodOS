@@ -86,6 +86,17 @@ class ActionType(StrEnum):
     COMPOST = "compost"
     DO_NOTHING = "do_nothing"
 
+    # --- agri transit action space (v2 §4, H8-13) --------------------------
+    # PREVENT: change the journey before it starts.
+    DEPART_EARLIER = "depart_earlier"
+    UPGRADE_TRANSPORT = "upgrade_transport"
+    # PRESERVE: change where it goes or how it is broken up.
+    REROUTE = "reroute"
+    SPLIT_BATCH = "split_batch"
+    # RECOVER: it will not survive the journey as planned.
+    DIVERT_TO_CHANNEL = "divert_to_channel"
+
+
 
 class ChannelType(StrEnum):
     INTERNAL_USE = "internal_use"
