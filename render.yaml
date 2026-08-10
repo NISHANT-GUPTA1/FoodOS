@@ -1,0 +1,34 @@
+# Render blueprint for the FoodOS backend.
+#
+# Netlify hosts the frontend; it runs Node, not Python, so the engine needs its
+# own host. Most screens degrade to fixtures without it, but the Batch Passport
+# and the receiving screens do not — `passportApi.ts` and `intakeApi.ts` have no
+# mock path by design, because a passport with invented history would be worse
+# than no passport at all.
+#
+# Deploy: Render dashboard -> New -> Blueprint -> pick this repo.
+
+services:
+  - type: web
+    name: foodos-api
+    runtime: python
+    plan: free
+    region: singapore # nearest to the demo audience; latency shows on the lambda slider
+    rootDir: backend
+
+    # 3.11 is not optional — schema/enums.py uses enum.StrEnum, which does not
+    # exist on 3.10, and numpy 1.26 has no 3.13 wheel.
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+
+    buildCommand: pip install -e .
+
+    # The database is gitignored and Render's free disk is ephemeral, so it has
+    # to be rebuilt on every boot. That is cheap here — the seed takes about
+    # five seconds and produces under a megabyte — and it is the same command
+    # §11 rule 3 says everything rebuilds from. A demo that depends on a
+    # hand-edited database does not survive a restart.
+    startCommand: python -m foodos.ingest.seed && uvicorn foodos.api.app:app --host 0.0.0.0 --port $PORT
+
+    healthCheckPath: /api/health
