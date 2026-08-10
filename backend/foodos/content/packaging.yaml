@@ -1,0 +1,116 @@
+# FoodOS — packaging constants
+# Owner: Person D
+#
+# Packaging is the cheapest lever in the whole chain and the one nobody models. A crate
+# decision made at the collection hub is locked in for the next 36 hours; by the time the
+# load reaches Azadpur the difference between a ventilated crate and a jute sack is a
+# grade band, and a grade band on 10 t is more money than the crates cost.
+#
+# THE THREE KEYS A AND B DEPEND ON  (Contract 3, frozen at H3)
+#
+#   thermal_retention_factor
+#     Multiplier on the load's temperature EXCESS over ambient air. The stack self-heats
+#     from respiration (commodities.yaml: respiration_heat_w_per_tonne) and from absorbed
+#     solar load; how much of that heat stays in the fruit is a packaging property.
+#       1.00  neutral — pulp tracks ambient
+#       <1.00 sheds heat: open sides, stacking that leaves air channels
+#       >1.00 traps heat: closed weave, no vents, fruit against fruit
+#     A applies it as:  pulp_temp = ambient + thermal_retention_factor * heat_excess_c
+#     It is NOT a shelf-life multiplier. Feeding it in as one double-counts, because the
+#     temperature it changes is already inside the Q10 term.
+#
+#   crush_protection
+#     0 to 1. Fraction of stacking-and-vibration mechanical damage the pack prevents.
+#     Applied against the transport mode's vibration_penalty:
+#       realised_damage = vibration_penalty * (1 - crush_protection)
+#     This is the term that makes "keep the open truck but change the crate" a real
+#     candidate action rather than a slide.
+#
+#   cost_per_kg
+#     INR per kg of produce packed, for ONE trip. Reusable packs are amortised over
+#     their trip life, not charged at purchase price — charging a crate's full Rs 180
+#     to a single consignment would make every reusable option look absurd and is the
+#     most common way this comparison is got wrong.
+#
+# Sources: crate and sack prices are 2025-26 Karnataka HOPCOMS / FPO procurement rates;
+# trip lives are the NHB Cold Chain and Value Addition guidelines' working assumptions
+# for returnable plastic crates in domestic horticulture.
+
+version: 1
+currency: INR
+
+default: ventilated_plastic_crate
+
+packaging:
+  ventilated_plastic_crate:
+    display_name: Ventilated plastic crate (returnable)
+    thermal_retention_factor: 0.75 # open lattice on all six faces; the stack breathes
+    crush_protection: 0.85 # rigid walls take the stack load, the fruit does not
+    cost_per_kg: 0.55
+    # Rs 165 per 25 kg crate, ~120 trips before it cracks -> Rs 1.38/trip -> Rs 0.055/kg.
+    # The 10x above that is not the crate: it is the return leg. Empties come back from
+    # Delhi to Kolar at roughly Rs 0.50/kg of outbound load, and an FPO that forgets to
+    # cost the return leg discovers it at the end of the season.
+    unit_capacity_kg: 25
+    trips_before_replacement: 120
+    reusable: true
+    stackable_tiers: 8
+    notes: >
+      The default and, for tomato, almost always the right answer. Rigid, ventilated,
+      stackable, returnable. The recommendation to switch TO this from a sack is the
+      cheapest intervention the engine can propose.
+
+  wooden_crate:
+    display_name: Wooden crate
+    thermal_retention_factor: 0.90 # slatted, but the timber itself stores heat
+    crush_protection: 0.70 # rigid, but splinters and nail heads cause their own damage
+    cost_per_kg: 0.72
+    # Rs 90 per 20 kg crate, ~25 trips. Cheap to buy, expensive per trip, and the
+    # abrasion damage is real — this is why the sector has been moving to plastic.
+    unit_capacity_kg: 20
+    trips_before_replacement: 25
+    reusable: true
+    stackable_tiers: 6
+
+  corrugated_fibreboard_box:
+    display_name: Corrugated fibreboard box (5-ply, vented)
+    thermal_retention_factor: 1.05 # vent holes only; board is an insulator
+    crush_protection: 0.60 # loses most of its strength above ~85% RH, which is a monsoon truck
+    cost_per_kg: 1.10
+    unit_capacity_kg: 10
+    trips_before_replacement: 1
+    reusable: false
+    stackable_tiers: 5
+    notes: >
+      Priced for organised retail, not the mandi. Included because it is the pack a
+      buyer-driven consignment will specify, and the engine should be able to cost it
+      honestly rather than refuse to consider it.
+
+  jute_bag:
+    display_name: Jute sack
+    thermal_retention_factor: 1.20 # closed weave, no ventilation, fruit pressed together
+    crush_protection: 0.15 # the fruit at the bottom carries the entire stack
+    cost_per_kg: 0.28
+    # Rs 14 per 50 kg sack, ~2 trips. The cheapest pack and, for tomato, close to the
+    # most expensive decision available: it is the single largest contributor to the
+    # farm-stage bruising the NABCONS study attributes loss to.
+    unit_capacity_kg: 50
+    trips_before_replacement: 2
+    reusable: true
+    stackable_tiers: 4
+    notes: >
+      Fine for onion and potato. For tomato it is the fault the system should find first.
+
+  loose_bulk:
+    display_name: Loose in the truck bed
+    thermal_retention_factor: 1.30 # a 1.5 m deep mass of fruit with no air path through it
+    crush_protection: 0.00
+    cost_per_kg: 0.00
+    unit_capacity_kg: null
+    trips_before_replacement: null
+    reusable: false
+    stackable_tiers: 1
+    notes: >
+      Zero packaging cost, and the baseline the saving is measured against for a farmer
+      who currently tips the harvest straight into the truck. Kept in the list precisely
+      because "do what you do today" must be a scoreable option, never an assumed one.

@@ -1,0 +1,168 @@
+# FoodOS — transport modes
+# Owner: Person D
+#
+# Three modes, and the honest fact that the expensive one is not always the right one.
+# Tomato suffers chilling injury below 10 degC (commodities.yaml), reefers at Kolar need
+# most of a day's notice, and 2,150 km of reefer costs more than the grade uplift returns
+# on a B+ consignment. An engine that always says "use a reefer" is a brochure. The
+# availability_hours and cost_per_km below are what let it say no.
+#
+# THE FOUR KEYS A AND B DEPEND ON  (Contract 3, frozen at H3)
+#
+#   cooling_factor
+#     Fraction of the gap between ambient air and the commodity's ref_temp_c that the
+#     mode closes.  0.0 = the load is at ambient; 1.0 = the load is at reference.
+#       effective_air_c = ambient_c - cooling_factor * (ambient_c - ref_temp_c)
+#     For a reefer the setpoint overrides this: the box holds setpoint_c, and A must
+#     clamp it at chilling_injury_below_c or the model will happily recommend freezing
+#     the fruit to death.
+#
+#   vibration_penalty
+#     Mechanical damage accumulated per 1,000 km, expressed as a reduction in the
+#     damage_factor from commodities.yaml, BEFORE packaging protection:
+#       damage_added = vibration_penalty * (distance_km / 1000) * (1 - crush_protection)
+#     Road surface scales it — routes.py returns a vibration_index that multiplies this.
+#
+#   cost_per_km
+#     INR per km for a ~9-10 t payload vehicle, all-in: freight, fuel surcharge, driver,
+#     tolls, state entry fees. Market rates, Karnataka-to-north-India lanes, 2025-26.
+#     NOT per tonne-km. A 10 t consignment on a 2,150 km run at Rs 38/km is Rs 81,700,
+#     which is Rs 8.17/kg — the right order for this lane, and worth checking against
+#     that per-kg sanity figure whenever this number is edited.
+#
+#   availability_hours
+#     Lead time from "decide" to "vehicle under the loading point at Kolar". This is the
+#     constraint that makes the depart-earlier action interesting: you cannot leave six
+#     hours early in a vehicle that arrives in fourteen.
+#
+# Sources: freight rates are Kolar/Bengaluru-origin FTL quotations for the Delhi and
+# Jaipur lanes, 2025-26 season. Reefer availability at a district collection hub is from
+# the NHB cold-chain gap assessment — reefer density in Kolar district is low enough that
+# same-shift booking is not realistic, and pretending otherwise breaks the demo's premise.
+
+version: 1
+currency: INR
+
+default: open_truck
+
+modes:
+  open_truck:
+    display_name: Open truck
+    cooling_factor: 0.00 # no protection at all; the load is at ambient plus solar gain
+    solar_gain_c: 4.5 # direct-sun surcharge on the top tier during daylight hours
+    vibration_penalty: 0.055 # damage_factor points lost per 1,000 km on mixed road
+    cost_per_km: 38.00
+    availability_hours: 2.0 # always something in the yard; this is the incumbent
+    payload_kg: 10000
+    night_running_allowed: true
+    notes: >
+      What the load actually travels on today, and therefore the baseline. Its weakness
+      is not the absence of refrigeration — it is the solar gain on the top tier, which
+      is why "depart six hours earlier" beats "spend on a reefer" on this corridor.
+
+  tarpaulin:
+    display_name: Open truck with tarpaulin and night running
+    cooling_factor: 0.18 # shade only: removes the solar gain, does not remove field heat
+    solar_gain_c: 0.5
+    vibration_penalty: 0.055 # same vehicle, same suspension, same road
+    cost_per_km: 41.00 # +Rs 3/km: tarp hire, tie-down labour, the extra driver hour
+    availability_hours: 4.0
+    payload_kg: 10000
+    night_running_allowed: true
+    notes: >
+      The cheap intervention, and usually the one the optimiser picks. Rs 6,450 on the
+      Delhi lane buys back most of the daytime heat load. It does nothing about heat the
+      fruit already carried out of the field — that is what the departure shift is for,
+      and the two actions are complements, not alternatives.
+
+  reefer:
+    display_name: Reefer (insulated, mechanically refrigerated)
+    cooling_factor: 0.95
+    setpoint_c: 13.0 # AT the tomato optimum. NOT 4 degC — see chilling_injury_below_c.
+    solar_gain_c: 0.0
+    vibration_penalty: 0.040 # air-suspension trailer; measurably gentler
+    cost_per_km: 68.00 # ~1.8x dry FTL, the standard domestic multiplier
+    availability_hours: 14.0 # the constraint that decides this option more often than cost
+    payload_kg: 9000 # insulation and the unit itself cost you a tonne of payload
+    night_running_allowed: true
+    requires_precooling: true
+    precooling_hours: 3.0
+    precooling_cost_per_kg: 0.90
+    notes: >
+      Right for a high-grade consignment with a buyer contract; wrong for a B+ field lot
+      whose grade uplift will not cover Rs 64,500 of extra freight. The 14-hour lead time
+      is the honest constraint at a district hub, and the engine must be allowed to
+      return this option EXCLUDED with that reason visible rather than quietly dropping
+      it — an operator who watches an option vanish without explanation stops trusting
+      the system.
+
+# --- vehicle classes ---------------------------------------------------------
+# cost_per_km above is for the ~10 t vehicle the baseline consignment travels in. A SPLIT
+# does not travel in that vehicle, and this is the block that stops the split action from
+# being costed as if it did.
+#
+# READ THIS BEFORE TUNING THE DEMO. Two 2,000 km trucks cost far more than one. A naive
+# split of a full truck load across two distant terminal markets loses money on freight
+# faster than it gains it on decay, and an engine that recommends it anyway is wrong in
+# the direction an FPO would notice within one season. The split becomes economic in
+# exactly two situations, and both are modelled here:
+#
+#   1. MULTI-DROP — one vehicle, two drops on or near the same corridor. It pays the
+#      detour and a drop charge, not a second full freight bill. This is how a split is
+#      actually executed on the Kolar-north lanes.
+#   2. ASYMMETRIC LEGS — a part load to a near market and the balance long-haul, where
+#      the near leg is cheap enough that the decay saved on it dominates.
+#
+# Rates are 2025-26 Karnataka-origin FTL market quotations by vehicle class, all-in.
+# Per-kg cost rises as the vehicle gets smaller, which is the whole tension.
+vehicle_classes:
+  lcv_4t:
+    display_name: LCV, 14 ft
+    payload_kg: 4000
+    cost_per_km: 24.00 # Rs 6.00/kg over 1,000 km
+  truck_6t:
+    display_name: Truck, 17 ft
+    payload_kg: 6000
+    cost_per_km: 30.00
+  truck_10t:
+    display_name: Truck, 19-22 ft
+    payload_kg: 10000
+    cost_per_km: 38.00 # Rs 3.80/kg over 1,000 km — the baseline vehicle
+  truck_16t:
+    display_name: Truck, 32 ft multi-axle
+    payload_kg: 16000
+    cost_per_km: 52.00
+
+multi_drop:
+  # One vehicle, two drops. Charge the detour distance at the vehicle's own rate plus a
+  # flat second-drop handling charge, instead of a second full freight bill.
+  second_drop_charge_inr: 3500 # unloading labour, weighment and the extra gate entry
+  max_drops: 2
+  # Extra road distance for the common pairs, over and above the direct run to the
+  # farther market. Both northern markets share the NH-44 corridor as far as Agra, which
+  # is why the detour is a few hundred kilometres and not a second journey.
+  detour_km:
+    delhi_apmc__jaipur_apmc: 277 # Agra -> Jaipur -> Delhi against Agra -> Delhi
+    delhi_apmc__hyderabad_bowenpally: 12 # Bowenpally is essentially on the lane
+    jaipur_apmc__hyderabad_bowenpally: 12
+    delhi_apmc__chennai_koyambedu: null # opposite directions; not a multi-drop
+  notes: >
+    The Hyderabad drop is nearly free in distance terms and lands 27 hours before the
+    Delhi drop. If the optimiser prefers it to the Delhi/Jaipur split, that is the
+    engine disagreeing with the pitch deck, and the engine is the one with the numbers.
+
+# --- departure shift ---------------------------------------------------------
+# Not a mode. The other half of the PREVENT action space, kept here because it is a
+# transport decision and shares these constants.
+departure:
+  shift_range_hours: [-12, 12] # Screen 4's slider bounds
+  # Night departure avoids the loading-yard heat soak AND puts the hottest transit hours
+  # in darkness. The gain is not linear — it is entirely about which hours of the diurnal
+  # curve the load is exposed to, so A must integrate the actual hourly series from
+  # external/weather.py rather than apply a flat bonus. There is deliberately no
+  # "night_departure_bonus" constant in this file: a flat bonus is exactly the shortcut
+  # that would make the What-If simulator disagree with the optimiser on stage.
+  yard_hold_hours_default: 2.0 # harvest to wheels-rolling, if the questionnaire is silent
+  driver_rest_hours_per_10h: 1.0 # statutory-ish; it lengthens transit and must be costed
+  earliest_dispatch_hour: 4 # the hub does not open before this
+  latest_dispatch_hour: 22

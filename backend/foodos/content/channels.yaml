@@ -277,3 +277,219 @@ preserve_actions:
     applies_to_states: [raw, prepped, cooked]
     requires: [freeze_tolerant]
     notes: Enormous life gain, but quality-limited. Never offer it for leafy greens or fresh paneer.
+
+# ============================================================================
+# AGRI DIVERSION COUNTERPARTIES â€” the RECOVER action space for the farm-gate node
+# ============================================================================
+# Owner: Person D. Added for the agri batch product; the kitchen node above is unchanged.
+#
+# WHY THIS IS A SEPARATE KEY AND NOT MORE ROWS UNDER `channels:`
+#   `ingest/channels.py` reads `channels:` and maps each row onto a `ChannelType` by its
+#   id. An agri id is not in that map, so its `type:` string would reach the ORM as an
+#   invalid enum value and break `python -m foodos.ingest.seed` â€” the one command that
+#   runs fifty times before the demo and must never break. Seeding these rows into the
+#   kitchen org would also change the kitchen node's rescue results and the regression
+#   suite that proves the platform claim. Additive block, zero risk, and B reads it
+#   through `content.agri_channels()`.
+#
+# WHAT A DIVERSION IS HERE
+#   A consignment whose RUL will not survive its planned journey. PREVENT (leave earlier,
+#   tarp it) and PRESERVE (reroute, split) have already been scored and lost. These are
+#   the routes that recover something rather than nothing â€” the agri equivalent of the
+#   kitchen's markdown ladder, priced off the mandi rate instead of a menu price.
+#
+#   basis: mandi_price   -> fraction of the destination modal price actually realised
+#   basis: farm_gate     -> fraction of the origin-market price
+#   basis: cost          -> avoided cost only; no revenue
+#
+#   recovery_factor is NET of the counterparty's own deductions â€” commission, weighment,
+#   loading, their transport if they do not collect. A processor quoting Rs 6/kg against
+#   a Rs 19.50 modal rate is entered at 0.31, not at some gross number with a footnote.
+#
+#   engine_channel_type is the `ChannelType` B constructs the Action with, stated here so
+#   the mapping is content, not a guess in engine code.
+#
+# Sources: processing rates are 2025-26 Karnataka tomato paste-line procurement (process
+# grade is bought on soluble solids, not appearance, which is why heavy visual damage
+# barely moves it); institutional and aggregator rates are Bengaluru B2B produce buyers'
+# published B-grade bands; feed and compost are the Kolar dairy co-op and district
+# horticulture department vermicompost rates.
+
+agri_channels:
+  - id: divert_secondary_mandi
+    name: Divert to the nearest terminal mandi
+    type: reroute
+    engine_channel_type: b2b_transfer
+    horizon: RECOVER
+    basis: mandi_price
+    recovery_factor: 0.88 # that mandi's own modal rate, less its commission and fees
+    lead_time_hours: 2.0
+    min_residual_life_hours: 6
+    min_qty_kg: 500
+    max_qty_kg: null
+    allowed_grades: [A, B_plus, B, C]
+    available_days: [mon, tue, wed, thu, fri, sat, sun]
+    cutoff_hour: 20
+    requires: [vehicle_en_route]
+    co2e_avoided_factor: 1.0
+    notes: >
+      The first thing to try and the least dramatic. Priced at the *destination's* modal
+      rate, which is why it reads as a loss against Delhi and still as a large gain
+      against arriving with unsaleable fruit. Absorption caps in mandis.yaml apply.
+
+  - id: tomato_processing_line
+    name: Tomato paste / puree line
+    type: processing
+    engine_channel_type: processing
+    horizon: RECOVER
+    basis: mandi_price
+    recovery_factor: 0.31 # ~Rs 6/kg process-grade against a Rs 19.50 modal rate
+    lead_time_hours: 8.0
+    min_residual_life_hours: 10
+    min_qty_kg: 2000 # a paste line will not open for a part load
+    max_qty_kg: 25000
+    allowed_grades: [A, B_plus, B, C]
+    available_days: [mon, tue, wed, thu, fri, sat]
+    cutoff_hour: 16
+    requires: [no_rot]
+    distance_km: 95
+    co2e_avoided_factor: 1.0
+    notes: >
+      The route that does not care what the fruit looks like. Process grade is bought on
+      soluble solids and colour, so heavy bruising costs almost nothing here while it
+      costs a full grade band at a fresh market. That inversion is the single most
+      counter-intuitive thing the engine knows, and it is worth saying on stage.
+
+  - id: institutional_bulk
+    name: Institutional bulk buyer (canteen / mid-day meal contractor)
+    type: own_demand
+    engine_channel_type: b2b_transfer
+    horizon: RECOVER
+    basis: farm_gate
+    recovery_factor: 0.74
+    lead_time_hours: 12.0
+    min_residual_life_hours: 24
+    min_qty_kg: 1000
+    max_qty_kg: 6000
+    allowed_grades: [A, B_plus, B]
+    available_days: [mon, tue, wed, thu, fri]
+    cutoff_hour: 14
+    requires: [no_rot, fssai_traceable]
+    co2e_avoided_factor: 1.0
+    notes: >
+      Good rate, real volume, and a 24-hour residual-life bar that a batch already in
+      trouble usually fails. Kept because it is exactly the option an operator will ask
+      about, and the answer should be a reason, not a shrug.
+
+  - id: b2b_produce_aggregator
+    name: B2B produce aggregator (B-grade lot)
+    type: aggregator
+    engine_channel_type: b2b_transfer
+    horizon: RECOVER
+    basis: farm_gate
+    recovery_factor: 0.58 # B-grade band, less the aggregator's grading rejection allowance
+    lead_time_hours: 6.0
+    min_residual_life_hours: 18
+    min_qty_kg: 500
+    max_qty_kg: 8000
+    allowed_grades: [B_plus, B]
+    available_days: [mon, tue, wed, thu, fri, sat]
+    cutoff_hour: 17
+    co2e_avoided_factor: 1.0
+
+  - id: roadside_distress_sale
+    name: Roadside / highway trader lot sale
+    type: distress
+    engine_channel_type: markdown
+    horizon: RECOVER
+    basis: farm_gate
+    recovery_factor: 0.34 # what a trader pays for a load that visibly cannot wait
+    lead_time_hours: 1.0
+    min_residual_life_hours: 2
+    min_qty_kg: 200
+    max_qty_kg: 4000
+    allowed_grades: [A, B_plus, B, C]
+    available_days: [mon, tue, wed, thu, fri, sat, sun]
+    cutoff_hour: 22
+    co2e_avoided_factor: 1.0
+    notes: >
+      What actually happens today when a load runs out of time, and therefore a route the
+      system must be able to price rather than moralise about. Ranking it honestly is how
+      the engine earns the right to say when it is the best remaining option.
+
+  - id: agri_ngo_donation
+    name: NGO / community kitchen donation
+    type: donation
+    engine_channel_type: donation
+    horizon: RECOVER
+    basis: cost
+    recovery_factor: 0.06 # avoided disposal and haulage only; the social value is separate
+    social_value_per_kg: 22.0
+    lead_time_hours: 6.0
+    min_residual_life_hours: 12
+    min_qty_kg: 200
+    max_qty_kg: 3000
+    allowed_grades: [A, B_plus, B]
+    available_days: [mon, tue, wed, thu, fri, sat]
+    cutoff_hour: 15
+    requires: [no_rot]
+    co2e_avoided_factor: 1.0
+    notes: >
+      Cash recovery is close to zero by design â€” the value is credited through
+      social_value_per_kg and the mu weight, not smuggled into the revenue term. A
+      donation that looks like a 6% cash sale is a donation nobody will trust.
+
+  - id: dairy_coop_feed
+    name: Dairy co-operative cattle feed
+    type: downcycle
+    engine_channel_type: animal_feed
+    horizon: RECOVER
+    basis: cost
+    recovery_factor: 0.03
+    lead_time_hours: 12.0
+    min_residual_life_hours: 0
+    min_qty_kg: 1000
+    max_qty_kg: null
+    allowed_grades: [B, C, reject]
+    available_days: [mon, wed, fri]
+    cutoff_hour: 12
+    co2e_avoided_factor: 0.6
+
+  - id: farm_compost_return
+    name: Return to field as compost
+    type: downcycle
+    engine_channel_type: compost
+    horizon: RECOVER
+    basis: cost
+    recovery_factor: 0.01 # nutrient value back to the plot, less the haulage
+    lead_time_hours: 4.0
+    min_residual_life_hours: 0
+    min_qty_kg: 0
+    max_qty_kg: null
+    allowed_grades: [A, B_plus, B, C, reject]
+    available_days: [mon, tue, wed, thu, fri, sat, sun]
+    cutoff_hour: 24
+    co2e_avoided_factor: 0.35
+    notes: Recovers almost no money and still beats abandoning the lot at the mandi gate.
+
+  - id: abandon_at_mandi
+    name: Abandon the lot
+    type: baseline
+    engine_channel_type: compost
+    horizon: RECOVER
+    basis: cost
+    recovery_factor: 0.0
+    lead_time_hours: 0
+    min_residual_life_hours: 0
+    min_qty_kg: 0
+    max_qty_kg: null
+    allowed_grades: [A, B_plus, B, C, reject]
+    available_days: [mon, tue, wed, thu, fri, sat, sun]
+    cutoff_hour: 24
+    co2e_avoided_factor: 0.0
+    is_baseline: true
+    notes: >
+      Not a rhetorical option. Tomato is dumped at mandi gates in this country every
+      season when the realised price will not cover the freight already spent. It is the
+      counterfactual every figure above is measured against, it is always eligible, it is
+      always ranked last, and it is never hidden.

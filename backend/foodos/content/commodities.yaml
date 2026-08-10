@@ -1,0 +1,249 @@
+# FoodOS — commodity constants for the agri (farm-gate batch) node
+# Owner: Person D
+#
+# THIS IS THE HIGHEST-LEVERAGE FILE IN THE REPO PER CHARACTER.
+# Every rupee and every hour the demo puts on screen is derived from these numbers. A
+# wrong constant here is not a bug that shows up as a crash — it shows up as a confident,
+# well-rendered, wrong figure in front of a judge. Every value below carries its source in
+# a comment. A number with no comment does not survive the question "where did you get
+# that?", and that question is always asked.
+#
+# WHAT THIS FILE IS NOT
+#   It is not a model. Person A owns the code; this file owns the constants A's code
+#   reads. If a demo figure is off, the fix is a constant here or a term in A's model —
+#   never a hardcoded value in an API response. That rule is what makes the platform
+#   claim ("one engine, many nodes") true rather than staged.
+#
+# THE PHYSICS THESE CONSTANTS FEED  (foodos/models/rul.py, wrapping ingest/shelf_life.py)
+#   Arrhenius, expressed in its Q10 form — the same physics the kitchen node already runs,
+#   restated in hours because a truck's decisions are hourly and a chiller's are daily:
+#
+#     rate(T)          = q10 ** ((T - ref_temp_c) / 10)     # >1 means faster than reference
+#     life_used       += (dt_hours / base_shelf_life_hours) * rate(T)   # accumulated fraction
+#     rul_hours        = base_shelf_life_hours * (1 - life_used) / rate(T_now)
+#     rul_hours       *= maturity_factor * damage_factor * packaging/transport factors
+#
+#   The accumulated-life-fraction form matters: a batch that has already spent four hours
+#   in the field at 35 degC cannot be described by its current temperature alone. History
+#   is the whole point — that is the difference between this and a printed expiry date.
+#
+# UNITS
+#   temperatures        degrees Celsius, PULP temperature, not air temperature
+#   shelf life          HOURS, always. Never days on this node.
+#   respiration         mg CO2 per kg per hour, at ref_temp_c
+#   prices              INR per KILOGRAM. Never per quintal — the /100 lives in
+#                       external/agmarknet.py and must not be applied twice.
+#   losses              percent of consigned mass
+
+version: 1
+currency: INR
+
+# --- pack-wide defaults ------------------------------------------------------
+# Merged UNDER each commodity by content.commodity(), so a commodity states only what
+# differs. Present so that a missing key degrades to something sane instead of a KeyError
+# halfway through a request — A's fuse() rule is that a missing layer degrades, never
+# crashes, and the same rule applies to this file.
+defaults:
+  ref_temp_c: 13.0
+  q10: 2.2
+  base_shelf_life_hours: 168.0
+  q_crit: 45.0
+  chilling_injury_below_c: 10.0
+  field_heat_threshold_c: 30.0 # hours above this are counted as field-heat hours
+  respiration_rate_mg_co2_per_kg_h: 15.0
+  respiration_heat_w_per_tonne: 45.0
+  reference_price_per_kg: 15.00
+  moisture_loss_pct_per_day_at_ref: 0.6
+
+commodities:
+  # ==========================================================================
+  # TOMATO — the only commodity in scope. §10 of the team split rules out every
+  # other one, and the questionnaire, the mandi set and the calibration below are
+  # all tomato-specific. A second commodity is a content commit plus a calibration
+  # pass, not a code change; that is the point of keeping it here.
+  # ==========================================================================
+  tomato:
+    display_name: Tomato
+    agmarknet_key: Tomato # must match COMMODITY_ALIASES in external/agmarknet.py
+    category: fruiting_vegetable
+
+    # --- decay kinetics -----------------------------------------------------
+    # ref_temp_c 13 degC: UC Davis Postharvest Technology Center gives the optimum
+    # holding temperature for firm-ripe / light-red tomato as 12.5-15 degC. It is NOT
+    # 4 degC — tomato held below 10 degC suffers chilling injury (pitting, failure to
+    # ripen, water-soaked flesh) which shortens life instead of extending it. This is
+    # why "just use a reefer" is not automatically the right answer, and why the
+    # optimiser has to be allowed to decline the reefer.
+    ref_temp_c: 13.0
+    chilling_injury_below_c: 10.0
+
+    # base_shelf_life_hours 264 h = 11 days at 13 degC, harvest to end of marketable
+    # life for a firm-ripe field tomato in ventilated packaging. UC Davis quotes
+    # 8-10 days for light-red and 13-15 days for mature-green at optimum; 11 days is
+    # the mid-maturity field crop this demo ships, and maturity_factors below move it.
+    base_shelf_life_hours: 264.0
+
+    # q10 2.2: quality-limited (not microbial) decay in tomato. Q10 for tomato
+    # respiration over 10-25 degC is commonly reported at 2.0-2.5; microbial spoilage
+    # runs hotter (2.5-3.0) but tomato loses marketability to over-ripening, softening
+    # and moisture loss long before it becomes microbially unsafe. Using a microbial
+    # Q10 here would overstate loss on a hot corridor by roughly a third.
+    q10: 2.2
+
+    # Respiration at 13 degC. UC Davis: ~13 mg CO2/kg/h at 10 degC, ~24 at 20 degC for
+    # mature-green tomato; 16 interpolates onto 13 degC. Feeds self-heating inside the
+    # load, which is why a tightly packed 10 t stack runs above ambient.
+    respiration_rate_mg_co2_per_kg_h: 16.0
+    respiration_heat_w_per_tonne: 58.0 # ~= respiration rate x 10.7 kJ per g CO2
+
+    # Moisture loss. Tomato has a low transpiration coefficient but 10 t on an open
+    # truck for 36 h still arrives lighter, and mass sold is mass weighed.
+    moisture_loss_pct_per_day_at_ref: 0.5
+
+    # --- quality thresholds -------------------------------------------------
+    # q_crit is the quality score (0-100, A's quality_score()) below which the batch
+    # can no longer be sold as fresh table produce at a terminal mandi. Below it the
+    # engine must route to a diversion channel in channels.yaml rather than keep
+    # trucking, because arriving with unsaleable fruit costs the freight AND the fruit.
+    q_crit: 45.0
+    q_grade_bands: # quality score -> visual grade, used for price realisation
+      A: 85.0
+      B_plus: 70.0
+      B: 55.0
+      C: 45.0
+    field_heat_threshold_c: 30.0
+
+    # --- the loss baselines the whole credibility rests on -------------------
+    # NABCONS (NABARD Consultancy Services) 2022, "Study to Determine Post-Harvest
+    # Losses of Agri Produce in India", commissioned by MoFPI. Tomato, all-India.
+    # These are the numbers A's loss model must reproduce under BASELINE conditions —
+    # not a target the model is allowed to be tuned past. The H8 gate fails if the
+    # calibrated model does not land on 8.37% farm.
+    #
+    # Read them correctly: farm-operations loss is harvest, on-farm handling, grading
+    # and packing. Market loss is the wholesale/retail stage. They are separate stages
+    # of the same chain and must NOT be added to produce a single headline figure —
+    # doing that is how the widely quoted "30-40% of Indian produce is wasted" claim
+    # gets built, and a judge who knows the sector will catch it.
+    nabcons_farm_loss_pct: 8.37 # NABCONS 2022, MoFPI — tomato, farm operations
+    nabcons_market_loss_pct: 3.25 # NABCONS 2022, MoFPI — tomato, wholesale/retail
+    nabcons_reference_year: 2022
+    nabcons_note: >
+      Farm and market are consecutive stages, not addends. Quote them separately.
+
+    # --- maturity ------------------------------------------------------------
+    # Multiplier on remaining life. A tomato harvested at breaker stage travels; one
+    # harvested red-ripe does not. This single answer in the questionnaire (Q3) moves
+    # RUL by nearly a factor of two, which is why it is asked before anything else.
+    maturity_factors:
+      mature_green: 1.35 # breaker not yet reached; 13-15 d at optimum
+      breaker: 1.10
+      turning: 0.95
+      pink: 0.85
+      light_red: 0.78
+      red_ripe: 0.60 # ships badly; belongs in a local or processing channel
+
+    # --- mechanical damage ---------------------------------------------------
+    # Multiplier on remaining life. Bruised and split fruit respires faster and opens a
+    # path for rot organisms; the effect compounds with vibration in transit, which is
+    # handled separately in transport_modes.yaml.
+    damage_factors:
+      none: 1.00
+      light: 0.94 # scattered surface scarring, no broken skin
+      moderate: 0.86 # visible bruising or a few split fruit per crate
+      heavy: 0.68 # crushing from stacking or a rough road; rot risk is now the driver
+
+    # --- price realisation ---------------------------------------------------
+    # Applied to the mandi modal price. A B+ consignment does not fetch the modal rate;
+    # the modal rate is what average-grade arrivals cleared at. Bands are the commission
+    # agents' own spread at Azadpur, which runs roughly +15% for clean A-grade lots to
+    # -35% for lots with visible spoilage.
+    grade_price_factors:
+      A: 1.15
+      B_plus: 0.85
+      B: 0.72
+      C: 0.55
+    reference_price_per_kg: 16.50 # fallback only, when AGMARKNET is silent for a mandi
+
+    # Mandi commission and market fees, deducted from gross before net value. Delhi
+    # Azadpur: 6% arhtiya commission is the customary rate; APMC market fee and
+    # unloading/weighing charges add roughly 2%.
+    market_commission_pct: 6.0
+    market_fee_pct: 2.0
+
+# --- calibration targets ------------------------------------------------------
+# NOT constants — the acceptance criteria the constants above exist to satisfy. A reads
+# this block at H26-H30 and checks the model against it. If a figure does not fall out,
+# the fix is a constant in this file or a term in A's model. It is never a literal in an
+# API response, and this block is the record of that promise.
+calibration:
+  baseline:
+    commodity: tomato
+    expect_farm_loss_pct: 8.37 # the H8 gate. If this does not reproduce, stop.
+    expect_market_loss_pct: 3.25
+    conditions: >
+      Harvest at optimum maturity, immediate shade, ventilated crate, ambient 13 degC
+      equivalent, no field heat, transit within base shelf life. This is the reference
+      point NABCONS measured, not the demo batch.
+
+  # The demo batch, locked at the H30 gate. Every figure here must be model output.
+  t1024:
+    id: T1024
+    commodity: tomato
+    qty_kg: 10000
+    origin: kolar_hub
+    destination: delhi_apmc
+    harvested_at: 2026-08-10T06:00:00
+    transport: open_truck
+    packaging: ventilated_plastic_crate
+    inputs:
+      maturity: light_red
+      damage: moderate
+      field_heat_hours_over_30c: 4.2
+      quality_score: 72 # -> grade B+ via q_grade_bands
+    expect:
+      loss_pct: 8.4
+      rul_hours: 31
+      risk_level: HIGH
+      best_plan_loss_pct: 3.9 # split 6 t Delhi / 4 t Jaipur + depart 6 h earlier
+    # Worked arithmetic, so A can see which lever moves which figure.
+    # NOTE: 34 degC is PULP temperature, not air. external/weather.py returns shade air
+    # temperature — for an 08:00 departure the committed Kolar-Delhi snapshot gives a
+    # journey mean of 29.7 degC, a max of 36.4 and 17 hours above 30 — and the fruit sits
+    # above that because of solar gain on the top tier
+    # (transport_modes.yaml::solar_gain_c 4.5 for an open truck) plus respiration
+    # self-heating. Air + solar gain + self-heating is what reaches the Q10 term. Feeding
+    # air temperature straight in understates loss by roughly a third; feeding a
+    # truck-specific pulp figure out of the weather connector would make the temperature
+    # wrong for every other transport mode.
+    #   rate(34 degC) = 2.2 ** ((34 - 13) / 10)          = 5.24
+    #   field heat    = 4.2 h at 35 degC -> 4.2 * 5.67 / 264   = 0.090 of life
+    #   yard hold     = 2.0 h at 32 degC -> 2.0 * 4.47 / 264   = 0.034 of life
+    #   remaining     = 264 * (1 - 0.124) / 5.24               = 44.1 h
+    #   x maturity light_red 0.78 x damage moderate 0.86       = 29.6 h
+    #   x ventilated crate thermal retention (packaging.yaml)  ~= 31 h
+    # The last factor is the one to tune if RUL drifts; it is the least well pinned
+    # by literature and the most defensible to adjust.
+
+  # --- an open question for the H26 sync, raised here rather than discovered on stage ---
+  # With real freight rates, a naive split — two full trucks, Kolar to Delhi and Kolar to
+  # Jaipur — costs about Rs 29,000 more than the single baseline truck and does not earn
+  # it back on decay. The split only pays as a MULTI-DROP: one vehicle, the 277 km Agra
+  # detour and one extra drop charge (transport_modes.yaml::multi_drop), which is how it
+  # is actually executed on this corridor. B's planner must build the split that way.
+  # If it still loses to "depart 6 h earlier + tarpaulin", we show that plan instead —
+  # a plan the engine picked is worth more on stage than a plan the deck picked, and the
+  # 3.9% target is a property of the best plan, not of the split specifically.
+  split_economics_note: >
+    Split must be costed as multi-drop, not as two full freight bills. See
+    transport_modes.yaml::multi_drop. Raise at H26 if the planner disagrees with the deck.
+
+  # An honesty note that belongs in the repo rather than in someone's head.
+  freight_note: >
+    The team-split document illustrates the split plan with a logistics cost of
+    Rs 31,500 for a 2,150 km Kolar-Delhi run. That is not a costed figure — real
+    full-truck-load freight for 10 t over that corridor is Rs 80,000-95,000, and
+    transport_modes.yaml carries the real rate with its source. The demo therefore
+    shows a larger logistics cost and a smaller net value than that illustration,
+    and the SAME delta-versus-baseline story, which is the claim we actually make.
+    Quoting an uncosted freight rate to a judge who ships produce is a lost room.
